@@ -3,6 +3,8 @@
 #include "resource.h"
 #include "pch.h"
 
+#include "DLLExport.h"
+
 #define USERS_NAME_LENGTH 64
 #define USERS_EMAIL_LENGTH 64
 #define USERS_JOB_TITLE_LENGTH 32
@@ -25,6 +27,14 @@ struct USERS
     {
         SecureZeroMemory(this, sizeof(*this));
     }
-};
+    USERS(const CString& name, const CString& email, const CString& job)
+    {
+        SecureZeroMemory(this, sizeof(*this));
+        this->lUpdateCounter = 0;
+        _tcscpy_s(szName, name);
+        _tcscpy_s(szEmail, email);
+        _tcscpy_s(szJobTitle, job);
+    }
 
+};
 typedef CTypedPtrArray<CPtrArray, USERS*> CUsersTypedPtrArray;

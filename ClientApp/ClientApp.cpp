@@ -9,8 +9,8 @@
 #include "CSoftInternshipProjectView.h"
 
 #include "DLLExport.h"
-#include "CUsersTable.h"	
-
+#include "UsersTable.h"	
+                          
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -35,20 +35,10 @@ BOOL ClientApp::InitInstance()
 	
 	CUsersTable oUsers;
 
-
-	/*CTypedArray<CPtrArray, USERS*> oUsers;
-
-	USERS* pUser1 = new USERS(_T("Иван"), _T("ivan@example.com"), _T("Разработчик"));
-	USERS* pUser2 = new USERS(_T("Петър"), _T("petar@example.com"), _T("Ръководител"));
-	USERS* pUser3 = new USERS(_T("Георги"), _T("georgi@example.com"), _T("Разработчик"));
-
-	oUsersPtrArray.Add(pUser1);
-	oUsersPtrArray.Add(pUser2);
-	oUsersPtrArray.Add(pUser3);
-
-	CUsersTable.LoadUsers();*/
-
-	
+	//temp array
+	CUsersTypedPtrArray oUsersPtrArray;
+	//CUsersTable.
+	oUsers.SelectAll(oUsersPtrArray);
 
 	EnableTaskbarInteraction(FALSE);
 

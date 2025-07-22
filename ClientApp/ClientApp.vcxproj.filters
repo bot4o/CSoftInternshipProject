@@ -36,6 +36,9 @@
     <ClInclude Include="ClientApp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="TestMethods.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainFrm.cpp">
@@ -48,6 +51,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ClientApp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestMethods.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
