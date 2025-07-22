@@ -41,7 +41,7 @@ bool CUsersTable::SelectAll(CUsersTypedPtrArray& oUsersArray)
 	}
 
 	// Конструираме заявката
-	CString strQuery = _T("SELECT * FROM USERS");
+	CString strQuery = _T(SELECT_ALL_USERS);
 	// Изпълняваме командата
 	hResult = m_oCommand.Open(oSession, strQuery);
 	if (FAILED(hResult))
@@ -119,7 +119,7 @@ bool CUsersTable::SelectWhereID(const long lID, USERS& recUser)
 	}
 
 	CString strQuery;
-	strQuery.Format(_T("SELECT * FROM USERS WHERE ID = %d"), lID);
+	strQuery.Format(_T(SELECT_ALL_USERS_BY_ID), lID);
 
 	CDBPropSet oUpdateDBPropSet(DBPROPSET_ROWSET);
 	oUpdateDBPropSet.AddProperty(DBPROP_CANFETCHBACKWARDS, true);
@@ -238,7 +238,7 @@ bool CUsersTable::UpdateWhereID(const long lID, const USERS& recUser) {
 	}
 
 	CString strQuery;
-	strQuery.Format(_T("UPDATE USERS SET JOB_TITLE = N'Старши разработчик' WHERE ID = %d"), lID);
+	strQuery.Format(_T(UPDATE_USERS_JOB_TITLE_BY_ID), lID);
 
 	CDBPropSet oUpdateDBPropSet(DBPROPSET_ROWSET);
 	oUpdateDBPropSet.AddProperty(DBPROP_CANFETCHBACKWARDS, true);
@@ -338,7 +338,7 @@ bool CUsersTable::Insert(const USERS& recUser)
 	}
 
 	CString strQuery;
-	strQuery.Format(_T("INSERT INTO USERS (NAME, EMAIL, JOB_TITLE) VALUES ('%s', '%s', '%s')"), recUser.szName, recUser.szEmail, recUser.szJobTitle);
+	strQuery.Format(_T(INSERT_USER), recUser.szName, recUser.szEmail, recUser.szJobTitle);
 
 	CDBPropSet oUpdateDBPropSet(DBPROPSET_ROWSET);
 	oUpdateDBPropSet.AddProperty(DBPROP_CANFETCHBACKWARDS, true);
@@ -412,7 +412,7 @@ bool CUsersTable::DeleteWhereID(const long lID) {
 	}
 
 	CString strQuery;
-	strQuery.Format(_T("DELETE FROM USERS WHERE ID = %d"), lID);
+	strQuery.Format(_T(DELETE_USER_BY_ID), lID);
 
 	hResult = m_oCommand.Open(oSession, strQuery);
 	if (FAILED(hResult))
