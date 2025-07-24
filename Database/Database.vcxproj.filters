@@ -52,6 +52,9 @@
     <ClInclude Include="UsersTable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="UsersAccessor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Database.rc">

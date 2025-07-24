@@ -46,10 +46,7 @@
     <ClInclude Include="pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Users.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="UsersAccessor.h">
+    <ClInclude Include="UsersStruct.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

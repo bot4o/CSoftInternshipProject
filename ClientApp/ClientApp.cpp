@@ -31,14 +31,6 @@ ClientApp theApp;
 BOOL ClientApp::InitInstance()
 {
 	CWinApp::InitInstance();
-	//temp Domain/UserTable debuging:
-	
-	CUsersTable oUsers;
-
-	//temp array
-	CUsersTypedPtrArray oUsersPtrArray;
-	//CUsersTable.
-	oUsers.SelectAll(oUsersPtrArray);
 
 	EnableTaskbarInteraction(FALSE);
 
@@ -72,6 +64,13 @@ BOOL ClientApp::InitInstance()
 
 	pMainFrame->ShowWindow(m_nCmdShow);
 	pMainFrame->UpdateWindow();
+
+	CUsersTable oUsers;
+
+	//temp array
+	CUsersTypedPtrArray oUsersPtrArray;
+	//CUsersTable.
+	oUsers.SelectAll(oUsersPtrArray);
 
 	return TRUE;
 }

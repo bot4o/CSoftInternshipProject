@@ -1,8 +1,8 @@
-#pragma once
+﻿#pragma once
 
 #include "Resource.h"
 #include "pch.h"
-#include "Users.h"
+#include "UsersStruct.h"
 #include "atldbcli.h"
 
 #define USERS_ACCESSORS_COUNT 2 //ID and all others
@@ -14,16 +14,22 @@
 #define USERS_COLUMN_ENTRY_USER_EMAIL 4 
 #define USERS_COLUMN_ENTRY_JOB_TITLE 5 
 
+/// <summary>Клас за достъп до таблицата USERS.</summary>  
 class CUsersAccessor
 {
-public: 
-    USERS GetRecUser() {
+public:
+    /// <summary>GET method за достъп до m_recUser.</summary>  
+    USERS GetRecUser()  
+    {
         return m_recUser;
     }
-    bool SetRecUser(USERS oNewUser) {
+    /// <summary>SET method за достъп до m_recUser.</summary>  
+    bool SetRecUser(USERS oNewUser) 
+    {
         m_recUser = oNewUser;
     }
 protected:
+    /// <summary>Макрос дефиниращ публичен достъп до аксесор за определен тип клас.</summary>  
     BEGIN_ACCESSOR_MAP(CUsersAccessor, USERS_ACCESSORS_COUNT)
         BEGIN_ACCESSOR(USERS_IDENTITY_ACCESSOR_INDEX, true)
         COLUMN_ENTRY(USERS_COLUMN_ENTRY_ID, m_recUser.lId)
@@ -37,5 +43,6 @@ protected:
         END_ACCESSOR()
     END_ACCESSOR_MAP()
 protected:
+    /// <summary>USER проментлива за заявките</summary>  
     USERS m_recUser;
 };

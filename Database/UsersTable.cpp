@@ -4,13 +4,6 @@
 
 bool CUsersTable::SelectAll(CUsersTypedPtrArray& oUsersArray)
 {
-	HRESULT hrCom = CoInitialize(NULL);
-	if (FAILED(hrCom))
-	{
-		AfxMessageBox(_T("Failed to initialize COM"));
-		return false;
-	}
-
 	CDataSource oDataSource;
 	CSession oSession;
 	CDBPropSet oDBPropSet(DBPROPSET_DBINIT);
@@ -41,7 +34,8 @@ bool CUsersTable::SelectAll(CUsersTypedPtrArray& oUsersArray)
 	}
 
 	// Конструираме заявката
-	CString strQuery = _T(SELECT_ALL_USERS);
+	CString strQuery;
+	strQuery.Format(_T(SQL_SELECT_ALL), strUser);
 	// Изпълняваме командата
 	hResult = m_oCommand.Open(oSession, strQuery);
 	if (FAILED(hResult))
@@ -83,13 +77,6 @@ bool CUsersTable::SelectAll(CUsersTypedPtrArray& oUsersArray)
 }
 bool CUsersTable::SelectWhereID(const long lID, USERS& recUser)
 {
-	HRESULT hrCom = CoInitialize(NULL);
-	if (FAILED(hrCom))
-	{
-		AfxMessageBox(_T("Failed to initialize COM"));
-		return false;
-	}
-
 	CDataSource oDataSource;
 	CSession oSession;
 	CDBPropSet oDBPropSet(DBPROPSET_DBINIT);
@@ -119,7 +106,7 @@ bool CUsersTable::SelectWhereID(const long lID, USERS& recUser)
 	}
 
 	CString strQuery;
-	strQuery.Format(_T(SELECT_ALL_USERS_BY_ID), lID);
+	strQuery.Format(_T(SQL_SELECT_BY_ID), strUser, lID);
 
 	CDBPropSet oUpdateDBPropSet(DBPROPSET_ROWSET);
 	oUpdateDBPropSet.AddProperty(DBPROP_CANFETCHBACKWARDS, true);
@@ -182,14 +169,8 @@ bool CUsersTable::SelectWhereID(const long lID, USERS& recUser)
 
 	return true;
 }
-bool CUsersTable::UpdateWhereID(const long lID, const USERS& recUser) {
-	HRESULT hrCom = CoInitialize(NULL);
-	if (FAILED(hrCom))
-	{
-		AfxMessageBox(_T("Failed to initialize COM"));
-		return false;
-	}
-
+bool CUsersTable::UpdateWhereID(const long lID, const USERS& recUser) 
+{
 	CDataSource oDataSource;
 	CSession oSession;
 	CDBPropSet oDBPropSet(DBPROPSET_DBINIT);
@@ -218,16 +199,6 @@ bool CUsersTable::UpdateWhereID(const long lID, const USERS& recUser) {
 		return false;
 	}
 
-	/*UPDATE USERS
-		SET JOB_TITLE = N'Старши разработчик'
-		WHERE EMAIL IN('petar@example.com', 'georgi@example.com')
-
-		IF @@ERROR < > 0
-		BEGIN
-		PRINT 'Something went wrong!';
-	ROLLBACK;
-	END*/
-
 	hResult = oSession.StartTransaction();
 	if (FAILED(hResult))
 	{
@@ -238,7 +209,8 @@ bool CUsersTable::UpdateWhereID(const long lID, const USERS& recUser) {
 	}
 
 	CString strQuery;
-	strQuery.Format(_T(UPDATE_USERS_JOB_TITLE_BY_ID), lID);
+	CString strJobTitle = _T("Старши разработик");
+	strQuery.Format(_T(SQL_UPDATE_JOB_TITLE_BY_ID), strUser, strJobTitle, lID);
 
 	CDBPropSet oUpdateDBPropSet(DBPROPSET_ROWSET);
 	oUpdateDBPropSet.AddProperty(DBPROP_CANFETCHBACKWARDS, true);
@@ -324,10 +296,6 @@ bool CUsersTable::Insert(const USERS& recUser)
 		return false;
 	}
 
-	/*INSERT INTO USERS(NAME, EMAIL, JOB_TITLE)
-		VALUES
-		(N'Иван Иванов', 'ivan@example.com', N'Ръководител'),*/
-
 	hResult = oSession.StartTransaction();
 	if (FAILED(hResult))
 	{
@@ -338,7 +306,7 @@ bool CUsersTable::Insert(const USERS& recUser)
 	}
 
 	CString strQuery;
-	strQuery.Format(_T(INSERT_USER), recUser.szName, recUser.szEmail, recUser.szJobTitle);
+	strQuery.Format(_T(SQL_INSERT), strUser,  recUser.szName, recUser.szEmail, recUser.szJobTitle);
 
 	CDBPropSet oUpdateDBPropSet(DBPROPSET_ROWSET);
 	oUpdateDBPropSet.AddProperty(DBPROP_CANFETCHBACKWARDS, true);
@@ -366,7 +334,8 @@ bool CUsersTable::Insert(const USERS& recUser)
 
 	return true;
 }
-bool CUsersTable::DeleteWhereID(const long lID) {
+bool CUsersTable::DeleteWhereID(const long lID) 
+{
 	HRESULT hrCom = CoInitialize(NULL);
 	if (FAILED(hrCom))
 	{
@@ -412,7 +381,7 @@ bool CUsersTable::DeleteWhereID(const long lID) {
 	}
 
 	CString strQuery;
-	strQuery.Format(_T(DELETE_USER_BY_ID), lID);
+	strQuery.Format(_T(SQL_DELETE_BY_ID), strUser,  lID);
 
 	hResult = m_oCommand.Open(oSession, strQuery);
 	if (FAILED(hResult))

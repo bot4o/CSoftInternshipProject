@@ -5,7 +5,7 @@
 #include "framework.h"
 
 #include "DLLExport.h"
-#include "Users.h"
+#include "UsersStruct.h"
 
 class TestMethods {
 public:
