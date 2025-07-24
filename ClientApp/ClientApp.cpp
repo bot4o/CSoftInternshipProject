@@ -65,6 +65,13 @@ BOOL ClientApp::InitInstance()
 	pMainFrame->ShowWindow(m_nCmdShow);
 	pMainFrame->UpdateWindow();
 
+	if (!CDBConnection::OpenConnection()) {
+		CString msg;
+		msg.Format(_T("Unable to connect to the SQL Server database"));
+		AfxMessageBox(msg);
+	}
+
+
 	CUsersTable oUsers;
 
 	//temp array
@@ -77,6 +84,7 @@ BOOL ClientApp::InitInstance()
 
 int ClientApp::ExitInstance()
 {
+	//oSession.Close();
 	return CWinApp::ExitInstance();
 }
 

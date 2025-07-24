@@ -24,6 +24,9 @@
     <ClCompile Include="UsersTable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DBConnection.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Database.def">
@@ -53,6 +56,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="UsersAccessor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DBConnection.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
