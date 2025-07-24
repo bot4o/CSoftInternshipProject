@@ -8,11 +8,9 @@
 
 #include "DLLExport.h"
 
-#define SQL_SELECT_ALL "SELECT * FROM %s WITH (HOLDLOCK, ROWLOCK)"
-#define SQL_SELECT_BY_ID "SELECT * FROM %s WITH (ROWLOCK, UPDLOCK) WHERE ID = %d"
-#define SQL_UPDATE_JOB_TITLE_BY_ID "UPDATE %s WITH (ROWLOCK, XLOCK) SET JOB_TITLE = N'%s' WHERE ID = %d"
-#define SQL_INSERT "INSERT INTO %s WITH (ROWLOCK) (NAME, EMAIL, JOB_TITLE) VALUES ('%s', '%s', '%s')"
-#define SQL_DELETE_BY_ID "DELETE FROM %s WITH (ROWLOCK, XLOCK) WHERE ID = %d"
+#define SQL_SELECT_ALL _T("SELECT * FROM %s WITH (HOLDLOCK, ROWLOCK)")
+#define SQL_SELECT_BY_ID _T("SELECT * FROM %s WITH (ROWLOCK, UPDLOCK) WHERE ID = %d")
+#define SQL_SELECT_EMPTY _T("SELECT * FROM %s WHERE 1 = 0")
 
 /// <summary>Клас за работа с таблица USERS</summary>  
 class DatabaseDLL_EXP CUsersTable
@@ -30,11 +28,21 @@ public:
     /// <summary>Изтрива потребител от базата според ID</summary>  
     bool DeleteWhereID(const long lID);
 
+    
+
     CUsersTable() {
         //TODO: 
     }
 private:
-    /// <summary>Командата</summary>  
+    
+    /// <summary>
+    ///     Отваря връзка с базата данни.
+    /// </summary>
+    /// <param name="oDataSource">Връзката със самата база данни</param>
+    /// <param name="oSession">Сесия/Заявака за изпълнение на команди</param>
+    bool OpenConnection(CDataSource oDataSource, CSession oSession);
+    /// <summary>Помага да изпълним команди по сесията</summary>  
     CCommand<CAccessor<CUsersAccessor>> m_oCommand;
-    CString strUser = _T("USERS");
+    // <summary>От коя таблица ще се извличат данни в заявките</summary>
+    CString strTable = _T("USERS");
 };
