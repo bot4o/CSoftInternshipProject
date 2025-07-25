@@ -25,12 +25,13 @@ class CUsersAccessor
 
 // Constructor / Destructor
 // ----------------
-public:
+//public:
     //CUsersAccessor();
     //virtual ~CUsersAccessor();
 
 // Methods
 // ----------------
+public:
     /// <summary>GET method за достъп до m_recUser.</summary>  
     USERS GetRecUser()  
     {
@@ -46,9 +47,10 @@ public:
 // ----------------
 
 
-// Members
-// ----------------
+
 protected:
+// Macros
+// ----------------
     /// <summary>Макрос дефиниращ публичен достъп до аксесор за определен тип клас.</summary>  
     BEGIN_ACCESSOR_MAP(CUsersAccessor, USERS_ACCESSORS_COUNT)
         BEGIN_ACCESSOR(USERS_IDENTITY_ACCESSOR_INDEX, true)
@@ -62,6 +64,9 @@ protected:
         COLUMN_ENTRY(USERS_COLUMN_ENTRY_JOB_TITLE, m_recUser.szJobTitle)
         END_ACCESSOR()
     END_ACCESSOR_MAP()
+
+// Members
+// ----------------
 protected:
     /// <summary>USER проментлива за заявките</summary>  
     USERS m_recUser;

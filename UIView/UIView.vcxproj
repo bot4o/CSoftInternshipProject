@@ -221,6 +221,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="UIView.cpp" />
+    <ClCompile Include="UsersView.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\UIView.rc2" />
@@ -232,6 +233,7 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="UsersView.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="UIView.rc" />
