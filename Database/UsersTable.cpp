@@ -22,7 +22,6 @@ bool CUsersTable::SelectAll(CUsersTypedPtrArray& oUsersArray)
 	hResult = m_oCommand.Open(m_oSession, strQuery);
 	if (FAILED(hResult))
 	{
-
 		CString msg;
 		msg.Format(_T("Unable to execute command for the SQL Server database.Error: %d"), hResult);
 		AfxMessageBox(msg);
