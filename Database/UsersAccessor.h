@@ -1,5 +1,4 @@
 ﻿#pragma once
-
 #include "Resource.h"
 #include "pch.h"
 #include "UsersStruct.h"
@@ -14,10 +13,24 @@
 #define USERS_COLUMN_ENTRY_USER_EMAIL 4 
 #define USERS_COLUMN_ENTRY_JOB_TITLE 5 
 
+/////////////////////////////////////////////////////////////////////////////
+// CUsersAccessor
+
 /// <summary>Клас за достъп до таблицата USERS.</summary>  
 class CUsersAccessor
 {
+// Constants
+// ----------------
+
+
+// Constructor / Destructor
+// ----------------
 public:
+    //CUsersAccessor();
+    //virtual ~CUsersAccessor();
+
+// Methods
+// ----------------
     /// <summary>GET method за достъп до m_recUser.</summary>  
     USERS GetRecUser()  
     {
@@ -28,6 +41,13 @@ public:
     {
         m_recUser = oNewUser;
     }
+
+// Overrides
+// ----------------
+
+
+// Members
+// ----------------
 protected:
     /// <summary>Макрос дефиниращ публичен достъп до аксесор за определен тип клас.</summary>  
     BEGIN_ACCESSOR_MAP(CUsersAccessor, USERS_ACCESSORS_COUNT)

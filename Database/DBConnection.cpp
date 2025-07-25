@@ -2,8 +2,22 @@
 #include "atldbcli.h"
 #include "DBConnection.h"
 
+/////////////////////////////////////////////////////////////////////////////
+// CDBConnection
 CDataSource CDBConnection::m_oDataSource;
 
+// Constructor / Destructor
+// ----------------
+CDBConnection::CDBConnection()
+{
+}
+
+CDBConnection::~CDBConnection()
+{
+}
+
+// Methods
+// ----------------
 bool CDBConnection::OpenConnection()
 {
 	CDBPropSet oDBPropSet(DBPROPSET_DBINIT);
@@ -28,4 +42,9 @@ CDataSource CDBConnection::GetDataSource()
 {
 	return m_oDataSource;
 }
+
+// Overrides
+// ----------------
+
+
 

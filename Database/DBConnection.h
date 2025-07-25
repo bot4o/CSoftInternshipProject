@@ -3,30 +3,32 @@
 #include "Resource.h"  
 #include "atldbcli.h"  
 
+/////////////////////////////////////////////////////////////////////////////
+// CDBConnection
 
 class CDBConnection
 {
+// Constants
+// ----------------
+
+
+// Constructors
+// ----------------
 public:
-	// Constructors
-	// ----------------
 	CDBConnection();
 	virtual ~CDBConnection();
 
 
-	// Methods
-	// ----------------
+// Methods
+// ----------------
 	static bool OpenConnection();	
-
 	static CDataSource GetDataSource();
 
+// Overrides
+// ----------------
 
-	// Overrides
-	// ----------------
 
-
-	// Members
-	// ----------------
+// Members
+// ----------------
 	static CDataSource m_oDataSource;
-
-
 };

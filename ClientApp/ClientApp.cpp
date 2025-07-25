@@ -65,19 +65,19 @@ BOOL ClientApp::InitInstance()
 	pMainFrame->ShowWindow(m_nCmdShow);
 	pMainFrame->UpdateWindow();
 
-	if (!CDBConnection::OpenConnection()) {
-		CString msg;
-		msg.Format(_T("Unable to connect to the SQL Server database"));
-		AfxMessageBox(msg);
-	}
+	//if (!CDBConnection::OpenConnection()) {
+	//	CString msg;
+	//	msg.Format(_T("Unable to connect to the SQL Server database"));
+	//	AfxMessageBox(msg);
+	//}
 
 
-	CUsersTable oUsers;
+	//CUsersTable oUsers;
 
-	//temp array
-	CUsersTypedPtrArray oUsersPtrArray;
-	//CUsersTable.
-	oUsers.SelectAll(oUsersPtrArray);
+	////temp array
+	//CUsersTypedPtrArray oUsersPtrArray;
+	////CUsersTable.
+	//oUsers.SelectAll(oUsersPtrArray);
 
 	return TRUE;
 }
