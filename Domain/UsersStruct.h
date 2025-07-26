@@ -2,7 +2,6 @@
 
 #include "resource.h"
 #include "pch.h"
-#include "DLLExport.h"
 
 #define USERS_NAME_LENGTH 64
 #define USERS_EMAIL_LENGTH 64

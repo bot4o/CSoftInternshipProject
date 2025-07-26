@@ -1,4 +1,5 @@
 ﻿#pragma once
+
 #include "Resource.h"  
 #include "pch.h"  
 #include "atldbcli.h"
