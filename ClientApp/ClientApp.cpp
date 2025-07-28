@@ -5,8 +5,11 @@
 #include "ClientApp.h"
 #include "MainFrm.h"
 #include "ChildFrm.h"
-#include "CSoftInternshipProjectDoc.h"
-#include "CSoftInternshipProjectView.h"
+#include "DBConnection.h"
+//#include "CSoftInternshipProjectDoc.h"
+//#include "CSoftInternshipProjectView.h"
+#include "UsersDocument.h"
+#include "UsersView.h"
 
 #include "DLLExport.h"
 #include "UsersTable.h"	
@@ -37,11 +40,16 @@ BOOL ClientApp::InitInstance()
 	SetRegistryKey(_T("Local AppWizard-Generated Applications"));
 	LoadStdProfileSettings(4);
 
+	CDBConnection::OpenConnection();
+
 	CMultiDocTemplate* pDocTemplate;
 	pDocTemplate = new CMultiDocTemplate(IDR_CSoftInternshipProjectTYPE,
-		RUNTIME_CLASS(CCSoftInternshipProjectDocument),
+		RUNTIME_CLASS(CUsersDocument),
 		RUNTIME_CLASS(CChildFrame),
-		RUNTIME_CLASS(CCSoftInternshipProjectView));
+		RUNTIME_CLASS(CUsersView));
+		/*RUNTIME_CLASS(CCSoftInternshipProjectDocument),
+		RUNTIME_CLASS(CChildFrame),
+		RUNTIME_CLASS(CCSoftInternshipProjectView));*/
 
 	if (!pDocTemplate)
 		return FALSE;
@@ -65,19 +73,6 @@ BOOL ClientApp::InitInstance()
 	pMainFrame->ShowWindow(m_nCmdShow);
 	pMainFrame->UpdateWindow();
 
-	//if (!CDBConnection::OpenConnection()) {
-	//	CString msg;
-	//	msg.Format(_T("Unable to connect to the SQL Server database"));
-	//	AfxMessageBox(msg);
-	//}
-
-
-	//CUsersTable oUsers;
-
-	////temp array
-	//CUsersTypedPtrArray oUsersPtrArray;
-	////CUsersTable.
-	//oUsers.SelectAll(oUsersPtrArray);
 
 	return TRUE;
 }

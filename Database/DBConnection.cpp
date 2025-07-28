@@ -20,6 +20,13 @@ CDBConnection::~CDBConnection()
 // ----------------
 bool CDBConnection::OpenConnection()
 {
+	HRESULT hr = ::CoInitialize(NULL);
+	if (FAILED(hr))
+	{
+		AfxMessageBox(_T("Failed to initialize COM library."));
+		return FALSE;
+	} 
+
 	CDBPropSet oDBPropSet(DBPROPSET_DBINIT);
 	oDBPropSet.AddProperty(DBPROP_INIT_DATASOURCE, _T("."));
 	oDBPropSet.AddProperty(DBPROP_AUTH_INTEGRATED, _T("SSPI"));
@@ -38,7 +45,7 @@ bool CDBConnection::OpenConnection()
 	}
 	return true;
 }
-CDataSource CDBConnection::GetDataSource()
+CDataSource& CDBConnection::GetDataSource()
 {
 	return m_oDataSource;
 }

@@ -2,11 +2,13 @@
 #include "pch.h"
 #include "Resource.h"  
 #include "atldbcli.h"  
+#include "DLLExport.h"
+
 
 /////////////////////////////////////////////////////////////////////////////
 // CDBConnection
 
-class CDBConnection
+class DatabaseDLL_EXP CDBConnection
 {
 // Constants
 // ----------------
@@ -22,7 +24,7 @@ public:
 // Methods
 // ----------------
 	static bool OpenConnection();	
-	static CDataSource GetDataSource();
+	static CDataSource& GetDataSource();
 
 // Overrides
 // ----------------

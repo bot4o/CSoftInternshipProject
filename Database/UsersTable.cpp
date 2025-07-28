@@ -19,9 +19,10 @@ CUsersTable::~CUsersTable()
 // ----------------
 bool CUsersTable::SelectAll(CUsersTypedPtrArray& oUsersArray)
 {
-	CDataSource oDataSource = CDBConnection::GetDataSource();
-
+	
+	CDataSource& oDataSource = CDBConnection::GetDataSource();  // reference
 	HRESULT hResult = m_oSession.Open(oDataSource);
+
 	if (FAILED(hResult))
 	{
 		CString strMessage;
@@ -70,8 +71,7 @@ bool CUsersTable::SelectAll(CUsersTypedPtrArray& oUsersArray)
 }
 bool CUsersTable::SelectWhereID(const long lID, USERS& recUser)
 {
-	CDataSource oDataSource = CDBConnection::GetDataSource();
-
+	CDataSource& oDataSource = CDBConnection::GetDataSource();
 	HRESULT hResult = m_oSession.Open(oDataSource);
 	if (FAILED(hResult))
 	{
@@ -146,8 +146,7 @@ bool CUsersTable::SelectWhereID(const long lID, USERS& recUser)
 }
 bool CUsersTable::UpdateWhereID(const long lID, USERS& recUser) 
 {
-	CDataSource oDataSource = CDBConnection::GetDataSource();
-
+	CDataSource& oDataSource = CDBConnection::GetDataSource();
 	HRESULT hResult = m_oSession.Open(oDataSource);
 	if (FAILED(hResult))
 	{
@@ -228,8 +227,7 @@ bool CUsersTable::UpdateWhereID(const long lID, USERS& recUser)
 }
 bool CUsersTable::Insert(const USERS& recUser) 
 {
-	CDataSource oDataSource = CDBConnection::m_oDataSource;
-
+	CDataSource& oDataSource = CDBConnection::GetDataSource();
 	HRESULT hResult = m_oSession.Open(oDataSource);
 	if (FAILED(hResult))
 	{
@@ -284,8 +282,7 @@ bool CUsersTable::Insert(const USERS& recUser)
 }
 bool CUsersTable::DeleteWhereID(const long lID) 
 {
-	CDataSource oDataSource = CDBConnection::GetDataSource();
-
+	CDataSource& oDataSource = CDBConnection::GetDataSource();
 	HRESULT hResult = m_oSession.Open(oDataSource);
 	if (FAILED(hResult))
 	{

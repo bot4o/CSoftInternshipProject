@@ -1,43 +1,57 @@
 ﻿#pragma once
-#include "UsersAppService.h"
+#include "DLLExport.h"
+#include "pch.h"
+#include "Resource.h"
+#include "../Application/UsersAppService.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CUsersDocument
 
-class CUsersDocument:public CDocument
+class DocumentDLL_EXP CUsersDocument : public CDocument
 {
+// Macros
+// ----------------
+	DECLARE_DYNCREATE(CUsersDocument)
 
-	// Constants
-	// ----------------
+
+// Constants
+// ----------------
 
 
-	// Constructor / Destructor
-	// ----------------
+// Constructor / Destructor
+// ----------------
 public:
 	CUsersDocument();
 	virtual ~CUsersDocument();
 
 
-	// Methods
-	// ----------------
-		/// <summary>Извежда всички потребители в базата</summary>  
-	bool SelectAll(CUsersTypedPtrArray& oUsersArray);
-	/// <summary>Извежда потребител от базата според ID</summary>  
-	bool SelectWhereID(const long lID, USERS& recUser);
-	/// <summary>Променя длъжноста на потребител от базата според ID</summary>  
-	bool UpdateWhereID(const long lID, USERS& recUser);
-	/// <summary>Вмъква нов потребител в базата</summary>  
-	bool Insert(const USERS& recUser);
-	/// <summary>Изтрива потребител от базата според ID</summary>  
-	bool DeleteWhereID(const long lID);
+// Methods
+// ----------------
+	/// <summary>Adds a new user to the USERS table</summary>  
+	bool AddUser(USERS recUser);
+	/// <summary>Loads all users from the USERS table</summary>  
+	bool LoadAllUsers();
+	/// <summary>Alters the role of a specific user in the USERS table</summary>  
+	bool UpdateUser(long lID, USERS& recUser);
+	/// <summary>Removes a specific user from the USERS table</summary>  
+	bool DeleteUser(long lID);
+	/// <summary>Gets the already populated m_oUsersArray for the UsersView</summary>  
+	CUsersTypedPtrArray& GetUsers();
 
 
-	// Overrides
-	// ----------------
+// Overrides
+// ----------------
+	/// <summary>Дава възможност да заредим данните</summary>  
+	BOOL OnNewDocument() override;
 
+// Members
+// ----------------
 
-	// Members
-	// ----------------
-
-
+private:
+	/// <summary>business logic</summary>  
+	CUsersAppService m_oUsersService;
+	
+	long m_lID;
+	USERS m_recUser;
+	CUsersTypedPtrArray m_oUsersArray;
 };

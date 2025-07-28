@@ -1,11 +1,17 @@
-#pragma once
-
+﻿#pragma once
+#include <afxcview.h>
+#include "DLLExport.h"
+#include "UsersDocument.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CUsersView
-//:public CListView
-class CUsersView
+
+class UIViewDLL_EXP CUsersView : public CListView
 {
+	// Macros
+	// ----------------
+	DECLARE_DYNCREATE(CUsersView)
+	
 
 	// Constants
 	// ----------------
@@ -20,14 +26,17 @@ public:
 
 	// Methods
 	// ----------------
+	CUsersDocument* GetDocument() const;
 
 
 	// Overrides
 	// ----------------
+	/// <summary>Инициализира данните за CListCtrl()</summary>
+	virtual void OnInitialUpdate();
 
-
+	//TODO: OnUpdate() ...
+	virtual void OnUpdate(CView* /* pSender */, LPARAM /* lHint */, CObject* /* pHint */);
 	// Members
 	// ----------------
-
 
 };

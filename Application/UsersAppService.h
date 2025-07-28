@@ -1,11 +1,13 @@
 ﻿#pragma once
-
+#include "DLLExport.h"
+#include "pch.h"
+#include "Resource.h"
 #include "../Database/UsersTable.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CSampleClass
 
-class CUsersAppService
+class ApplicationDLL_EXP CUsersAppService
 {
 
 	// Constants
