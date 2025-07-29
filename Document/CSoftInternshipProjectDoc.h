@@ -1,5 +1,7 @@
 #pragma once
 #include "DLLExport.h"
+#include "pch.h"
+#include "Resource.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CCSoftInternshipProjectDocument

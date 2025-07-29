@@ -19,7 +19,6 @@ CUsersTable::~CUsersTable()
 // ----------------
 bool CUsersTable::SelectAll(CUsersTypedPtrArray& oUsersArray)
 {
-	
 	CDataSource& oDataSource = CDBConnection::GetDataSource();  // reference
 	HRESULT hResult = m_oSession.Open(oDataSource);
 
@@ -344,6 +343,3 @@ bool CUsersTable::DeleteWhereID(const long lID)
 	oDataSource.Close();
 	return true;
 }
-
-// Overrides
-// ----------------

@@ -50,8 +50,5 @@ CDataSource& CDBConnection::GetDataSource()
 	return m_oDataSource;
 }
 
-// Overrides
-// ----------------
-
 
 

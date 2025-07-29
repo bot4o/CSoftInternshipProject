@@ -5,15 +5,13 @@
 /////////////////////////////////////////////////////////////////////////////
 // CUsersDocument
 // 
+
 // Macros
 // ----------------
-
 IMPLEMENT_DYNCREATE(CUsersDocument, CDocument)
-
 
 // Constructor / Destructor
 // ----------------
-
 CUsersDocument::CUsersDocument()
 {
 }
@@ -21,7 +19,6 @@ CUsersDocument::CUsersDocument()
 CUsersDocument::~CUsersDocument()
 {
 }
-
 
 // Methods
 // ----------------
@@ -46,18 +43,15 @@ bool CUsersDocument::DeleteUser(long m_lID)
 	m_oUsersService.DeleteWhereID(m_lID);
 	return true;
 }
-
-//Getter
 CUsersTypedPtrArray& CUsersDocument::GetUsers() 
 {
 	return m_oUsersArray;
 }
-
-//TODO how to use UpdateAllViews to trigger CUsersView.OnUpdate() and .OnInitialUpdate()
 void UpdateAllViews(CView* pSender, LPARAM lHint = 0L, CObject* pHint = NULL)
 {
-
+	//TODO how to use UpdateAllViews to trigger CUsersView.OnUpdate() and .OnInitialUpdate()
 }
+
 // Overrides
 // ----------------
 BOOL CUsersDocument::OnNewDocument()

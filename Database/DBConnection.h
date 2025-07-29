@@ -10,9 +10,6 @@
 
 class DatabaseDLL_EXP CDBConnection
 {
-// Constants
-// ----------------
-
 
 // Constructors
 // ----------------
@@ -20,15 +17,10 @@ public:
 	CDBConnection();
 	virtual ~CDBConnection();
 
-
 // Methods
 // ----------------
 	static bool OpenConnection();	
 	static CDataSource& GetDataSource();
-
-// Overrides
-// ----------------
-
 
 // Members
 // ----------------

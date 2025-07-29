@@ -16,7 +16,6 @@ class UIViewDLL_EXP CUsersView : public CListView
 	// Constants
 	// ----------------
 
-
 	// Constructor / Destructor
 	// ----------------
 public:

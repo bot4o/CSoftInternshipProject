@@ -52,7 +52,7 @@ BOOL ClientApp::InitInstance()
 		RUNTIME_CLASS(CCSoftInternshipProjectView));*/
 
 	if (!pDocTemplate)
-		return FALSE;
+		return FALSE; 
 
 	AddDocTemplate(pDocTemplate);
 

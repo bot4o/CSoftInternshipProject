@@ -20,9 +20,6 @@
 /// <summary>Клас за работа с таблица USERS</summary>  
 class DatabaseDLL_EXP CUsersTable
 {
-// Constants
-// ----------------
-
 
 // Constructor / Destructor
 // ----------------
@@ -43,10 +40,6 @@ public:
     /// <summary>Изтрива потребител от базата според ID</summary>  
     bool DeleteWhereID(const long lID);
 
-// Overrides
-// ----------------
-
-    
 // Members
 // ----------------
 private:
