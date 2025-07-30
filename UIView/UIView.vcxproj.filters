@@ -38,6 +38,12 @@
     <None Include="res\UIView.rc2">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="contextm.bin">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="idr_cont.bin">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">

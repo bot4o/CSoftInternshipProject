@@ -1,41 +1,47 @@
 ﻿#pragma once
-#include <afxcview.h>
 #include "DLLExport.h"
-#include "UsersDocument.h"
+#include "pch.h"
+#include "resource.h"
+#include <afxcview.h>
+#include "../Document/UsersDocument.h"
+#include "UsersDialog.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CUsersView
 
 class UIViewDLL_EXP CUsersView : public CListView
 {
-	// Macros
-	// ----------------
+// Macros
+// ----------------
 	DECLARE_DYNCREATE(CUsersView)
-	
+	DECLARE_MESSAGE_MAP()
 
-	// Constants
-	// ----------------
+// Constants
+// ----------------
 
-	// Constructor / Destructor
-	// ----------------
+// Constructor / Destructor
+// ----------------
 public:
 	CUsersView();
 	virtual ~CUsersView();
 
 
-	// Methods
-	// ----------------
+// Methods
+// ----------------
 	CUsersDocument* GetDocument() const;
 
-
-	// Overrides
-	// ----------------
+	void OnNMRClick(NMHDR* pNMHDR, LRESULT* pResult);
+	void OnContextEdit();
+	void OnContextDelete();
+	void OnContextInsert();
+	void OnContextLoad();
+// Overrides
+// ----------------
 	/// <summary>Инициализира данните за CListCtrl()</summary>
 	virtual void OnInitialUpdate();
 
 	//TODO: OnUpdate() ...
 	virtual void OnUpdate(CView* /* pSender */, LPARAM /* lHint */, CObject* /* pHint */);
-	// Members
-	// ----------------
-
+// Members
+// ----------------
 };

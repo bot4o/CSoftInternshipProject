@@ -224,6 +224,8 @@
     <ClCompile Include="UsersView.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="contextm.bin" />
+    <None Include="idr_cont.bin" />
     <None Include="res\UIView.rc2" />
     <None Include="UIView.def" />
   </ItemGroup>
