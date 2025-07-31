@@ -9,7 +9,7 @@
 #include "DLLExport.h"
 
 #define SQL_SELECT_ALL_NOLOCK _T("SELECT * FROM %s WITH (NOLOCK)")
-#define SQL_SELECT_ALL _T("SELECT * FROM %s WITH ")
+#define SQL_SELECT_ALL _T("SELECT * FROM %s ")
 #define SQL_SELECT_BY_ID _T("SELECT * FROM %s WITH (ROWLOCK, UPDLOCK) WHERE ID = %d")
 #define SQL_SELECT_EMPTY _T("SELECT * FROM %s WHERE 1 = 0")
 

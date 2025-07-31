@@ -28,7 +28,7 @@ public:
 // Methods
 // ----------------
 	/// <summary>Adds a new user to the USERS table</summary>  
-	bool AddUser(USERS recUser);
+	bool AddUser(const USERS& recUser);
 	/// <summary>Loads all users from the USERS table</summary>  
 	bool LoadAllUsers();
 	/// <summary>Alters the role of a specific user in the USERS table</summary>  

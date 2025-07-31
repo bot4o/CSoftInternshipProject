@@ -15,10 +15,10 @@ CUsersDialog::CUsersDialog(CWnd* pParent /*=nullptr*/)
 {
 
 }
-CUsersDialog::CUsersDialog(USERS* oSelectedUser, bool mode, CWnd* pParent)
-	: CDialogEx(IDD_USERS_DIALOG, pParent), m_oUser(*oSelectedUser), m_mode(mode)
+CUsersDialog::CUsersDialog(USERS& oSelectedUser, bool mode, CWnd* pParent)
+	: CDialogEx(IDD_USERS_DIALOG, pParent), m_mode(mode)
 { 
-
+	this->m_oUser = &oSelectedUser;
 }
 
 CUsersDialog::~CUsersDialog()
@@ -51,9 +51,9 @@ BOOL CUsersDialog::OnInitDialog()
 		m_edbEmail.SetWindowTextW(_T(""));
 		m_edbJobTitle.SetWindowTextW(_T(""));
 
-		m_edbName.SetWindowTextW(m_oUser.szName);
-		m_edbEmail.SetWindowTextW(m_oUser.szEmail);
-		m_edbJobTitle.SetWindowTextW(m_oUser.szJobTitle);
+		m_edbName.SetWindowTextW(m_oUser->szName);
+		m_edbEmail.SetWindowTextW(m_oUser->szEmail);
+		m_edbJobTitle.SetWindowTextW(m_oUser->szJobTitle);
 	}
 	else //INSERT
 	{
@@ -73,13 +73,13 @@ void CUsersDialog::OnOK()
 	CString strName; 
 	m_edbName.GetWindowText(strName);
 	CString strEmail;
-	m_edbName.GetWindowText(strEmail);
+	m_edbEmail.GetWindowText(strEmail);
 	CString strJobTitle;
-	m_edbName.GetWindowText(strJobTitle);
+	m_edbJobTitle.GetWindowText(strJobTitle);
 
-	_tcscpy_s(m_oUser.szName, strName);
-	_tcscpy_s(m_oUser.szEmail, strEmail);
-	_tcscpy_s(m_oUser.szJobTitle, strJobTitle);
+	_tcscpy_s(m_oUser->szName, strName);
+	_tcscpy_s(m_oUser->szEmail, strEmail);
+	_tcscpy_s(m_oUser->szJobTitle, strJobTitle);
 
 	CDialogEx::OnOK();
 }

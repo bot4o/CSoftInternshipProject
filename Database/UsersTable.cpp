@@ -18,10 +18,14 @@ CUsersTable::~CUsersTable()
 // Methods
 // ----------------
 bool CUsersTable::SelectAll(CUsersTypedPtrArray& oUsersArray)
-{
-	CDataSource& oDataSource = CDBConnection::GetDataSource();  // reference
-	HRESULT hResult = m_oSession.Open(oDataSource);
+{	
+	CDataSource& oDataSource = CDBConnection::GetDataSource();
 
+	if (oDataSource.m_spInit == nullptr)
+	{
+		CDBConnection::OpenConnection();
+	}
+	HRESULT hResult = m_oSession.Open(oDataSource);
 	if (FAILED(hResult))
 	{
 		CString strMessage;
@@ -31,8 +35,9 @@ bool CUsersTable::SelectAll(CUsersTypedPtrArray& oUsersArray)
 	}
 
 	CString strQuery;
-	strQuery.Format(SQL_SELECT_ALL_NOLOCK, strTable);
+	strQuery.Format(SQL_SELECT_ALL, strTable);
 
+	//само тук се чупи винаги след изпълнение на INSERT
 	hResult = m_oCommand.Open(m_oSession, strQuery);
 	if (FAILED(hResult))
 	{
@@ -44,7 +49,11 @@ bool CUsersTable::SelectAll(CUsersTypedPtrArray& oUsersArray)
 
 		return false;
 	}
-
+	if (oUsersArray.GetSize() > 0)
+	{
+		//Array already has data 
+		oUsersArray.RemoveAll();
+	}
 	while ((hResult = m_oCommand.MoveNext()) == S_OK)
 	{
 		USERS* pUser = new USERS(m_oCommand.GetRecUser());
@@ -64,8 +73,6 @@ bool CUsersTable::SelectAll(CUsersTypedPtrArray& oUsersArray)
 
 	m_oCommand.Close();
 	m_oSession.Close();
-	oDataSource.Close();
-
 	return true;
 }
 bool CUsersTable::SelectWhereID(const long lID, USERS& recUser)
@@ -140,7 +147,6 @@ bool CUsersTable::SelectWhereID(const long lID, USERS& recUser)
 		return false;
 	}	m_oCommand.Close();
 	m_oSession.Close();
-	oDataSource.Close();
 	return true;
 }
 bool CUsersTable::UpdateWhereID(const long lID, USERS& recUser) 
@@ -184,6 +190,19 @@ bool CUsersTable::UpdateWhereID(const long lID, USERS& recUser)
 		oDataSource.Close();
 		return false;
 	}
+	//Ето тук
+	//This move the "cursor" on the position of the first (and only) row of the query result
+	hResult = m_oCommand.MoveNext();
+	if (hResult == DB_S_ENDOFROWSET)
+	{
+		AfxMessageBox(_T("No user found with the specified ID to update."));
+		m_oCommand.Close();
+		m_oSession.Abort();
+		m_oSession.Close();
+		oDataSource.Close();
+		return true;
+	}
+
 	USERS& recDatabaseUser = m_oCommand.GetRecUser();
 	if (recUser.lUpdateCounter != recDatabaseUser.lUpdateCounter)
 	{
@@ -221,7 +240,6 @@ bool CUsersTable::UpdateWhereID(const long lID, USERS& recUser)
 		return false;
 	}	m_oCommand.Close();
 	m_oSession.Close();
-	oDataSource.Close();
 	return true;
 }
 bool CUsersTable::Insert(const USERS& recUser) 
@@ -275,8 +293,8 @@ bool CUsersTable::Insert(const USERS& recUser)
 		return false;
 	}
 
+	m_oCommand.Close();
 	m_oSession.Close();
-	oDataSource.Close();
 	return true;
 }
 bool CUsersTable::DeleteWhereID(const long lID) 
@@ -303,7 +321,14 @@ bool CUsersTable::DeleteWhereID(const long lID)
 	CString strQuery;
 	strQuery.Format(SQL_SELECT_BY_ID, strTable,  lID);
 
-	hResult = m_oCommand.Open(m_oSession, strQuery);
+
+	CDBPropSet oUpdateDBPropSet(DBPROPSET_ROWSET);
+	oUpdateDBPropSet.AddProperty(DBPROP_CANFETCHBACKWARDS, true);
+	oUpdateDBPropSet.AddProperty(DBPROP_IRowsetScroll, true);
+	oUpdateDBPropSet.AddProperty(DBPROP_IRowsetChange, true);
+	oUpdateDBPropSet.AddProperty(DBPROP_UPDATABILITY, DBPROPVAL_UP_CHANGE | DBPROPVAL_UP_INSERT | DBPROPVAL_UP_DELETE);
+
+	hResult = m_oCommand.Open(m_oSession, strQuery, &oUpdateDBPropSet);
 	if (FAILED(hResult))
 	{
 		CString strMessage;
@@ -325,7 +350,7 @@ bool CUsersTable::DeleteWhereID(const long lID)
 		oDataSource.Close();
 		return true;
 	}
-	m_oCommand.Delete();
+	hResult = m_oCommand.Delete();
 
 	hResult = m_oSession.Commit();
 	if (FAILED(hResult)) 
@@ -340,6 +365,5 @@ bool CUsersTable::DeleteWhereID(const long lID)
 	}
 	m_oCommand.Close();
 	m_oSession.Close();
-	oDataSource.Close();
 	return true;
 }

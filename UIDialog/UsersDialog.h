@@ -14,7 +14,7 @@ class UIDialogDLL_EXP CUsersDialog : public CDialogEx
 
 public:
 	CUsersDialog(CWnd* pParent = nullptr);   // standard constructor
-	CUsersDialog(USERS* oSelectedUser, bool m_mode, CWnd* pParent = nullptr);
+	CUsersDialog(USERS& oSelectedUser, bool m_mode, CWnd* pParent = nullptr);
 	virtual ~CUsersDialog();
 
 
@@ -34,7 +34,7 @@ private:
 	//true - Edit mode;
 	//false - Insert mode;
 	bool m_mode;
-	USERS m_oUser;
+	USERS* m_oUser = nullptr;
 
 	CEdit m_edbName;
 	CEdit m_edbEmail;

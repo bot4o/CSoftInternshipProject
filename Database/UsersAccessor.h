@@ -33,15 +33,16 @@ class CUsersAccessor
 // ----------------
 public:
     /// <summary>GET method за достъп до m_recUser.</summary>  
-    USERS GetRecUser()  
+    USERS& GetRecUser()  
     {
         return m_recUser;
     }
     /// <summary>SET method за достъп до m_recUser.</summary>  
-    bool SetRecUser(USERS oNewUser) 
-    {
-        m_recUser = oNewUser;
-    }
+    //bool SetRecUser(USERS& oNewUser) 
+    //{
+    //    m_recUser = oNewUser;
+    //    return true;
+    //}
 
 // Overrides
 // ----------------
@@ -54,14 +55,14 @@ protected:
     /// <summary>Макрос дефиниращ публичен достъп до аксесор за определен тип клас.</summary>  
     BEGIN_ACCESSOR_MAP(CUsersAccessor, USERS_ACCESSORS_COUNT)
         BEGIN_ACCESSOR(USERS_IDENTITY_ACCESSOR_INDEX, true)
-        COLUMN_ENTRY(USERS_COLUMN_ENTRY_ID, m_recUser.lId)
+            COLUMN_ENTRY(USERS_COLUMN_ENTRY_ID, m_recUser.lId)
         END_ACCESSOR()
 
         BEGIN_ACCESSOR(USERS_DATA_ACCESSOR_INDEX, true)
-        COLUMN_ENTRY(USERS_COLUMN_ENTRY_UPDATE_COUNTER, m_recUser.lUpdateCounter)
-        COLUMN_ENTRY(USERS_COLUMN_ENTRY_USER_NAME, m_recUser.szName)
-        COLUMN_ENTRY(USERS_COLUMN_ENTRY_USER_EMAIL, m_recUser.szEmail)
-        COLUMN_ENTRY(USERS_COLUMN_ENTRY_JOB_TITLE, m_recUser.szJobTitle)
+            COLUMN_ENTRY(USERS_COLUMN_ENTRY_UPDATE_COUNTER, m_recUser.lUpdateCounter)
+            COLUMN_ENTRY(USERS_COLUMN_ENTRY_USER_NAME, m_recUser.szName)
+            COLUMN_ENTRY(USERS_COLUMN_ENTRY_USER_EMAIL, m_recUser.szEmail)
+            COLUMN_ENTRY(USERS_COLUMN_ENTRY_JOB_TITLE, m_recUser.szJobTitle)
         END_ACCESSOR()
     END_ACCESSOR_MAP()
 

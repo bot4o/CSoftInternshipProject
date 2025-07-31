@@ -23,7 +23,7 @@ CUsersDocument::~CUsersDocument()
 // Methods
 // ----------------
 //CRUD
-bool CUsersDocument::AddUser(USERS m_oRecUser)
+bool CUsersDocument::AddUser(const USERS& m_oRecUser)
 {
 	m_oUsersService.Insert(m_oRecUser);
 	return true;

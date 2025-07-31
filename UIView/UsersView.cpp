@@ -57,7 +57,7 @@ void CUsersView::OnContextInsert()
 	int mode = false;
 	USERS pUser;
 
-	CUsersDialog oUsersDialog(&pUser, mode);
+	CUsersDialog oUsersDialog(pUser, mode);
 	oUsersDialog.DoModal();
 
 	GetDocument()->AddUser(pUser);
@@ -72,13 +72,13 @@ void CUsersView::OnContextEdit()
 		return;
 	}	
 
-	CString strID = GetListCtrl().GetItemText(nSelectedIndex - 1, 0);
+	CString strID = GetListCtrl().GetItemText(nSelectedIndex, 0);
 	int nID = _ttoi(strID);
 
 	CUsersTypedPtrArray& oUsersArray = GetDocument()->GetUsers();
-	USERS* pUser = oUsersArray[nID];
+	USERS* pUser = oUsersArray[nSelectedIndex];
 
-	CUsersDialog oUsersDialog(pUser, mode);
+	CUsersDialog oUsersDialog(*pUser, mode);
 	oUsersDialog.DoModal();
 
 	GetDocument()->UpdateUser(nID, *pUser);
@@ -92,15 +92,18 @@ void CUsersView::OnContextDelete()
 		return;
 	}
 
-	CString strID = GetListCtrl().GetItemText(nSelectedIndex - 1, 0);
+	CString strID = GetListCtrl().GetItemText(nSelectedIndex, 0);
 	int nID = _ttoi(strID);
 
 	GetDocument()->DeleteUser(nID);
 }
 void CUsersView::OnContextLoad()
 {
-	CUsersTypedPtrArray& oUsersArray = GetDocument()->GetUsers();
 	GetDocument()->LoadAllUsers();
+	CUsersTypedPtrArray& oUsersArray = GetDocument()->GetUsers();
+
+	GetListCtrl().DeleteAllItems();
+
 	for (int i = 0; i < oUsersArray.GetSize(); i++)
 	{
 		USERS* pUser = oUsersArray[i];
