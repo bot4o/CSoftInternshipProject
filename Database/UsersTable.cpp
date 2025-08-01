@@ -99,11 +99,7 @@ bool CUsersTable::SelectWhereID(const long lID, USERS& recUser)
 	CString strQuery;
 	strQuery.Format(SQL_SELECT_BY_ID, strTable, lID);
 
-	CDBPropSet oUpdateDBPropSet(DBPROPSET_ROWSET);
-	oUpdateDBPropSet.AddProperty(DBPROP_CANFETCHBACKWARDS, true);
-	oUpdateDBPropSet.AddProperty(DBPROP_IRowsetScroll, true);
-	oUpdateDBPropSet.AddProperty(DBPROP_IRowsetChange, true);
-	oUpdateDBPropSet.AddProperty(DBPROP_UPDATABILITY, DBPROPVAL_UP_CHANGE | DBPROPVAL_UP_INSERT | DBPROPVAL_UP_DELETE);
+	CDBPropSet& oUpdateDBPropSet = CDBConnection::GetDbPropSet();
 
 	hResult = m_oCommand.Open(m_oSession, strQuery, &oUpdateDBPropSet);
 	if (FAILED(hResult))
@@ -173,11 +169,7 @@ bool CUsersTable::UpdateWhereID(const long lID, USERS& recUser)
 	CString sUpdateQuery;
 	sUpdateQuery.Format(SQL_SELECT_BY_ID, strTable, lID);
 
-	CDBPropSet oUpdateDBPropSet(DBPROPSET_ROWSET);
-	oUpdateDBPropSet.AddProperty(DBPROP_CANFETCHBACKWARDS, true);
-	oUpdateDBPropSet.AddProperty(DBPROP_IRowsetScroll, true);
-	oUpdateDBPropSet.AddProperty(DBPROP_IRowsetChange, true);
-	oUpdateDBPropSet.AddProperty(DBPROP_UPDATABILITY, DBPROPVAL_UP_CHANGE | DBPROPVAL_UP_INSERT | DBPROPVAL_UP_DELETE);
+	CDBPropSet& oUpdateDBPropSet = CDBConnection::GetDbPropSet();
 
 	hResult = m_oCommand.Open(m_oSession, sUpdateQuery, &oUpdateDBPropSet);
 	if (FAILED(hResult))
@@ -257,11 +249,7 @@ bool CUsersTable::Insert(const USERS& recUser)
 	CString strQuery;
 	strQuery.Format(SQL_SELECT_EMPTY, strTable);
 
-	CDBPropSet oUpdateDBPropSet(DBPROPSET_ROWSET);
-	oUpdateDBPropSet.AddProperty(DBPROP_CANFETCHBACKWARDS, true);
-	oUpdateDBPropSet.AddProperty(DBPROP_IRowsetScroll, true);
-	oUpdateDBPropSet.AddProperty(DBPROP_IRowsetChange, true);
-	oUpdateDBPropSet.AddProperty(DBPROP_UPDATABILITY, DBPROPVAL_UP_CHANGE | DBPROPVAL_UP_INSERT | DBPROPVAL_UP_DELETE);
+	CDBPropSet& oUpdateDBPropSet = CDBConnection::GetDbPropSet();
 
 	hResult = m_oCommand.Open(m_oSession, strQuery, &oUpdateDBPropSet);
 	if (FAILED(hResult))
@@ -321,12 +309,7 @@ bool CUsersTable::DeleteWhereID(const long lID)
 	CString strQuery;
 	strQuery.Format(SQL_SELECT_BY_ID, strTable,  lID);
 
-
-	CDBPropSet oUpdateDBPropSet(DBPROPSET_ROWSET);
-	oUpdateDBPropSet.AddProperty(DBPROP_CANFETCHBACKWARDS, true);
-	oUpdateDBPropSet.AddProperty(DBPROP_IRowsetScroll, true);
-	oUpdateDBPropSet.AddProperty(DBPROP_IRowsetChange, true);
-	oUpdateDBPropSet.AddProperty(DBPROP_UPDATABILITY, DBPROPVAL_UP_CHANGE | DBPROPVAL_UP_INSERT | DBPROPVAL_UP_DELETE);
+	CDBPropSet& oUpdateDBPropSet = CDBConnection::GetDbPropSet();
 
 	hResult = m_oCommand.Open(m_oSession, strQuery, &oUpdateDBPropSet);
 	if (FAILED(hResult))
@@ -340,7 +323,7 @@ bool CUsersTable::DeleteWhereID(const long lID)
 		return false;
 	}
 
-	hResult = m_oCommand.MoveNext();
+	hResult = m_oCommand.MoveFirst();
 	if (hResult != S_OK) 
 	{
 		AfxMessageBox(_T("No user found with the specified ID to delete."));
@@ -351,6 +334,15 @@ bool CUsersTable::DeleteWhereID(const long lID)
 		return true;
 	}
 	hResult = m_oCommand.Delete();
+	if (FAILED(hResult))
+	{
+		AfxMessageBox(_T("Failed to delete the user."));
+		m_oCommand.Close();
+		m_oSession.Abort();
+		m_oSession.Close();
+		oDataSource.Close();
+		return false;
+	}
 
 	hResult = m_oSession.Commit();
 	if (FAILED(hResult)) 

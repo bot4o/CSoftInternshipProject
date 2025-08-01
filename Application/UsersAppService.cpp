@@ -1,5 +1,6 @@
 ﻿#include "pch.h"
 #include "UsersAppService.h"
+#include "UsersTable.h"
 
 CUsersAppService::CUsersAppService() 
 {
@@ -16,7 +17,7 @@ CUsersAppService::~CUsersAppService()
 /// <summary>Извежда всички потребители в базата</summary>  
 bool CUsersAppService::SelectAll(CUsersTypedPtrArray& oUsersArray)
 {
-	if (!m_oUsersTable.SelectAll(oUsersArray))
+	if (!CUsersTable().SelectAll(oUsersArray))
 	{
 		AfxMessageBox(_T("Error at the m_oUsersTable.SelectAll() in the application layer"));
 		return false;
@@ -26,7 +27,7 @@ bool CUsersAppService::SelectAll(CUsersTypedPtrArray& oUsersArray)
 /// <summary>Извежда потребител от базата според ID</summary>  
 bool CUsersAppService::SelectWhereID(const long lID, USERS& recUser)
 {
-	if (!m_oUsersTable.SelectWhereID(lID, recUser))
+	if (!CUsersTable().SelectWhereID(lID, recUser))
 	{
 		AfxMessageBox(_T("Error at the m_oUsersTable.SelectWhereID() in the application layer"));
 		return false;
@@ -36,7 +37,7 @@ bool CUsersAppService::SelectWhereID(const long lID, USERS& recUser)
 /// <summary>Променя длъжноста на потребител от базата според ID</summary>  
 bool CUsersAppService::UpdateWhereID(const long lID, USERS& recUser)
 {
-	if (!m_oUsersTable.UpdateWhereID(lID, recUser))
+	if (!CUsersTable().UpdateWhereID(lID, recUser))
 	{
 		AfxMessageBox(_T("Error at the m_oUsersTable.UpdateWhereID() in the application layer"));
 		return false;
@@ -46,7 +47,7 @@ bool CUsersAppService::UpdateWhereID(const long lID, USERS& recUser)
 /// <summary>Вмъква нов потребител в базата</summary>  
 bool CUsersAppService::Insert(const USERS& recUser)
 {
-	if (!m_oUsersTable.Insert(recUser))
+	if (!CUsersTable().Insert(recUser))
 	{
 		AfxMessageBox(_T("Error at the m_oUsersTable.Insert() in the application layer"));
 		return false;
@@ -56,7 +57,7 @@ bool CUsersAppService::Insert(const USERS& recUser)
 /// <summary>Изтрива потребител от базата според ID</summary>  
 bool CUsersAppService::DeleteWhereID(const long lID)
 {
-	if (!m_oUsersTable.DeleteWhereID(lID))
+	if (!CUsersTable().DeleteWhereID(lID))
 	{
 		AfxMessageBox(_T("Error at the m_oUsersTable.DeleteWhereID() in the application layer"));
 		return false;

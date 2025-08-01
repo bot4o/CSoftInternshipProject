@@ -2,7 +2,7 @@
 #include "DLLExport.h"
 #include "pch.h"
 #include "Resource.h"
-#include "../Application/UsersAppService.h"
+#include "UsersStruct.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CUsersDocument
@@ -46,12 +46,6 @@ public:
 
 // Members
 // ----------------
-public: 
-	 CUsersTypedPtrArray m_oUsersArray;
 private:
-	/// <summary>business logic</summary>  
-	CUsersAppService m_oUsersService;
-	
-	long m_lID;
-	USERS m_recUser;
+	CUsersTypedPtrArray m_oUsersArray;
 };

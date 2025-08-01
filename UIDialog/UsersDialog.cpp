@@ -1,30 +1,30 @@
-// UsersDialog.cpp : implementation file
-//
-
-#include "pch.h"
+﻿#include "pch.h"
 #include "afxdialogex.h"
 #include "UsersDialog.h"
 
 
-// CUsersDialog dialog
+/////////////////////////////////////////////////////////////////////////////
+// CUsersDialog
 
+// Macros
+// ----------------
 IMPLEMENT_DYNAMIC(CUsersDialog, CDialogEx)
 
-CUsersDialog::CUsersDialog(CWnd* pParent /*=nullptr*/)
-	: CDialogEx(IDD_USERS_DIALOG, pParent)
+BEGIN_MESSAGE_MAP(CUsersDialog, CDialogEx)
+END_MESSAGE_MAP()
+// Constructor / Destructor
+// ----------------
+CUsersDialog::CUsersDialog(USERS& oSelectedUser, Modes oActionMode, CWnd* pParent)
+	: CDialogEx(IDD_USERS_DIALOG, pParent), m_oUser(oSelectedUser), m_oActionMode(oActionMode)
 {
-
-}
-CUsersDialog::CUsersDialog(USERS& oSelectedUser, bool mode, CWnd* pParent)
-	: CDialogEx(IDD_USERS_DIALOG, pParent), m_mode(mode)
-{ 
-	this->m_oUser = &oSelectedUser;
 }
 
 CUsersDialog::~CUsersDialog()
 {
 }
 
+// Methods
+// ----------------
 void CUsersDialog::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
@@ -32,54 +32,65 @@ void CUsersDialog::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EDB_EMAIL, m_edbEmail);
 	DDX_Control(pDX, IDC_EDB_JOB_TITLE, m_edbJobTitle);
 }
-
-
-BEGIN_MESSAGE_MAP(CUsersDialog, CDialogEx)
-END_MESSAGE_MAP()
-
-
-// CUsersDialog message handlers
-
 BOOL CUsersDialog::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
-	
-	//UPDATE
-	if (m_mode == true)
+
+	switch (m_oActionMode)
 	{
+	case InsertMode:
 		m_edbName.SetWindowTextW(_T(""));
 		m_edbEmail.SetWindowTextW(_T(""));
 		m_edbJobTitle.SetWindowTextW(_T(""));
-
-		m_edbName.SetWindowTextW(m_oUser->szName);
-		m_edbEmail.SetWindowTextW(m_oUser->szEmail);
-		m_edbJobTitle.SetWindowTextW(m_oUser->szJobTitle);
+		break;
+	case UpdateMode:
+		m_edbName.SetWindowTextW(m_oUser.szName);
+		m_edbEmail.SetWindowTextW(m_oUser.szEmail);
+		m_edbJobTitle.SetWindowTextW(m_oUser.szJobTitle);
+		break;
+	case PreviewMode:
+		m_edbName.SetReadOnly();
+		m_edbEmail.SetReadOnly();
+		m_edbJobTitle.SetReadOnly();
+		m_edbName.SetWindowTextW(m_oUser.szName);
+		m_edbEmail.SetWindowTextW(m_oUser.szEmail);
+		m_edbJobTitle.SetWindowTextW(m_oUser.szJobTitle);
+		break;
+	default:
+		break;
 	}
-	else //INSERT
-	{
-		m_edbName.SetWindowTextW(_T(""));
-		m_edbEmail.SetWindowTextW(_T(""));
-		m_edbJobTitle.SetWindowTextW(_T(""));
-	}
-	// TODO:  Add extra initialization here
 
-	return TRUE;  // return TRUE unless you set the focus to a control
-	// EXCEPTION: OCX Property Pages should return FALSE
+	return TRUE;
 }
 
 void CUsersDialog::OnOK()
 {
-	// TODO: Add your specialized code here and/or call the base class
-	CString strName; 
+	if (m_oActionMode == PreviewMode) {
+		return CDialogEx::OnOK();
+	}
+	CString strName;
 	m_edbName.GetWindowText(strName);
 	CString strEmail;
 	m_edbEmail.GetWindowText(strEmail);
 	CString strJobTitle;
 	m_edbJobTitle.GetWindowText(strJobTitle);
 
-	_tcscpy_s(m_oUser->szName, strName);
-	_tcscpy_s(m_oUser->szEmail, strEmail);
-	_tcscpy_s(m_oUser->szJobTitle, strJobTitle);
+	_tcscpy_s(m_oUser.szName, strName);
+	_tcscpy_s(m_oUser.szEmail, strEmail);
+	_tcscpy_s(m_oUser.szJobTitle, strJobTitle);
 
-	CDialogEx::OnOK();
+	return CDialogEx::OnOK();
 }
+
+void CUsersDialog::OnAbort()
+{
+	return CDialogEx::OnCancel(); 
+}
+
+void CUsersDialog::OnCancel()
+{
+	return CDialogEx::OnCancel();  
+}
+
+// Overrides
+// ----------------

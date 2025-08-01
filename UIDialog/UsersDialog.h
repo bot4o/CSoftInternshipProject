@@ -4,38 +4,52 @@
 #include "resource.h"
 #include "afxdialogex.h"
 #include "UsersStruct.h"
-#include "../UIView/UsersView.h"
+#include "DialogModes.h"
 
-// CUsersDialog dialog
+/////////////////////////////////////////////////////////////////////////////
+// CUsersDialog
 
-class UIDialogDLL_EXP CUsersDialog : public CDialogEx
+class UIDialogDLL_EXP CUsersDialog : public CDialogEx 
 {
+	// Macros
+	// ----------------
 	DECLARE_DYNAMIC(CUsersDialog)
+	DECLARE_MESSAGE_MAP()
 
+	// Constants
+	// ----------------
+
+
+	// Constructor / Destructor
+	// ----------------
 public:
-	CUsersDialog(CWnd* pParent = nullptr);   // standard constructor
-	CUsersDialog(USERS& oSelectedUser, bool m_mode, CWnd* pParent = nullptr);
+	//CUsersDialog(CWnd* pParent = nullptr);   // standard constructor
+	CUsersDialog(USERS& oSelectedUser, Modes oActionMode, CWnd* pParent = nullptr);
 	virtual ~CUsersDialog();
 
 
+	// Methods
+	// ----------------
+public:
 	virtual BOOL OnInitDialog();
 	virtual void OnOK();
-
-// Dialog Data
+	virtual void OnCancel();
+	virtual void OnAbort();
+protected:
+	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+	// Dialog Data
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_USERS_DIALOG };
 #endif
+	// Overrides
+	// ----------------
 
-protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 
-	DECLARE_MESSAGE_MAP()
+	// Members
+	// ----------------
 private:
-	//true - Edit mode;
-	//false - Insert mode;
-	bool m_mode;
-	USERS* m_oUser = nullptr;
-
+	Modes m_oActionMode;
+	USERS& m_oUser;
 	CEdit m_edbName;
 	CEdit m_edbEmail;
 	CEdit m_edbJobTitle;

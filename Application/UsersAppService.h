@@ -2,8 +2,7 @@
 #include "DLLExport.h"
 #include "pch.h"
 #include "Resource.h"
-#include "../Database/UsersTable.h"
-
+#include "UsersStruct.h"
 /////////////////////////////////////////////////////////////////////////////
 // CSampleClass
 
@@ -40,5 +39,4 @@ public:
 
 	// Members
 	// ----------------
-	CUsersTable m_oUsersTable;
 };

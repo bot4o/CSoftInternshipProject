@@ -21,6 +21,7 @@ public:
 // ----------------
 	static bool OpenConnection();	
 	static CDataSource& GetDataSource();
+	static CDBPropSet GetDbPropSet();
 
 // Members
 // ----------------

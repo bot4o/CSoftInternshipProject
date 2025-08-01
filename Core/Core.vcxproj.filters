@@ -49,6 +49,12 @@
     <ClInclude Include="DLLExport.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="DialogModes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CUsersAutoCleanArray.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Core.rc">

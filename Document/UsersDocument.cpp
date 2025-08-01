@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "UsersDocument.h"
+#include "UsersAppService.h"
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -25,22 +26,44 @@ CUsersDocument::~CUsersDocument()
 //CRUD
 bool CUsersDocument::AddUser(const USERS& m_oRecUser)
 {
-	m_oUsersService.Insert(m_oRecUser);
+	if (!CUsersAppService().Insert(m_oRecUser))
+	{
+		AfxMessageBox(_T("Error at the CUsersAppService().Insert() in the document layer"));
+		return false;
+	}
+	UpdateAllViews(nullptr);
 	return true;
 }
 bool CUsersDocument::LoadAllUsers()
 {
-	m_oUsersService.SelectAll(m_oUsersArray);
+	if (!CUsersAppService().SelectAll(m_oUsersArray))
+	{
+		AfxMessageBox(_T("Error at the CUsersAppService().SelectAll() in the document layer"));
+
+		return false;
+	}
 	return true;
 }
 bool CUsersDocument::UpdateUser(long m_lID, USERS& m_oRecUser)
 {
-	m_oUsersService.UpdateWhereID(m_lID, m_oRecUser);
+	if (!CUsersAppService().UpdateWhereID(m_lID, m_oRecUser))
+	{
+		AfxMessageBox(_T("Error at the CUsersAppService().UpdateWhereID() in the document layer"));
+
+		return false;
+	}
+	UpdateAllViews(nullptr);
 	return true;
 }
 bool CUsersDocument::DeleteUser(long m_lID)
 {
-	m_oUsersService.DeleteWhereID(m_lID);
+	if (!CUsersAppService().DeleteWhereID(m_lID))
+	{
+		AfxMessageBox(_T("Error at the CUsersAppService().DeleteWhereID() in the document layer"));
+
+		return false;
+	}
+	UpdateAllViews(nullptr);
 	return true;
 }
 CUsersTypedPtrArray& CUsersDocument::GetUsers() 
@@ -58,6 +81,7 @@ BOOL CUsersDocument::OnNewDocument()
 {
 	if (!CDocument::OnNewDocument())
 		return FALSE;
+
 	if (!LoadAllUsers()) {
 		AfxMessageBox(_T("Cound't initialize all users into this document"));
 		return FALSE;

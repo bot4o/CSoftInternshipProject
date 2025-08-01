@@ -1,5 +1,7 @@
 ﻿#include "pch.h"
 #include "UsersView.h"
+#include "DialogModes.h"
+#include "UsersDialog.h"
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -10,6 +12,7 @@
 IMPLEMENT_DYNCREATE(CUsersView, CListView)
 
 BEGIN_MESSAGE_MAP(CUsersView, CListView)
+	ON_NOTIFY_REFLECT(NM_DBLCLK, &CUsersView::OnListDoubleClick)
 	ON_NOTIFY_REFLECT(NM_RCLICK, &CUsersView::OnNMRClick)
 	ON_COMMAND(ID_POPUP_USERS_UPDATE, &CUsersView::OnContextEdit)
 	ON_COMMAND(ID_POPUP_USERS_DELETE, &CUsersView::OnContextDelete)
@@ -35,7 +38,37 @@ CUsersDocument* CUsersView::GetDocument() const
 	ASSERT(m_pDocument->IsKindOf(RUNTIME_CLASS(CUsersDocument)));
 	return (CUsersDocument*)m_pDocument;
 }
+void CUsersView::OnListDoubleClick(NMHDR* pNMHDR, LRESULT* pResult)
+{
+	int nSelectedIndex = GetListCtrl().GetNextItem(-1, LVNI_SELECTED);
+	if (nSelectedIndex == -1)
+	{
+		AfxMessageBox(_T("No user selected."));
+		return;
+	}
 
+	CUsersTypedPtrArray& oUsersArray = GetDocument()->GetUsers();
+	long lID = oUsersArray[nSelectedIndex]->lId;
+
+	USERS* oRefferedUser = nullptr;
+	for (int i = 0; i < oUsersArray.GetSize(); i++)
+	{
+		if (lID == oUsersArray[i]->lId)
+		{
+			oRefferedUser = oUsersArray[i];
+		}
+	}
+
+	CUsersDialog oUsersDialog(*oRefferedUser, Modes::PreviewMode);
+
+	INT_PTR nResult = -1;
+	nResult = oUsersDialog.DoModal();
+
+	if (nResult == 1)
+	{
+		GetDocument()->UpdateUser(lID, *oRefferedUser);
+	}
+}
 void CUsersView::OnNMRClick(NMHDR* pNMHDR, LRESULT* pResult)
 {
 	CPoint oPoint;
@@ -54,17 +87,20 @@ void CUsersView::OnNMRClick(NMHDR* pNMHDR, LRESULT* pResult)
 }
 void CUsersView::OnContextInsert()
 {
-	int mode = false;
-	USERS pUser;
+	USERS oUser = USERS();
+	CUsersDialog oUsersDialog(oUser, Modes::InsertMode);
+	
+	INT_PTR nResult = -1;
+	nResult = oUsersDialog.DoModal();
 
-	CUsersDialog oUsersDialog(pUser, mode);
-	oUsersDialog.DoModal();
+	if (nResult == 1)
+	{
+		GetDocument()->AddUser(oUser);
 
-	GetDocument()->AddUser(pUser);
+	}
 }
 void CUsersView::OnContextEdit()
 {
-	bool mode = true;
 	int nSelectedIndex = GetListCtrl().GetNextItem(-1, LVNI_SELECTED);
 	if (nSelectedIndex == -1)
 	{
@@ -72,16 +108,27 @@ void CUsersView::OnContextEdit()
 		return;
 	}	
 
-	CString strID = GetListCtrl().GetItemText(nSelectedIndex, 0);
-	int nID = _ttoi(strID);
-
 	CUsersTypedPtrArray& oUsersArray = GetDocument()->GetUsers();
-	USERS* pUser = oUsersArray[nSelectedIndex];
+	long lID = oUsersArray[nSelectedIndex]->lId;
 
-	CUsersDialog oUsersDialog(*pUser, mode);
-	oUsersDialog.DoModal();
+	USERS* oRefferedUser = nullptr;
+	for (int i = 0; i < oUsersArray.GetSize(); i++)
+	{
+		if (lID == oUsersArray[i]->lId)
+		{
+			 oRefferedUser = oUsersArray[i];
+		}
+	}
 
-	GetDocument()->UpdateUser(nID, *pUser);
+	CUsersDialog oUsersDialog(*oRefferedUser, Modes::UpdateMode);
+
+	INT_PTR nResult = -1;
+	nResult = oUsersDialog.DoModal();
+
+	if (nResult == 1)
+	{
+		GetDocument()->UpdateUser(lID, *oRefferedUser);
+	}
 }
 void CUsersView::OnContextDelete()
 {
@@ -92,10 +139,19 @@ void CUsersView::OnContextDelete()
 		return;
 	}
 
-	CString strID = GetListCtrl().GetItemText(nSelectedIndex, 0);
-	int nID = _ttoi(strID);
+	CUsersTypedPtrArray& oUsersArray = GetDocument()->GetUsers();
+	long lID = oUsersArray[nSelectedIndex]->lId;
 
-	GetDocument()->DeleteUser(nID);
+	USERS* oRefferedUser = nullptr;
+	for (int i = 0; i < oUsersArray.GetSize(); i++)
+	{
+		if (lID == oUsersArray[i]->lId)
+		{
+			oRefferedUser = oUsersArray[i];
+		}
+	}
+
+	GetDocument()->DeleteUser(lID);
 }
 void CUsersView::OnContextLoad()
 {
@@ -125,18 +181,9 @@ void CUsersView::OnContextLoad()
 // ----------------
 void CUsersView::OnInitialUpdate()
 {
-	CListView::OnInitialUpdate();
-	//GetUsers();
-	//TODO GetListCtrl().methods
 	GetListCtrl().ModifyStyle(0, LVS_REPORT | LVS_SINGLESEL);
-	// LVS_REPORT - Setup row list-like items
-	// LVS_SINGLESEL - Disable selection of multiple rows
-
 	GetListCtrl().SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
-	// LVS_EX_FULLROWSELECT - When a row is selected, the entire row is highlighted, not just the first column. 
-	// LVS_EX_GRIDLINES - Draws horizontal and vertical grid lines between items and columns, similar to a spreadsheet (like Excel).
-	
-	// ... your source code
+
 	GetListCtrl().InsertColumn(0, _T("ID"), LVCFMT_LEFT, 50);
 	GetListCtrl().InsertColumn(1, _T("UPDATE_COUNTER"), LVCFMT_LEFT, 50);
 	GetListCtrl().InsertColumn(2, _T("NAME"), LVCFMT_LEFT, 200);
@@ -160,11 +207,11 @@ void CUsersView::OnInitialUpdate()
 		GetListCtrl().SetItemText(nItem, 3, pUser->szEmail);
 		GetListCtrl().SetItemText(nItem, 4, pUser->szJobTitle);
 	}
+	CListView::OnInitialUpdate();
 }
 
 
 void CUsersView::OnUpdate(CView* /*pSender*/, LPARAM lHint, CObject* pHint)
 {
-	//Refresh
-	//GetListCtrl().DeleteAllItems();
+	OnContextLoad();
 }

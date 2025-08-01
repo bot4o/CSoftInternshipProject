@@ -3,7 +3,7 @@
 #include "pch.h"
 #include "resource.h"
 #include <afxcview.h>
-#include "../Document/UsersDocument.h"
+#include "UsersDocument.h"
 #include "UsersDialog.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -29,6 +29,7 @@ public:
 // Methods
 // ----------------
 	CUsersDocument* GetDocument() const;
+	void OnListDoubleClick(NMHDR* pNMHDR, LRESULT* pResult);
 
 	void OnNMRClick(NMHDR* pNMHDR, LRESULT* pResult);
 	void OnContextEdit();
