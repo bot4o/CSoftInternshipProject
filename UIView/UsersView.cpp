@@ -2,7 +2,7 @@
 #include "UsersView.h"
 #include "DialogModes.h"
 #include "UsersDialog.h"
-
+#include "UsersAutoCleanArray.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CUsersViews
@@ -43,7 +43,6 @@ void CUsersView::OnListDoubleClick(NMHDR* pNMHDR, LRESULT* pResult)
 	int nSelectedIndex = GetListCtrl().GetNextItem(-1, LVNI_SELECTED);
 	if (nSelectedIndex == -1)
 	{
-		AfxMessageBox(_T("No user selected."));
 		return;
 	}
 
@@ -71,6 +70,7 @@ void CUsersView::OnListDoubleClick(NMHDR* pNMHDR, LRESULT* pResult)
 }
 void CUsersView::OnNMRClick(NMHDR* pNMHDR, LRESULT* pResult)
 {
+
 	CPoint oPoint;
 	GetCursorPos(&oPoint);
 
@@ -78,11 +78,20 @@ void CUsersView::OnNMRClick(NMHDR* pNMHDR, LRESULT* pResult)
 	oMenu.LoadMenu(IDR_POPUP_USERS_VIEW);
 	CMenu* pPopup = oMenu.GetSubMenu(0);
 
+	int nSelectedIndex = GetListCtrl().GetNextItem(-1, LVNI_SELECTED);
+	if (nSelectedIndex == -1)
+	{
+		pPopup->EnableMenuItem(ID_POPUP_USERS_DELETE, MF_GRAYED);
+		pPopup->EnableMenuItem(ID_POPUP_USERS_UPDATE, MF_GRAYED);
+
+	}
+
 	if (pPopup)
 	{
 		pPopup->TrackPopupMenu(TPM_RIGHTBUTTON, oPoint.x, oPoint.y, this);
 	}
 
+	
 	*pResult = 0;
 }
 void CUsersView::OnContextInsert()
@@ -96,7 +105,6 @@ void CUsersView::OnContextInsert()
 	if (nResult == 1)
 	{
 		GetDocument()->AddUser(oUser);
-
 	}
 }
 void CUsersView::OnContextEdit()
@@ -107,7 +115,6 @@ void CUsersView::OnContextEdit()
 		AfxMessageBox(_T("No user selected."));
 		return;
 	}	
-
 	CUsersTypedPtrArray& oUsersArray = GetDocument()->GetUsers();
 	long lID = oUsersArray[nSelectedIndex]->lId;
 

@@ -11,11 +11,6 @@
 template<class Array, class TYPE>
 class CUsersAutoCleanArray : CTypedPtrArray<CPtrArray, TYPE>
 {
-
-    // Constants
-    // ----------------
-
-
     // Constructor / Destructor
     // ----------------
 public:
@@ -26,17 +21,4 @@ public:
         }
         RemoveAll();
     }
-
-    // Methods
-    // ----------------
-
-
-    // Overrides
-    // ----------------
-
-
-    // Members
-    // ----------------
-
-
 };

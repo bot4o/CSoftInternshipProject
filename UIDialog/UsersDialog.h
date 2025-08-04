@@ -31,6 +31,8 @@ public:
 	// Methods
 	// ----------------
 public:
+	void SetEditBoxText();
+
 	virtual BOOL OnInitDialog();
 	virtual void OnOK();
 	virtual void OnCancel();

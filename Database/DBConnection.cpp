@@ -43,19 +43,21 @@ bool CDBConnection::OpenConnection()
 		AfxMessageBox(msg);
 		return false;
 	}
+
 	return true;
 }
 CDataSource& CDBConnection::GetDataSource()
 {
 	return m_oDataSource;
 }
-CDBPropSet CDBConnection::GetDbPropSet() {
-	CDBPropSet oUpdateDBPropSet(DBPROPSET_ROWSET);
-	oUpdateDBPropSet.AddProperty(DBPROP_CANFETCHBACKWARDS, true);
-	oUpdateDBPropSet.AddProperty(DBPROP_IRowsetScroll, true);
-	oUpdateDBPropSet.AddProperty(DBPROP_IRowsetChange, true);
-	oUpdateDBPropSet.AddProperty(DBPROP_UPDATABILITY, DBPROPVAL_UP_CHANGE | DBPROPVAL_UP_INSERT | DBPROPVAL_UP_DELETE);
-	return oUpdateDBPropSet;
+CDBPropSet CDBConnection::GetDbPropSet() 
+{
+	CDBPropSet oDBPropSet(DBPROPSET_ROWSET);
+	oDBPropSet.AddProperty(DBPROP_CANFETCHBACKWARDS, true);
+	oDBPropSet.AddProperty(DBPROP_IRowsetScroll, true);
+	oDBPropSet.AddProperty(DBPROP_IRowsetChange, true);
+	oDBPropSet.AddProperty(DBPROP_UPDATABILITY, DBPROPVAL_UP_CHANGE | DBPROPVAL_UP_INSERT | DBPROPVAL_UP_DELETE);
+	return oDBPropSet;
 }
 
 

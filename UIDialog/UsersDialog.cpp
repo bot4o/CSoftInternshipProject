@@ -25,6 +25,14 @@ CUsersDialog::~CUsersDialog()
 
 // Methods
 // ----------------
+void CUsersDialog::SetEditBoxText() 
+{
+	m_edbName.SetWindowTextW(m_oUser.szName);
+	m_edbEmail.SetWindowTextW(m_oUser.szEmail);
+	m_edbJobTitle.SetWindowTextW(m_oUser.szJobTitle);
+
+	return;
+}
 void CUsersDialog::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
@@ -39,22 +47,16 @@ BOOL CUsersDialog::OnInitDialog()
 	switch (m_oActionMode)
 	{
 	case InsertMode:
-		m_edbName.SetWindowTextW(_T(""));
-		m_edbEmail.SetWindowTextW(_T(""));
-		m_edbJobTitle.SetWindowTextW(_T(""));
+		SetEditBoxText();
 		break;
 	case UpdateMode:
-		m_edbName.SetWindowTextW(m_oUser.szName);
-		m_edbEmail.SetWindowTextW(m_oUser.szEmail);
-		m_edbJobTitle.SetWindowTextW(m_oUser.szJobTitle);
+		SetEditBoxText();
 		break;
 	case PreviewMode:
 		m_edbName.SetReadOnly();
 		m_edbEmail.SetReadOnly();
 		m_edbJobTitle.SetReadOnly();
-		m_edbName.SetWindowTextW(m_oUser.szName);
-		m_edbEmail.SetWindowTextW(m_oUser.szEmail);
-		m_edbJobTitle.SetWindowTextW(m_oUser.szJobTitle);
+		SetEditBoxText();
 		break;
 	default:
 		break;
@@ -74,6 +76,21 @@ void CUsersDialog::OnOK()
 	m_edbEmail.GetWindowText(strEmail);
 	CString strJobTitle;
 	m_edbJobTitle.GetWindowText(strJobTitle);
+
+	int nAtPos = strEmail.Find(_T('@'));
+	int nLastAtPos = strEmail.ReverseFind(_T('@'));
+
+	if (nAtPos <= 0 || nAtPos != nLastAtPos || nAtPos >= strEmail.GetLength() - 1)
+	{
+		AfxMessageBox(_T("Invalid Email Format"));
+		return;
+	}
+	int nDotPos = strEmail.Find(_T('.'), nAtPos + 2);
+	if (nDotPos == -1 || nDotPos >= strEmail.GetLength() - 1)
+	{
+		AfxMessageBox(_T("Invalid Email Format"));
+		return;
+	}
 
 	_tcscpy_s(m_oUser.szName, strName);
 	_tcscpy_s(m_oUser.szEmail, strEmail);

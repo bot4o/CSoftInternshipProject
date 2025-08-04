@@ -19,15 +19,11 @@
 /// <summary>Клас за достъп до таблицата USERS.</summary>  
 class CUsersAccessor
 {
-// Constants
-// ----------------
-
-
 // Constructor / Destructor
 // ----------------
 //public:
-    //CUsersAccessor();
-    //virtual ~CUsersAccessor();
+   /* CUsersAccessor();
+    virtual ~CUsersAccessor();*/
 
 // Methods
 // ----------------
@@ -38,20 +34,14 @@ public:
         return m_recUser;
     }
     /// <summary>SET method за достъп до m_recUser.</summary>  
-    //bool SetRecUser(USERS& oNewUser) 
-    //{
-    //    m_recUser = oNewUser;
-    //    return true;
-    //}
-
-// Overrides
-// ----------------
-
-
-
-protected:
+    bool SetRecUser(USERS& oNewUser) 
+    {
+        m_recUser = oNewUser;
+        return true;
+    }
 // Macros
 // ----------------
+protected:
     /// <summary>Макрос дефиниращ публичен достъп до аксесор за определен тип клас.</summary>  
     BEGIN_ACCESSOR_MAP(CUsersAccessor, USERS_ACCESSORS_COUNT)
         BEGIN_ACCESSOR(USERS_IDENTITY_ACCESSOR_INDEX, true)

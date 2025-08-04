@@ -13,10 +13,6 @@
 /// <summary>Таблична структура от данни за таблица USERS</summary>
 struct USERS
 {
-// Constants
-// ----------------
-
-
 // Constructor / Destructor
 // ----------------
 public:
@@ -32,14 +28,6 @@ public:
         _tcscpy_s(szEmail, email);
         _tcscpy_s(szJobTitle, job);
     }
-// Methods
-// ----------------
-
-
-// Overrides
-// ----------------
-
-
 // Members
 // ----------------
     /// <summary>Уникален идентификатор за ред</summary>
