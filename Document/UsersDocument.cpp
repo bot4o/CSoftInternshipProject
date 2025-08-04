@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "UsersDocument.h"
 #include "UsersAppService.h"
+#include "DialogModes.h"
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -24,14 +25,14 @@ CUsersDocument::~CUsersDocument()
 // Methods
 // ----------------
 //CRUD
-bool CUsersDocument::AddUser(const USERS& m_oRecUser)
+bool CUsersDocument::AddUser(const USERS& oRecUser)
 {
-	if (!CUsersAppService().Insert(m_oRecUser))
+	if (!CUsersAppService().Insert(oRecUser))
 	{
 		AfxMessageBox(_T("Error at the CUsersAppService().Insert() in the document layer"));
 		return false;
 	}
-	UpdateAllViews(nullptr);
+	UpdateAllViews(nullptr, InsertMode, (CObject*)&oRecUser);
 	return true;
 }
 bool CUsersDocument::LoadAllUsers()
@@ -44,15 +45,15 @@ bool CUsersDocument::LoadAllUsers()
 	}
 	return true;
 }
-bool CUsersDocument::UpdateUser(long m_lID, USERS& m_oRecUser)
+bool CUsersDocument::UpdateUser(long m_lID, USERS& oRecUser)
 {
-	if (!CUsersAppService().UpdateWhereID(m_lID, m_oRecUser))
+	if (!CUsersAppService().UpdateWhereID(m_lID, oRecUser))
 	{
 		AfxMessageBox(_T("Error at the CUsersAppService().UpdateWhereID() in the document layer"));
 
 		return false;
 	}
-	UpdateAllViews(nullptr);
+	UpdateAllViews(nullptr, UpdateMode, (CObject*)&oRecUser);
 	return true;
 }
 bool CUsersDocument::DeleteUser(long m_lID)
@@ -63,7 +64,8 @@ bool CUsersDocument::DeleteUser(long m_lID)
 
 		return false;
 	}
-	UpdateAllViews(nullptr);
+	USERS* oRecUser = new USERS();
+	UpdateAllViews(nullptr, DeleteMode, (CObject*)&oRecUser);
 	return true;
 }
 CUsersTypedPtrArray& CUsersDocument::GetUsers() 

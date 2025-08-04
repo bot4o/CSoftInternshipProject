@@ -214,7 +214,56 @@ void CUsersView::OnInitialUpdate()
 	CListView::OnInitialUpdate();
 }
 
-
 void CUsersView::OnUpdate(CView* /*pSender*/, LPARAM lHint, CObject* pHint)
 {
+	if (pHint == nullptr)
+		return;
+
+	USERS* pUser = (USERS*)pHint;
+	if (pUser == nullptr)
+		return;
+
+	CString strId;
+	strId.Format(_T("%d"), pUser->lId);
+	CString strUpdateCounter;
+	strUpdateCounter.Format(_T("%d"), pUser->lUpdateCounter);
+
+	switch (lHint)
+	{
+	case InsertMode:
+	{
+		int nItem = GetListCtrl().InsertItem(GetListCtrl().GetItemCount(), strId);
+		GetListCtrl().SetItemText(nItem, 1, strUpdateCounter);
+		GetListCtrl().SetItemText(nItem, 2, pUser->szName);
+		GetListCtrl().SetItemText(nItem, 3, pUser->szEmail);
+		GetListCtrl().SetItemText(nItem, 4, pUser->szJobTitle);
+		break;
+	}
+	case UpdateMode:
+	{
+		int nSelectedIndex = GetListCtrl().GetNextItem(-1, LVNI_SELECTED);
+		if (nSelectedIndex == -1)
+		{
+			AfxMessageBox(_T("No user selected."));
+			return;
+		}
+		GetListCtrl().SetItemText(nSelectedIndex, 1, strUpdateCounter);
+		GetListCtrl().SetItemText(nSelectedIndex, 2, pUser->szName);
+		GetListCtrl().SetItemText(nSelectedIndex, 3, pUser->szEmail);
+		GetListCtrl().SetItemText(nSelectedIndex, 4, pUser->szJobTitle);
+		break;
+	}
+	case DeleteMode:
+	{
+		int nSelectedIndex = GetListCtrl().GetNextItem(-1, LVNI_SELECTED);
+		if (nSelectedIndex == -1)
+		{
+			AfxMessageBox(_T("No user selected."));
+			return;
+		}
+		GetListCtrl().DeleteItem(nSelectedIndex);
+	
+		break;
+	}
+	}
 }

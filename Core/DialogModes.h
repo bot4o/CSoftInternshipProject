@@ -6,5 +6,6 @@ enum Modes
 {
 	InsertMode,
 	UpdateMode,
-	PreviewMode
+	PreviewMode,
+	DeleteMode
 };
