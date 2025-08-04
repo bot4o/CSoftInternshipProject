@@ -32,7 +32,7 @@ public:
 	// ----------------
 public:
 	void SetEditBoxText();
-
+	bool ValidateDialog(CString strName, CString strEmail, CString strJobTitle);
 	virtual BOOL OnInitDialog();
 	virtual void OnOK();
 	virtual void OnCancel();

@@ -25,10 +25,40 @@ CUsersDialog::~CUsersDialog()
 
 // Methods
 // ----------------
+bool CUsersDialog::ValidateDialog(CString strName, CString strEmail, CString strJobTitle)
+{
+	int nAtPos = strEmail.Find(_T('@'));
+	int nLastAtPos = strEmail.ReverseFind(_T('@'));
+
+	if (nAtPos <= 0 || nAtPos != nLastAtPos || nAtPos >= strEmail.GetLength() - 1)
+	{
+		AfxMessageBox(_T("Invalid Email Format"));
+		return false;
+	}
+	int nDotPos = strEmail.Find(_T('.'), nAtPos + 2);
+	if (nDotPos == -1 || nDotPos >= strEmail.GetLength() - 1)
+	{
+		AfxMessageBox(_T("Invalid Email Format"));
+		return false;
+	}
+
+	CString strOldName, strOldEmail, strOldJobTitle;
+	strOldName = m_oUser.szName;
+	strOldEmail = m_oUser.szEmail;
+	strOldJobTitle = m_oUser.szJobTitle;
+	if (strOldName == strName && strOldEmail == strEmail && strOldJobTitle == strJobTitle)
+	{
+		AfxMessageBox(_T("No changes were made"));
+		return false;
+	}
+	return true;
+}
 void CUsersDialog::SetEditBoxText() 
 {
 	m_edbName.SetWindowTextW(m_oUser.szName);
+
 	m_edbEmail.SetWindowTextW(m_oUser.szEmail);
+
 	m_edbJobTitle.SetWindowTextW(m_oUser.szJobTitle);
 
 	return;
@@ -77,18 +107,8 @@ void CUsersDialog::OnOK()
 	CString strJobTitle;
 	m_edbJobTitle.GetWindowText(strJobTitle);
 
-	int nAtPos = strEmail.Find(_T('@'));
-	int nLastAtPos = strEmail.ReverseFind(_T('@'));
-
-	if (nAtPos <= 0 || nAtPos != nLastAtPos || nAtPos >= strEmail.GetLength() - 1)
+	if (!ValidateDialog(strName, strEmail, strJobTitle)) 
 	{
-		AfxMessageBox(_T("Invalid Email Format"));
-		return;
-	}
-	int nDotPos = strEmail.Find(_T('.'), nAtPos + 2);
-	if (nDotPos == -1 || nDotPos >= strEmail.GetLength() - 1)
-	{
-		AfxMessageBox(_T("Invalid Email Format"));
 		return;
 	}
 

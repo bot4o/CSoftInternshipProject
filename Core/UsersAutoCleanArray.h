@@ -6,17 +6,18 @@
 #include "framework.h"
 
 /////////////////////////////////////////////////////////////////////////////
-// CUsersAutoCleanArray
+// CAutoCleanArray
 
 template<class Array, class TYPE>
-class CUsersAutoCleanArray : CTypedPtrArray<CPtrArray, TYPE>
+class CAutoCleanArray : CTypedPtrArray<CPtrArray, TYPE>
 {
     // Constructor / Destructor
     // ----------------
 public:
-    CUsersAutoCleanArray();
-    virtual ~CUsersAutoCleanArray() {
-        for (int i = 0; i < GetSize(); i++) {
+    CAutoCleanArray();
+    virtual ~CAutoCleanArray() {
+        for (int i = 0; i < GetSize(); i++) 
+        {
             delete GetAt(i);
         }
         RemoveAll();

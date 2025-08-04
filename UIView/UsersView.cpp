@@ -6,7 +6,8 @@
 
 /////////////////////////////////////////////////////////////////////////////
 // CUsersViews
-
+#define MODAL_OK 1
+#define MODAL_CANCEL 2
 // Macros
 // ----------------
 IMPLEMENT_DYNCREATE(CUsersView, CListView)
@@ -63,14 +64,13 @@ void CUsersView::OnListDoubleClick(NMHDR* pNMHDR, LRESULT* pResult)
 	INT_PTR nResult = -1;
 	nResult = oUsersDialog.DoModal();
 
-	if (nResult == 1)
+	if (nResult == MODAL_OK)
 	{
 		GetDocument()->UpdateUser(lID, *oRefferedUser);
 	}
 }
 void CUsersView::OnNMRClick(NMHDR* pNMHDR, LRESULT* pResult)
 {
-
 	CPoint oPoint;
 	GetCursorPos(&oPoint);
 
@@ -85,13 +85,10 @@ void CUsersView::OnNMRClick(NMHDR* pNMHDR, LRESULT* pResult)
 		pPopup->EnableMenuItem(ID_POPUP_USERS_UPDATE, MF_GRAYED);
 
 	}
-
 	if (pPopup)
 	{
 		pPopup->TrackPopupMenu(TPM_RIGHTBUTTON, oPoint.x, oPoint.y, this);
 	}
-
-	
 	*pResult = 0;
 }
 void CUsersView::OnContextInsert()
@@ -102,7 +99,7 @@ void CUsersView::OnContextInsert()
 	INT_PTR nResult = -1;
 	nResult = oUsersDialog.DoModal();
 
-	if (nResult == 1)
+	if (nResult == MODAL_OK)
 	{
 		GetDocument()->AddUser(oUser);
 	}
@@ -132,7 +129,7 @@ void CUsersView::OnContextEdit()
 	INT_PTR nResult = -1;
 	nResult = oUsersDialog.DoModal();
 
-	if (nResult == 1)
+	if (nResult == MODAL_OK)
 	{
 		GetDocument()->UpdateUser(lID, *oRefferedUser);
 	}
@@ -220,5 +217,4 @@ void CUsersView::OnInitialUpdate()
 
 void CUsersView::OnUpdate(CView* /*pSender*/, LPARAM lHint, CObject* pHint)
 {
-	OnContextLoad();
 }
