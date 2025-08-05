@@ -32,9 +32,9 @@ public:
 	/// <summary>Loads all users from the USERS table</summary>  
 	bool LoadAllUsers();
 	/// <summary>Alters the role of a specific user in the USERS table</summary>  
-	bool UpdateUser(long lID, USERS& recUser);
+	bool UpdateUser(const long lID, USERS& recUser);
 	/// <summary>Removes a specific user from the USERS table</summary>  
-	bool DeleteUser(long lID);
+	bool DeleteUser(const long lID);
 	/// <summary>Gets the already populated m_oUsersArray for the UsersView</summary>  
 	CUsersTypedPtrArray& GetUsers();
 

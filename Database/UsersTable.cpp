@@ -45,7 +45,7 @@ bool CUsersTable::SelectAll(CUsersTypedPtrArray& oUsersArray)
 		msg.Format(_T("Unable to execute command for the SQL Server database.Error: %d"), hResult);
 		AfxMessageBox(msg);
 		m_oSession.Close();
-		oDataSource.Close();
+		//oDataSource.Close();
 
 		return false;
 	}
@@ -92,7 +92,6 @@ bool CUsersTable::SelectWhereID(const long lID, USERS& recUser)
 	{
 		AfxMessageBox(_T("Unable to start new transaction for the SQL Server database. Error: %d", hResult));
 		m_oSession.Close();
-		oDataSource.Close();
 		return false;
 	}
 
@@ -109,7 +108,6 @@ bool CUsersTable::SelectWhereID(const long lID, USERS& recUser)
 
 		m_oSession.Abort();
 		m_oSession.Close();
-		oDataSource.Close();
 
 		AfxMessageBox(strMessage);
 		return false;
@@ -124,7 +122,6 @@ bool CUsersTable::SelectWhereID(const long lID, USERS& recUser)
 		m_oSession.Abort();
 		m_oCommand.Close();
 		m_oSession.Close();
-		oDataSource.Close();
 
 		return false;
 	}
@@ -139,7 +136,6 @@ bool CUsersTable::SelectWhereID(const long lID, USERS& recUser)
 		AfxMessageBox(strMessage);
 		m_oSession.Abort();
 		m_oSession.Close();
-		oDataSource.Close();
 		return false;
 	}	m_oCommand.Close();
 	m_oSession.Close();
@@ -162,7 +158,6 @@ bool CUsersTable::UpdateWhereID(const long lID, USERS& recUser)
 	{
 		AfxMessageBox(_T("Unable to start new transaction for the SQL Server database. Error: %d", hResult));
 		m_oSession.Close();
-		oDataSource.Close();
 		return false;
 	}
 
@@ -179,7 +174,6 @@ bool CUsersTable::UpdateWhereID(const long lID, USERS& recUser)
 		AfxMessageBox(strMessage);
 		m_oSession.Abort();
 		m_oSession.Close();
-		oDataSource.Close();
 		return false;
 	}
 	//Ето тук
@@ -191,7 +185,6 @@ bool CUsersTable::UpdateWhereID(const long lID, USERS& recUser)
 		m_oCommand.Close();
 		m_oSession.Abort();
 		m_oSession.Close();
-		oDataSource.Close();
 		return true;
 	}
 
@@ -202,12 +195,12 @@ bool CUsersTable::UpdateWhereID(const long lID, USERS& recUser)
 		m_oSession.Abort();
 		m_oCommand.Close();
 		m_oSession.Close();
-		oDataSource.Close();
 		return false;
 	}
 
 	recDatabaseUser = recUser;
 	recDatabaseUser.lUpdateCounter += 1;
+	recUser.lUpdateCounter += 1;
 
 	hResult = m_oCommand.SetData(USERS_DATA_ACCESSOR_INDEX);
 	if (FAILED(hResult))
@@ -216,7 +209,6 @@ bool CUsersTable::UpdateWhereID(const long lID, USERS& recUser)
 		m_oSession.Abort();
 		m_oCommand.Close();
 		m_oSession.Close();
-		oDataSource.Close();
 		return false;
 	}
 
@@ -228,9 +220,9 @@ bool CUsersTable::UpdateWhereID(const long lID, USERS& recUser)
 		AfxMessageBox(strMessage);
 		m_oSession.Abort();
 		m_oSession.Close();
-		oDataSource.Close();
 		return false;
-	}	m_oCommand.Close();
+	}	
+	m_oCommand.Close();
 	m_oSession.Close();
 	return true;
 }
@@ -259,7 +251,6 @@ bool CUsersTable::Insert(const USERS& recUser)
 		AfxMessageBox(strMessage);
 		m_oCommand.Close();
 		m_oSession.Close();
-		oDataSource.Close();
 		return false;
 	}
 
@@ -270,14 +261,12 @@ bool CUsersTable::Insert(const USERS& recUser)
 	_tcscpy_s(oDatabaseUser.szJobTitle, recUser.szJobTitle);
 
 	hResult = m_oCommand.Insert(USERS_DATA_ACCESSOR_INDEX);
-
 	if (FAILED(hResult))
 	{
 		AfxMessageBox(_T("Unable to set data in the SQL Server database. Error: %d", hResult));
 
 		m_oCommand.Close();
 		m_oSession.Close();
-		oDataSource.Close();
 		return false;
 	}
 
@@ -302,7 +291,6 @@ bool CUsersTable::DeleteWhereID(const long lID)
 	{
 		AfxMessageBox(_T("Unable to start new transaction for the SQL Server database. Error: %d", hResult));
 		m_oSession.Close();
-		oDataSource.Close();
 		return false;
 	}
 
@@ -319,7 +307,6 @@ bool CUsersTable::DeleteWhereID(const long lID)
 		AfxMessageBox(strMessage);
 		m_oSession.Abort();
 		m_oSession.Close();
-		oDataSource.Close();
 		return false;
 	}
 
@@ -330,9 +317,9 @@ bool CUsersTable::DeleteWhereID(const long lID)
 		m_oCommand.Close();
 		m_oSession.Abort();
 		m_oSession.Close();
-		oDataSource.Close();
 		return true;
 	}
+	USERS temp = m_oCommand.GetRecUser();
 	hResult = m_oCommand.Delete();
 	if (FAILED(hResult))
 	{
@@ -340,7 +327,6 @@ bool CUsersTable::DeleteWhereID(const long lID)
 		m_oCommand.Close();
 		m_oSession.Abort();
 		m_oSession.Close();
-		oDataSource.Close();
 		return false;
 	}
 
@@ -352,7 +338,6 @@ bool CUsersTable::DeleteWhereID(const long lID)
 		AfxMessageBox(strMessage);
 		m_oSession.Abort();
 		m_oSession.Close();
-		oDataSource.Close();
 		return false;
 	}
 	m_oCommand.Close();

@@ -45,7 +45,7 @@ bool CUsersDocument::LoadAllUsers()
 	}
 	return true;
 }
-bool CUsersDocument::UpdateUser(long m_lID, USERS& oRecUser)
+bool CUsersDocument::UpdateUser(const long m_lID, USERS& oRecUser)
 {
 	if (!CUsersAppService().UpdateWhereID(m_lID, oRecUser))
 	{
@@ -56,7 +56,7 @@ bool CUsersDocument::UpdateUser(long m_lID, USERS& oRecUser)
 	UpdateAllViews(nullptr, UpdateMode, (CObject*)&oRecUser);
 	return true;
 }
-bool CUsersDocument::DeleteUser(long m_lID)
+bool CUsersDocument::DeleteUser(const long m_lID)
 {
 	if (!CUsersAppService().DeleteWhereID(m_lID))
 	{
@@ -64,7 +64,7 @@ bool CUsersDocument::DeleteUser(long m_lID)
 
 		return false;
 	}
-	USERS* oRecUser = new USERS();
+	USERS oRecUser = USERS();
 	UpdateAllViews(nullptr, DeleteMode, (CObject*)&oRecUser);
 	return true;
 }
@@ -90,4 +90,3 @@ BOOL CUsersDocument::OnNewDocument()
 	}
 	return TRUE;
 }
-
