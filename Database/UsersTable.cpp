@@ -226,7 +226,7 @@ bool CUsersTable::UpdateWhereID(const long lID, USERS& recUser)
 	m_oSession.Close();
 	return true;
 }
-bool CUsersTable::Insert(const USERS& recUser) 
+bool CUsersTable::Insert(USERS& recUser) 
 {
 	CDataSource& oDataSource = CDBConnection::GetDataSource();
 	HRESULT hResult = m_oSession.Open(oDataSource);
@@ -270,6 +270,15 @@ bool CUsersTable::Insert(const USERS& recUser)
 		return false;
 	}
 
+	hResult = m_oCommand.MoveFirst();
+	if (hResult != S_OK)
+	{
+		m_oCommand.Close();
+		m_oSession.Close();
+		return true;
+	}
+	recUser.lId = m_oCommand.GetRecUser().lId;
+
 	m_oCommand.Close();
 	m_oSession.Close();
 	return true;
@@ -309,17 +318,16 @@ bool CUsersTable::DeleteWhereID(const long lID)
 		m_oSession.Close();
 		return false;
 	}
-
+	USERS temp = m_oCommand.GetRecUser();
 	hResult = m_oCommand.MoveFirst();
 	if (hResult != S_OK) 
 	{
-		AfxMessageBox(_T("No user found with the specified ID to delete."));
+		AfxMessageBox(_T("No user found with the specified ID"));
 		m_oCommand.Close();
 		m_oSession.Abort();
 		m_oSession.Close();
 		return true;
 	}
-	USERS temp = m_oCommand.GetRecUser();
 	hResult = m_oCommand.Delete();
 	if (FAILED(hResult))
 	{

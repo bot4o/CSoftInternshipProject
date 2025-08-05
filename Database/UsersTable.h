@@ -36,7 +36,7 @@ public:
     /// <summary>Променя длъжноста на потребител от базата според ID</summary>  
     bool UpdateWhereID(const long lID, USERS& recUser);
     /// <summary>Вмъква нов потребител в базата</summary>  
-    bool Insert(const USERS& recUser);
+    bool Insert(USERS& recUser);
     /// <summary>Изтрива потребител от базата според ID</summary>  
     bool DeleteWhereID(const long lID);
 

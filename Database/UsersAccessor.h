@@ -33,12 +33,12 @@ public:
     {
         return m_recUser;
     }
-    /// <summary>SET method за достъп до m_recUser.</summary>  
+    /*/// <summary>SET method за достъп до m_recUser.</summary>  
     bool SetRecUser(USERS& oNewUser) 
     {
         m_recUser = oNewUser;
         return true;
-    }
+    }*/
 // Macros
 // ----------------
 protected:

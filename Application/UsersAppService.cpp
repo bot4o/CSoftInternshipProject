@@ -45,7 +45,7 @@ bool CUsersAppService::UpdateWhereID(const long lID, USERS& recUser)
 	return true;
 }
 /// <summary>Вмъква нов потребител в базата</summary>  
-bool CUsersAppService::Insert(const USERS& recUser)
+bool CUsersAppService::Insert(USERS& recUser)
 {
 	if (!CUsersTable().Insert(recUser))
 	{

@@ -146,14 +146,14 @@ void CUsersView::OnContextDelete()
 	CUsersTypedPtrArray& oUsersArray = GetDocument()->GetUsers();
 	long lID = oUsersArray[nSelectedIndex]->lId;
 
-	USERS* oRefferedUser = nullptr;
-	for (int i = 0; i < oUsersArray.GetSize(); i++)
-	{
-		if (lID == oUsersArray[i]->lId)
+		/*USERS* oRefferedUser = nullptr;
+		for (int i = 0; i < oUsersArray.GetSize(); i++)
 		{
-			oRefferedUser = oUsersArray[i];
-		}
-	}
+			if (lID == oUsersArray[i]->lId)
+			{
+				oRefferedUser = oUsersArray[i];
+			}
+		}*/
 
 	GetDocument()->DeleteUser(lID);
 }

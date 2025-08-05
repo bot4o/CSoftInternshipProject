@@ -25,13 +25,15 @@ CUsersDocument::~CUsersDocument()
 // Methods
 // ----------------
 //CRUD
-bool CUsersDocument::AddUser(const USERS& oRecUser)
+bool CUsersDocument::AddUser(USERS& oRecUser)
 {
 	if (!CUsersAppService().Insert(oRecUser))
 	{
 		AfxMessageBox(_T("Error at the CUsersAppService().Insert() in the document layer"));
 		return false;
 	}
+	
+	m_oUsersArray.Add(new USERS(oRecUser));
 	UpdateAllViews(nullptr, InsertMode, (CObject*)&oRecUser);
 	return true;
 }
@@ -45,9 +47,9 @@ bool CUsersDocument::LoadAllUsers()
 	}
 	return true;
 }
-bool CUsersDocument::UpdateUser(const long m_lID, USERS& oRecUser)
+bool CUsersDocument::UpdateUser(const long lID, USERS& oRecUser)
 {
-	if (!CUsersAppService().UpdateWhereID(m_lID, oRecUser))
+	if (!CUsersAppService().UpdateWhereID(lID, oRecUser))
 	{
 		AfxMessageBox(_T("Error at the CUsersAppService().UpdateWhereID() in the document layer"));
 
@@ -56,18 +58,27 @@ bool CUsersDocument::UpdateUser(const long m_lID, USERS& oRecUser)
 	UpdateAllViews(nullptr, UpdateMode, (CObject*)&oRecUser);
 	return true;
 }
-bool CUsersDocument::DeleteUser(const long m_lID)
+bool CUsersDocument::DeleteUser(const long lID)
 {
-	if (!CUsersAppService().DeleteWhereID(m_lID))
+	if (!CUsersAppService().DeleteWhereID(lID))
 	{
 		AfxMessageBox(_T("Error at the CUsersAppService().DeleteWhereID() in the document layer"));
 
 		return false;
 	}
+	for (int i = 0; i < m_oUsersArray.GetSize(); i++)
+	{
+		if (lID == m_oUsersArray[i]->lId) 
+		{
+			m_oUsersArray.RemoveAt(i);
+			break;
+		}
+	}
 	USERS oRecUser = USERS();
 	UpdateAllViews(nullptr, DeleteMode, (CObject*)&oRecUser);
 	return true;
 }
+
 CUsersTypedPtrArray& CUsersDocument::GetUsers() 
 {
 	return m_oUsersArray;
