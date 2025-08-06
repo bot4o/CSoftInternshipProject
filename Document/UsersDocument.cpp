@@ -32,21 +32,21 @@ bool CUsersDocument::AddUser(USERS& oRecUser)
 		AfxMessageBox(_T("Error at the CUsersAppService().Insert() in the document layer"));
 		return false;
 	}
-	
 	m_oUsersArray.Add(new USERS(oRecUser));
 	UpdateAllViews(nullptr, InsertMode, (CObject*)&oRecUser);
 	return true;
 }
+
 bool CUsersDocument::LoadAllUsers()
 {
 	if (!CUsersAppService().SelectAll(m_oUsersArray))
 	{
 		AfxMessageBox(_T("Error at the CUsersAppService().SelectAll() in the document layer"));
-
 		return false;
 	}
 	return true;
 }
+
 bool CUsersDocument::UpdateUser(const long lID, USERS& oRecUser)
 {
 	if (!CUsersAppService().UpdateWhereID(lID, oRecUser))
@@ -58,6 +58,7 @@ bool CUsersDocument::UpdateUser(const long lID, USERS& oRecUser)
 	UpdateAllViews(nullptr, UpdateMode, (CObject*)&oRecUser);
 	return true;
 }
+
 bool CUsersDocument::DeleteUser(const long lID)
 {
 	if (!CUsersAppService().DeleteWhereID(lID))
@@ -74,8 +75,7 @@ bool CUsersDocument::DeleteUser(const long lID)
 			break;
 		}
 	}
-	USERS oRecUser = USERS();
-	UpdateAllViews(nullptr, DeleteMode, (CObject*)&oRecUser);
+	UpdateAllViews(nullptr, DeleteMode, (CObject*)&m_oUsersArray[0]);
 	return true;
 }
 
@@ -83,9 +83,10 @@ CUsersTypedPtrArray& CUsersDocument::GetUsers()
 {
 	return m_oUsersArray;
 }
+
 void UpdateAllViews(CView* pSender, LPARAM lHint = 0L, CObject* pHint = NULL)
 {
-	//TODO how to use UpdateAllViews to trigger CUsersView.OnUpdate() and .OnInitialUpdate()
+
 }
 
 // Overrides

@@ -8,17 +8,11 @@
 
 class ApplicationDLL_EXP CUsersAppService
 {
-
-	// Constants
-	// ----------------
-
-
 	// Constructor / Destructor
 	// ----------------
 public:
 	CUsersAppService();
 	virtual ~CUsersAppService();
-
 
 	// Methods
 	// ----------------
@@ -32,11 +26,4 @@ public:
 	bool Insert(USERS& recUser);
 	/// <summary>Изтрива потребител от базата според ID</summary>  
 	bool DeleteWhereID(const long lID);
-
-	// Overrides
-	// ----------------
-
-
-	// Members
-	// ----------------
 };

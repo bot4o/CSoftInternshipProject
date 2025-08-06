@@ -215,8 +215,10 @@
     <ClInclude Include="Domain.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="ProjectsStruct.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="TasksStruct.h" />
     <ClInclude Include="UsersStruct.h" />
   </ItemGroup>
   <ItemGroup>

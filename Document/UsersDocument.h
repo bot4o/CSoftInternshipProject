@@ -13,17 +13,11 @@ class DocumentDLL_EXP CUsersDocument : public CDocument
 // ----------------
 	DECLARE_DYNCREATE(CUsersDocument)
 
-
-// Constants
-// ----------------
-
-
 // Constructor / Destructor
 // ----------------
 public:
 	CUsersDocument();
 	virtual ~CUsersDocument();
-
 
 // Methods
 // ----------------

@@ -49,6 +49,12 @@
     <ClInclude Include="UsersStruct.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ProjectsStruct.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TasksStruct.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Domain.rc">

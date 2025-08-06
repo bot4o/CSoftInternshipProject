@@ -1,24 +1,24 @@
 ﻿#include "pch.h"
-#include "UsersTable.h"
+#include "TasksTable.h"
 
 ////////////////////////////////////////////////////////////////////////////
-// CUsersTable
+// CTasksTable
 
 // Constructor / Destructor
 // ----------------
 
-CUsersTable::CUsersTable()
+CTasksTable::CTasksTable()
 {
 }
 
-CUsersTable::~CUsersTable()
+CTasksTable::~CTasksTable()
 {
 }
 
 // Methods
 // ----------------
-bool CUsersTable::SelectAll(CUsersTypedPtrArray& oUsersArray)
-{	
+bool CTasksTable::SelectAll(CTasksTypedPtrArray& oTasksArray)
+{
 	CDataSource& oDataSource = CDBConnection::GetDataSource();
 
 	//Check for connection because its the first query exacuted;
@@ -51,17 +51,17 @@ bool CUsersTable::SelectAll(CUsersTypedPtrArray& oUsersArray)
 
 		return false;
 	}
-	if (oUsersArray.GetSize() > 0)
+	if (oTasksArray.GetSize() > 0)
 	{
 		//if array already has data 
-		oUsersArray.RemoveAll();
+		oTasksArray.RemoveAll();
 	}
 	while ((hResult = m_oCommand.MoveNext()) == S_OK)
 	{
-		USERS* pUser = new USERS(m_oCommand.GetRecUser());
-		if (pUser != NULL)
+		TASKS* pTask = new TASKS(m_oCommand.GetRecTask());
+		if (pTask != NULL)
 		{
-			oUsersArray.Add(pUser);
+			oTasksArray.Add(pTask);
 		}
 	}
 	if (hResult != DB_S_ENDOFROWSET)
@@ -77,7 +77,7 @@ bool CUsersTable::SelectAll(CUsersTypedPtrArray& oUsersArray)
 	return true;
 }
 
-bool CUsersTable::SelectWhereID(const long lID, USERS& recUser)
+bool CTasksTable::SelectWhereID(const long lID, TASKS& recTask)
 {
 	CDataSource& oDataSource = CDBConnection::GetDataSource();
 
@@ -113,12 +113,12 @@ bool CUsersTable::SelectWhereID(const long lID, USERS& recUser)
 		m_oSession.Close();
 		return false;
 	}
-	
+
 	hResult = m_oCommand.MoveFirst();
 	if (hResult != S_OK)
 	{
 		CString strMessage;
-		strMessage.Format(_T("User with ID %d not found"), lID);
+		strMessage.Format(_T("Task with ID %d not found"), lID);
 		AfxMessageBox(strMessage);
 		m_oSession.Abort();
 		m_oCommand.Close();
@@ -126,7 +126,7 @@ bool CUsersTable::SelectWhereID(const long lID, USERS& recUser)
 		return false;
 	}
 
-	recUser = m_oCommand.GetRecUser();
+	recTask = m_oCommand.GetRecTask();
 
 	hResult = m_oSession.Commit();
 	if (FAILED(hResult))
@@ -137,14 +137,14 @@ bool CUsersTable::SelectWhereID(const long lID, USERS& recUser)
 		m_oSession.Abort();
 		m_oSession.Close();
 		return false;
-	}	
+	}
 
 	m_oCommand.Close();
 	m_oSession.Close();
 	return true;
 }
 
-bool CUsersTable::UpdateWhereID(const long lID, USERS& recUser) 
+bool CTasksTable::UpdateWhereID(const long lID, TASKS& recTask)
 {
 	CDataSource& oDataSource = CDBConnection::GetDataSource();
 
@@ -192,8 +192,8 @@ bool CUsersTable::UpdateWhereID(const long lID, USERS& recUser)
 		return true;
 	}
 
-	USERS& recDatabaseUser = m_oCommand.GetRecUser();
-	if (recUser.lUpdateCounter != recDatabaseUser.lUpdateCounter)
+	TASKS& recDatabaseTask = m_oCommand.GetRecTask();
+	if (recTask.lUpdateCounter != recDatabaseTask.lUpdateCounter)
 	{
 		AfxMessageBox(_T("Update counters do not match in the database"));
 		m_oSession.Abort();
@@ -202,11 +202,11 @@ bool CUsersTable::UpdateWhereID(const long lID, USERS& recUser)
 		return false;
 	}
 
-	recDatabaseUser = recUser;
-	recDatabaseUser.lUpdateCounter += 1;
-	recUser.lUpdateCounter += 1;
+	recDatabaseTask = recTask;
+	recDatabaseTask.lUpdateCounter += 1;
+	recTask.lUpdateCounter += 1;
 
-	hResult = m_oCommand.SetData(USERS_DATA_ACCESSOR_INDEX);
+	hResult = m_oCommand.SetData(TASKS_DATA_ACCESSOR_INDEX);
 	if (FAILED(hResult))
 	{
 		AfxMessageBox(_T("Unable to set data in the SQL Server database. Error: %d", hResult));
@@ -225,13 +225,13 @@ bool CUsersTable::UpdateWhereID(const long lID, USERS& recUser)
 		m_oSession.Abort();
 		m_oSession.Close();
 		return false;
-	}	
+	}
 	m_oCommand.Close();
 	m_oSession.Close();
 	return true;
 }
 
-bool CUsersTable::Insert(USERS& recUser) 
+bool CTasksTable::Insert(TASKS& recTask)
 {
 	CDataSource& oDataSource = CDBConnection::GetDataSource();
 
@@ -260,13 +260,13 @@ bool CUsersTable::Insert(USERS& recUser)
 		return false;
 	}
 
-	USERS& oDatabaseUser = m_oCommand.GetRecUser();
-	oDatabaseUser.lUpdateCounter = 0;
-	_tcscpy_s(oDatabaseUser.szName, recUser.szName);
-	_tcscpy_s(oDatabaseUser.szEmail, recUser.szEmail);
-	_tcscpy_s(oDatabaseUser.szJobTitle, recUser.szJobTitle);
+	TASKS& oDatabaseTask = m_oCommand.GetRecTask();
+	oDatabaseTask.lUpdateCounter = 0;
+	_tcscpy_s(oDatabaseTask.szName, recTask.szName);
+	_tcscpy_s(oDatabaseTask.szEmail, recTask.szEmail);
+	_tcscpy_s(oDatabaseTask.szJobTitle, recTask.szJobTitle);
 
-	hResult = m_oCommand.Insert(USERS_DATA_ACCESSOR_INDEX);
+	hResult = m_oCommand.Insert(TASKS_DATA_ACCESSOR_INDEX);
 	if (FAILED(hResult))
 	{
 		AfxMessageBox(_T("Unable to set data in the SQL Server database. Error: %d", hResult));
@@ -283,14 +283,14 @@ bool CUsersTable::Insert(USERS& recUser)
 		m_oSession.Close();
 		return true;
 	}
-	recUser.lId = m_oCommand.GetRecUser().lId;
+	recTask.lId = m_oCommand.GetRecTask().lId;
 
 	m_oCommand.Close();
 	m_oSession.Close();
 	return true;
 }
 
-bool CUsersTable::DeleteWhereID(const long lID) 
+bool CTasksTable::DeleteWhereID(const long lID)
 {
 	CDataSource& oDataSource = CDBConnection::GetDataSource();
 
@@ -312,7 +312,7 @@ bool CUsersTable::DeleteWhereID(const long lID)
 	}
 
 	CString strQuery;
-	strQuery.Format(SQL_SELECT_BY_ID, strTable,  lID);
+	strQuery.Format(SQL_SELECT_BY_ID, strTable, lID);
 
 	CDBPropSet& oUpdateDBPropSet = CDBConnection::GetDbPropSet();
 
@@ -328,7 +328,7 @@ bool CUsersTable::DeleteWhereID(const long lID)
 	}
 
 	hResult = m_oCommand.MoveFirst();
-	if (hResult != S_OK) 
+	if (hResult != S_OK)
 	{
 		AfxMessageBox(_T("No user found with the specified ID"));
 		m_oSession.Abort();
@@ -347,7 +347,7 @@ bool CUsersTable::DeleteWhereID(const long lID)
 	}
 
 	hResult = m_oSession.Commit();
-	if (FAILED(hResult)) 
+	if (FAILED(hResult))
 	{
 		CString strMessage;
 		strMessage.Format(_T("Failed to commit transaction. Error: %d"), hResult);

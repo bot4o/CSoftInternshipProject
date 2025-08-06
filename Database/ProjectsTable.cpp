@@ -1,24 +1,24 @@
 ﻿#include "pch.h"
-#include "UsersTable.h"
+#include "ProjectsTable.h"
 
 ////////////////////////////////////////////////////////////////////////////
-// CUsersTable
+// CProjectsTable
 
 // Constructor / Destructor
 // ----------------
 
-CUsersTable::CUsersTable()
+CProjectsTable::CProjectsTable()
 {
 }
 
-CUsersTable::~CUsersTable()
+CProjectsTable::~CProjectsTable()
 {
 }
 
 // Methods
 // ----------------
-bool CUsersTable::SelectAll(CUsersTypedPtrArray& oUsersArray)
-{	
+bool CProjectsTable::SelectAll(CProjectsTypedPtrArray& oProjectsArray)
+{
 	CDataSource& oDataSource = CDBConnection::GetDataSource();
 
 	//Check for connection because its the first query exacuted;
@@ -51,17 +51,17 @@ bool CUsersTable::SelectAll(CUsersTypedPtrArray& oUsersArray)
 
 		return false;
 	}
-	if (oUsersArray.GetSize() > 0)
+	if (oProjectsArray.GetSize() > 0)
 	{
 		//if array already has data 
-		oUsersArray.RemoveAll();
+		oProjectsArray.RemoveAll();
 	}
 	while ((hResult = m_oCommand.MoveNext()) == S_OK)
 	{
-		USERS* pUser = new USERS(m_oCommand.GetRecUser());
-		if (pUser != NULL)
+		PROJECTS* pProject = new PROJECTS(m_oCommand.GetRecProject());
+		if (pProject != NULL)
 		{
-			oUsersArray.Add(pUser);
+			oProjectsArray.Add(pProject);
 		}
 	}
 	if (hResult != DB_S_ENDOFROWSET)
@@ -77,7 +77,7 @@ bool CUsersTable::SelectAll(CUsersTypedPtrArray& oUsersArray)
 	return true;
 }
 
-bool CUsersTable::SelectWhereID(const long lID, USERS& recUser)
+bool CProjectsTable::SelectWhereID(const long lID, PROJECTS& recProject)
 {
 	CDataSource& oDataSource = CDBConnection::GetDataSource();
 
@@ -113,12 +113,12 @@ bool CUsersTable::SelectWhereID(const long lID, USERS& recUser)
 		m_oSession.Close();
 		return false;
 	}
-	
+
 	hResult = m_oCommand.MoveFirst();
 	if (hResult != S_OK)
 	{
 		CString strMessage;
-		strMessage.Format(_T("User with ID %d not found"), lID);
+		strMessage.Format(_T("Project with ID %d not found"), lID);
 		AfxMessageBox(strMessage);
 		m_oSession.Abort();
 		m_oCommand.Close();
@@ -126,7 +126,7 @@ bool CUsersTable::SelectWhereID(const long lID, USERS& recUser)
 		return false;
 	}
 
-	recUser = m_oCommand.GetRecUser();
+	recProject = m_oCommand.GetRecProject();
 
 	hResult = m_oSession.Commit();
 	if (FAILED(hResult))
@@ -137,14 +137,14 @@ bool CUsersTable::SelectWhereID(const long lID, USERS& recUser)
 		m_oSession.Abort();
 		m_oSession.Close();
 		return false;
-	}	
+	}
 
 	m_oCommand.Close();
 	m_oSession.Close();
 	return true;
 }
 
-bool CUsersTable::UpdateWhereID(const long lID, USERS& recUser) 
+bool CProjectsTable::UpdateWhereID(const long lID, PROJECTS& recProject)
 {
 	CDataSource& oDataSource = CDBConnection::GetDataSource();
 
@@ -192,8 +192,8 @@ bool CUsersTable::UpdateWhereID(const long lID, USERS& recUser)
 		return true;
 	}
 
-	USERS& recDatabaseUser = m_oCommand.GetRecUser();
-	if (recUser.lUpdateCounter != recDatabaseUser.lUpdateCounter)
+	PROJECTS& recDatabaseProject = m_oCommand.GetRecProject();
+	if (recProject.lUpdateCounter != recDatabaseProject.lUpdateCounter)
 	{
 		AfxMessageBox(_T("Update counters do not match in the database"));
 		m_oSession.Abort();
@@ -202,11 +202,11 @@ bool CUsersTable::UpdateWhereID(const long lID, USERS& recUser)
 		return false;
 	}
 
-	recDatabaseUser = recUser;
-	recDatabaseUser.lUpdateCounter += 1;
-	recUser.lUpdateCounter += 1;
+	recDatabaseProject = recProject;
+	recDatabaseProject.lUpdateCounter += 1;
+	recProject.lUpdateCounter += 1;
 
-	hResult = m_oCommand.SetData(USERS_DATA_ACCESSOR_INDEX);
+	hResult = m_oCommand.SetData(PROJECTS_DATA_ACCESSOR_INDEX);
 	if (FAILED(hResult))
 	{
 		AfxMessageBox(_T("Unable to set data in the SQL Server database. Error: %d", hResult));
@@ -225,13 +225,13 @@ bool CUsersTable::UpdateWhereID(const long lID, USERS& recUser)
 		m_oSession.Abort();
 		m_oSession.Close();
 		return false;
-	}	
+	}
 	m_oCommand.Close();
 	m_oSession.Close();
 	return true;
 }
 
-bool CUsersTable::Insert(USERS& recUser) 
+bool CProjectsTable::Insert(PROJECTS& recProject)
 {
 	CDataSource& oDataSource = CDBConnection::GetDataSource();
 
@@ -260,13 +260,13 @@ bool CUsersTable::Insert(USERS& recUser)
 		return false;
 	}
 
-	USERS& oDatabaseUser = m_oCommand.GetRecUser();
-	oDatabaseUser.lUpdateCounter = 0;
-	_tcscpy_s(oDatabaseUser.szName, recUser.szName);
-	_tcscpy_s(oDatabaseUser.szEmail, recUser.szEmail);
-	_tcscpy_s(oDatabaseUser.szJobTitle, recUser.szJobTitle);
+	PROJECTS& oDatabaseProject = m_oCommand.GetRecProject();
+	oDatabaseProject.lUpdateCounter = 0;
+	_tcscpy_s(oDatabaseProject.szName, recProject.szName);
+	_tcscpy_s(oDatabaseProject.szEmail, recProject.szEmail);
+	_tcscpy_s(oDatabaseProject.szJobTitle, recProject.szJobTitle);
 
-	hResult = m_oCommand.Insert(USERS_DATA_ACCESSOR_INDEX);
+	hResult = m_oCommand.Insert(PROJECTS_DATA_ACCESSOR_INDEX);
 	if (FAILED(hResult))
 	{
 		AfxMessageBox(_T("Unable to set data in the SQL Server database. Error: %d", hResult));
@@ -283,14 +283,14 @@ bool CUsersTable::Insert(USERS& recUser)
 		m_oSession.Close();
 		return true;
 	}
-	recUser.lId = m_oCommand.GetRecUser().lId;
+	recProject.lId = m_oCommand.GetRecProject().lId;
 
 	m_oCommand.Close();
 	m_oSession.Close();
 	return true;
 }
 
-bool CUsersTable::DeleteWhereID(const long lID) 
+bool CProjectsTable::DeleteWhereID(const long lID)
 {
 	CDataSource& oDataSource = CDBConnection::GetDataSource();
 
@@ -312,7 +312,7 @@ bool CUsersTable::DeleteWhereID(const long lID)
 	}
 
 	CString strQuery;
-	strQuery.Format(SQL_SELECT_BY_ID, strTable,  lID);
+	strQuery.Format(SQL_SELECT_BY_ID, strTable, lID);
 
 	CDBPropSet& oUpdateDBPropSet = CDBConnection::GetDbPropSet();
 
@@ -328,7 +328,7 @@ bool CUsersTable::DeleteWhereID(const long lID)
 	}
 
 	hResult = m_oCommand.MoveFirst();
-	if (hResult != S_OK) 
+	if (hResult != S_OK)
 	{
 		AfxMessageBox(_T("No user found with the specified ID"));
 		m_oSession.Abort();
@@ -347,7 +347,7 @@ bool CUsersTable::DeleteWhereID(const long lID)
 	}
 
 	hResult = m_oSession.Commit();
-	if (FAILED(hResult)) 
+	if (FAILED(hResult))
 	{
 		CString strMessage;
 		strMessage.Format(_T("Failed to commit transaction. Error: %d"), hResult);

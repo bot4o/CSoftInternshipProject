@@ -4,10 +4,12 @@
 #include "UsersDialog.h"
 #include "UsersAutoCleanArray.h"
 
-/////////////////////////////////////////////////////////////////////////////
-// CUsersViews
 #define MODAL_OK 1
 #define MODAL_CANCEL 2
+
+/////////////////////////////////////////////////////////////////////////////
+// CUsersViews
+
 // Macros
 // ----------------
 IMPLEMENT_DYNCREATE(CUsersView, CListView)
@@ -69,6 +71,7 @@ void CUsersView::OnListDoubleClick(NMHDR* pNMHDR, LRESULT* pResult)
 		GetDocument()->UpdateUser(lID, *oRefferedUser);
 	}
 }
+
 void CUsersView::OnNMRClick(NMHDR* pNMHDR, LRESULT* pResult)
 {
 	CPoint oPoint;
@@ -91,6 +94,7 @@ void CUsersView::OnNMRClick(NMHDR* pNMHDR, LRESULT* pResult)
 	}
 	*pResult = 0;
 }
+
 void CUsersView::OnContextInsert()
 {
 	USERS oUser = USERS();
@@ -104,6 +108,7 @@ void CUsersView::OnContextInsert()
 		GetDocument()->AddUser(oUser);
 	}
 }
+
 void CUsersView::OnContextEdit()
 {
 	int nSelectedIndex = GetListCtrl().GetNextItem(-1, LVNI_SELECTED);
@@ -134,6 +139,7 @@ void CUsersView::OnContextEdit()
 		GetDocument()->UpdateUser(lID, *oRefferedUser);
 	}
 }
+
 void CUsersView::OnContextDelete()
 {
 	int nSelectedIndex = GetListCtrl().GetNextItem(-1, LVNI_SELECTED);
@@ -146,17 +152,9 @@ void CUsersView::OnContextDelete()
 	CUsersTypedPtrArray& oUsersArray = GetDocument()->GetUsers();
 	long lID = oUsersArray[nSelectedIndex]->lId;
 
-		/*USERS* oRefferedUser = nullptr;
-		for (int i = 0; i < oUsersArray.GetSize(); i++)
-		{
-			if (lID == oUsersArray[i]->lId)
-			{
-				oRefferedUser = oUsersArray[i];
-			}
-		}*/
-
 	GetDocument()->DeleteUser(lID);
 }
+
 void CUsersView::OnContextLoad()
 {
 	GetDocument()->LoadAllUsers();
@@ -181,6 +179,7 @@ void CUsersView::OnContextLoad()
 		GetListCtrl().SetItemText(nItem, 4, pUser->szJobTitle);
 	}
 }
+
 // Overrides
 // ----------------
 void CUsersView::OnInitialUpdate()
@@ -201,16 +200,16 @@ void CUsersView::OnInitialUpdate()
 
 		CString strId;
 		strId.Format(_T("%d"), pUser->lId);
-
 		CString strUpdateCounter;
 		strUpdateCounter.Format(_T("%d"), pUser->lUpdateCounter);
-		
+
 		int nItem = GetListCtrl().InsertItem(i, strId);
 		GetListCtrl().SetItemText(nItem, 1, strUpdateCounter);
 		GetListCtrl().SetItemText(nItem, 2, pUser->szName);
 		GetListCtrl().SetItemText(nItem, 3, pUser->szEmail);
 		GetListCtrl().SetItemText(nItem, 4, pUser->szJobTitle);
 	}
+
 	CListView::OnInitialUpdate();
 }
 
@@ -265,5 +264,8 @@ void CUsersView::OnUpdate(CView* /*pSender*/, LPARAM lHint, CObject* pHint)
 	
 		break;
 	}
+	default:
+		AfxMessageBox(_T("Wrong mode for the view"));
+		break;
 	}
 }

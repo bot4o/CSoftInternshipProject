@@ -19,12 +19,6 @@
 /// <summary>Клас за достъп до таблицата USERS.</summary>  
 class CUsersAccessor
 {
-// Constructor / Destructor
-// ----------------
-//public:
-   /* CUsersAccessor();
-    virtual ~CUsersAccessor();*/
-
 // Methods
 // ----------------
 public:
@@ -33,12 +27,6 @@ public:
     {
         return m_recUser;
     }
-    /*/// <summary>SET method за достъп до m_recUser.</summary>  
-    bool SetRecUser(USERS& oNewUser) 
-    {
-        m_recUser = oNewUser;
-        return true;
-    }*/
 // Macros
 // ----------------
 protected:

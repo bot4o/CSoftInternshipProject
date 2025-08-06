@@ -24,6 +24,7 @@ bool CUsersAppService::SelectAll(CUsersTypedPtrArray& oUsersArray)
 	}
 	return true;
 }
+
 /// <summary>Извежда потребител от базата според ID</summary>  
 bool CUsersAppService::SelectWhereID(const long lID, USERS& recUser)
 {
@@ -34,6 +35,7 @@ bool CUsersAppService::SelectWhereID(const long lID, USERS& recUser)
 	}
 	return true;
 }
+
 /// <summary>Променя длъжноста на потребител от базата според ID</summary>  
 bool CUsersAppService::UpdateWhereID(const long lID, USERS& recUser)
 {
@@ -44,6 +46,7 @@ bool CUsersAppService::UpdateWhereID(const long lID, USERS& recUser)
 	}
 	return true;
 }
+
 /// <summary>Вмъква нов потребител в базата</summary>  
 bool CUsersAppService::Insert(USERS& recUser)
 {
@@ -54,6 +57,7 @@ bool CUsersAppService::Insert(USERS& recUser)
 	}
 	return true;
 }
+
 /// <summary>Изтрива потребител от базата според ID</summary>  
 bool CUsersAppService::DeleteWhereID(const long lID)
 {
