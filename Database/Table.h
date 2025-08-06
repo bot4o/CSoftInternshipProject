@@ -1,34 +1,34 @@
 ﻿#pragma once
-
 #include "Resource.h"  
 #include "pch.h"  
 #include "atldbcli.h"
 #include "DBConnection.h"
+#include "DLLExport.h"
 
+#define IDENTITY_ACCESSOR_INDEX 0
+#define DATA_ACCESSOR_INDEX 1
 #define SQL_SELECT_ALL_NOLOCK _T("SELECT * FROM %s WITH (NOLOCK)")
 #define SQL_SELECT_ALL _T("SELECT * FROM %s")
 #define SQL_SELECT_BY_ID _T("SELECT * FROM %s WITH (ROWLOCK, UPDLOCK, HOLDLOCK) WHERE ID = %d")
 #define SQL_SELECT_EMPTY _T("SELECT TOP 0 * FROM %s")
 
 /////////////////////////////////////////////////////////////////////////////
-// CTable
+// CBaseTable
 
 /// <summary>Клас за работа с таблица</summary>  
-template<typename TRecord, typename TAccessor, int nIdAccessorIndex, int nDataAccessorIndex>
-
-class CTable
+template<typename TRecord, typename TAccessor>
+class DatabaseDLL_EXP CBaseTable
 {
-
     // Constructor / Destructor
     // ----------------
 public:
-    CTable(const CString& m_strTableName);
-    virtual ~CTable();
+    CBaseTable(const CString& strTableName) : m_strTable(strTableName) {}
+    virtual ~CBaseTable();
 
     // Methods
     // ----------------
         /// <summary>Извежда всички потребители в базата</summary>  
-    bool SelectAll(CTypedPtrArray<CPtrArray, TRecord*>& oRecordArray) 
+    bool SelectAll(CTypedPtrArray<CPtrArray, TRecord*>& oRecordArray)
     {
         CDataSource& oDataSource = CDBConnection::GetDataSource();
         if (oDataSource.m_spInit == nullptr)
@@ -46,7 +46,7 @@ public:
         }
 
         CString strQuery;
-        strQuery.Format(SQL_SELECT_ALL, m_m_strTable);
+        strQuery.Format(SQL_SELECT_ALL, m_strTable);
 
         hResult = m_oCommand.Open(m_oSession, strQuery);
         if (FAILED(hResult))
@@ -79,7 +79,7 @@ public:
         return true;
     }
     /// <summary>Извежда потребител от базата според ID</summary>  
-    bool SelectWhereID(const long lID, TRecord& record) 
+    bool SelectWhereID(const long lID, TRecord& oRecord)
     {
         CDataSource& oDataSource = CDBConnection::GetDataSource();
 
@@ -146,7 +146,7 @@ public:
         return true;
     }
     /// <summary>Променя длъжноста на потребител от базата според ID</summary>  
-    bool UpdateWhereID(const long lID, TRecord& record)
+    bool UpdateWhereID(const long lID, TRecord& oRecord)
     {
         CDataSource& oDataSource = CDBConnection::GetDataSource();
 
@@ -208,7 +208,7 @@ public:
         oDatabaseRecord.lUpdateCounter += 1;
         record.lUpdateCounter += 1;
 
-        hResult = m_oCommand.SetData(nDataAccessorIndex);
+        hResult = m_oCommand.SetData(DATA_ACCESSOR_INDEX);
         if (FAILED(hResult))
         {
             AfxMessageBox(_T("Unable to set data in the SQL Server database. Error: %d", hResult));
@@ -233,7 +233,7 @@ public:
         return true;
     }
     /// <summary>Вмъква нов потребител в базата</summary>  
-    bool Insert(TRecord& record)
+    bool Insert(TRecord& oRecord)
     {
         CDataSource& oDataSource = CDBConnection::GetDataSource();
 
@@ -268,7 +268,7 @@ public:
         _tcscpy_s(oDatabaseRecord.szEmail, record.szEmail);
         _tcscpy_s(oDatabaseRecord.szJobTitle, record.szJobTitle);
 
-        hResult = m_oCommand.Insert(nDataAccessorIndex);
+        hResult = m_oCommand.Insert(DATA_ACCESSOR_INDEX);
         if (FAILED(hResult))
         {
             AfxMessageBox(_T("Unable to set data in the SQL Server database. Error: %d", hResult));

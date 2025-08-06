@@ -26,7 +26,7 @@ class CTasksAccessor
     // ----------------
 public:
     /// <summary>GET method за достъп до m_recTask.</summary>  
-    TASKS& GetRecTask()
+    TASKS& GetRecord()
     {
         return m_recTask;
     }

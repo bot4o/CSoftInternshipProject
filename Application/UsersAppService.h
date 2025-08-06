@@ -1,8 +1,8 @@
 ﻿#pragma once
-#include "DLLExport.h"
 #include "pch.h"
 #include "Resource.h"
 #include "UsersStruct.h"
+
 /////////////////////////////////////////////////////////////////////////////
 // CSampleClass
 

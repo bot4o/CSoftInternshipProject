@@ -6,13 +6,10 @@
 #include "MainFrm.h"
 #include "ChildFrm.h"
 #include "DBConnection.h"
-//#include "CSoftInternshipProjectDoc.h"
-//#include "CSoftInternshipProjectView.h"
 #include "UsersDocument.h"
 #include "UsersView.h"
 
 #include "DLLExport.h"
-#include "UsersTable.h"	
                           
 #ifdef _DEBUG
 #define new DEBUG_NEW

@@ -209,10 +209,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="ProjectsTable.cpp" />
-    <ClCompile Include="Table.cpp" />
-    <ClCompile Include="TasksTable.cpp" />
-    <ClCompile Include="UsersTable.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Database.def" />
@@ -231,7 +227,6 @@
     <ClInclude Include="TasksAccessor.h" />
     <ClInclude Include="TasksTable.h" />
     <ClInclude Include="UsersAccessor.h" />
-    <ClInclude Include="UsersTable.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Database.rc" />

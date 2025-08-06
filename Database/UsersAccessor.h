@@ -23,7 +23,7 @@ class CUsersAccessor
 // ----------------
 public:
     /// <summary>GET method за достъп до m_recUser.</summary>  
-    USERS& GetRecUser()  
+    USERS& GetRecord()  
     {
         return m_recUser;
     }

@@ -25,7 +25,7 @@ class CProjectsAccessor
     // ----------------
 public:
     /// <summary>GET method за достъп до m_recProject.</summary>  
-    PROJECTS& GetRecProject()
+    PROJECTS& GetRecord()
     {
         return m_recProject;
     }
@@ -39,12 +39,12 @@ protected:
         END_ACCESSOR()
 
         BEGIN_ACCESSOR(PROJECTS_DATA_ACCESSOR_INDEX, true)
-        COLUMN_ENTRY(PROJECTS_COLUMN_ENTRY_UPDATE_COUNTER, m_recProject.lUpdateCounter)
-        COLUMN_ENTRY(PROJECTS_COLUMN_ENTRY_NAME, m_recProject.szName)
-        COLUMN_ENTRY(PROJECTS_COLUMN_ENTRY_DESCRIPTION, m_recProject.szDescription)
-        COLUMN_ENTRY(PROJECTS_COLUMN_ENTRY_PROJECT_MANAGER_ID, m_recProject.lProjectManagerId)
-        COLUMN_ENTRY(PROJECTS_COLUMN_ENTRY_STATE, m_recProject.bState)
-        COLUMN_ENTRY(PROJECTS_COLUMN_ENTRY_TOTAL_EFFORT, m_recProject.sTotalEffort)
+            COLUMN_ENTRY(PROJECTS_COLUMN_ENTRY_UPDATE_COUNTER, m_recProject.lUpdateCounter)
+            COLUMN_ENTRY(PROJECTS_COLUMN_ENTRY_NAME, m_recProject.szName)
+            COLUMN_ENTRY(PROJECTS_COLUMN_ENTRY_DESCRIPTION, m_recProject.szDescription)
+            COLUMN_ENTRY(PROJECTS_COLUMN_ENTRY_PROJECT_MANAGER_ID, m_recProject.lProjectManagerId)
+            COLUMN_ENTRY(PROJECTS_COLUMN_ENTRY_STATE, m_recProject.bState)
+            COLUMN_ENTRY(PROJECTS_COLUMN_ENTRY_TOTAL_EFFORT, m_recProject.sTotalEffort)
         END_ACCESSOR()
     END_ACCESSOR_MAP()
 
