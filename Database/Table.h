@@ -17,13 +17,13 @@
 
 /// <summary>Клас за работа с таблица</summary>  
 template<typename TRecord, typename TAccessor>
-class DatabaseDLL_EXP CBaseTable
+class CBaseTable
 {
     // Constructor / Destructor
     // ----------------
 public:
     CBaseTable(const CString& strTableName) : m_strTable(strTableName) {}
-    virtual ~CBaseTable();
+    virtual ~CBaseTable() {}
 
     // Methods
     // ----------------
@@ -120,7 +120,7 @@ public:
         if (hResult != S_OK)
         {
             CString strMessage;
-            strMessage.Format(_T("%s record with ID of %d was not found"), m_strTable, lID);
+            strMessage.Format(_T("%s oRecord with ID of %d was not found"), m_strTable, lID);
             AfxMessageBox(strMessage);
             m_oSession.Abort();
             m_oCommand.Close();
@@ -128,7 +128,7 @@ public:
             return false;
         }
 
-        record = m_oCommand.GetRecord(); // <--
+        oRecord = m_oCommand.GetRecord(); // <--
 
         hResult = m_oSession.Commit();
         if (FAILED(hResult))
@@ -176,7 +176,7 @@ public:
         if (FAILED(hResult))
         {
             CString strMessage;
-            strMessage.Format(_T("Failed to update %s record. Error: %d", hResult, m_strTable));
+            strMessage.Format(_T("Failed to update %s oRecord. Error: %d", hResult, m_strTable));
             AfxMessageBox(strMessage);
             m_oSession.Abort();
             m_oSession.Close();
@@ -195,7 +195,7 @@ public:
         }
 
         TRecord& oDatabaseRecord = m_oCommand.GetRecord(); //<--
-        if (record.lUpdateCounter != oDatabaseRecord.lUpdateCounter)
+        if (oRecord.lUpdateCounter != oDatabaseRecord.lUpdateCounter)
         {
             AfxMessageBox(_T("Update counters do not match in the database"));
             m_oSession.Abort();
@@ -204,9 +204,9 @@ public:
             return false;
         }
 
-        oDatabaseRecord = record;
+        oDatabaseRecord = oRecord;
         oDatabaseRecord.lUpdateCounter += 1;
-        record.lUpdateCounter += 1;
+        oRecord.lUpdateCounter += 1;
 
         hResult = m_oCommand.SetData(DATA_ACCESSOR_INDEX);
         if (FAILED(hResult))
@@ -255,7 +255,7 @@ public:
         if (FAILED(hResult))
         {
             CString strMessage;
-            strMessage.Format(_T("Failed to insert %s record. Error: %d", m_strTable, hResult));
+            strMessage.Format(_T("Failed to insert %s oRecord. Error: %d", m_strTable, hResult));
             AfxMessageBox(strMessage);
             m_oCommand.Close();
             m_oSession.Close();
@@ -264,9 +264,10 @@ public:
 
         TRecord& oDatabaseRecord = m_oCommand.GetRecord(); //<--
         oDatabaseRecord.lUpdateCounter = 0;
-        _tcscpy_s(oDatabaseRecord.szName, record.szName);
-        _tcscpy_s(oDatabaseRecord.szEmail, record.szEmail);
-        _tcscpy_s(oDatabaseRecord.szJobTitle, record.szJobTitle);
+        _tcscpy_s(oDatabaseRecord.szName, oRecord.szName);
+        _tcscpy_s(oDatabaseRecord.szEmail, oRecord.szEmail);
+        _tcscpy_s(oDatabaseRecord.szJobTitle, oRecord.szJobTitle);
+
 
         hResult = m_oCommand.Insert(DATA_ACCESSOR_INDEX);
         if (FAILED(hResult))
@@ -280,12 +281,12 @@ public:
         hResult = m_oCommand.MoveFirst();
         if (hResult != S_OK)
         {
-            AfxMessageBox(_T("Unable to read inserted %s record again from the SQL Server database. Error: %d", m_strTable, hResult));
+            AfxMessageBox(_T("Unable to read inserted %s oRecord again from the SQL Server database. Error: %d", m_strTable, hResult));
             m_oCommand.Close();
             m_oSession.Close();
             return true;
         }
-        record.lId = m_oCommand.GetRecord().lId;
+        oRecord.lId = m_oCommand.GetRecord().lId;
 
         m_oCommand.Close();
         m_oSession.Close();
@@ -322,7 +323,7 @@ public:
         if (FAILED(hResult))
         {
             CString strMessage;
-            strMessage.Format(_T("Failed to delete %s record. Error: %d", m_strTable, hResult));
+            strMessage.Format(_T("Failed to delete %s oRecord. Error: %d", m_strTable, hResult));
             AfxMessageBox(strMessage);
             m_oSession.Abort();
             m_oSession.Close();
@@ -332,7 +333,7 @@ public:
         hResult = m_oCommand.MoveFirst();
         if (hResult != S_OK)
         {
-            AfxMessageBox(_T("No %s record found with the specified ID", m_strTable));
+            AfxMessageBox(_T("No %s oRecord found with the specified ID", m_strTable));
             m_oSession.Abort();
             m_oCommand.Close();
             m_oSession.Close();
@@ -341,7 +342,7 @@ public:
         hResult = m_oCommand.Delete();
         if (FAILED(hResult))
         {
-            AfxMessageBox(_T("Failed to delete the %s. record", m_strTable));
+            AfxMessageBox(_T("Failed to delete the %s. oRecord", m_strTable));
             m_oSession.Abort();
             m_oCommand.Close();
             m_oSession.Close();
