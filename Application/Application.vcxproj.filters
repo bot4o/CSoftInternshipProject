@@ -52,6 +52,9 @@
     <ClInclude Include="UsersAppService.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ProjectsAppService.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Application.rc">

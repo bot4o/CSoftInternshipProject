@@ -262,12 +262,8 @@ public:
             return false;
         }
 
-        TRecord& oDatabaseRecord = m_oCommand.GetRecord(); //<--
-        oDatabaseRecord.lUpdateCounter = 0;
-        _tcscpy_s(oDatabaseRecord.szName, oRecord.szName);
-        _tcscpy_s(oDatabaseRecord.szEmail, oRecord.szEmail);
-        _tcscpy_s(oDatabaseRecord.szJobTitle, oRecord.szJobTitle);
-
+        TRecord& oDatabaseRecord = m_oCommand.GetRecord();
+        oDatabaseRecord = oRecord;
 
         hResult = m_oCommand.Insert(DATA_ACCESSOR_INDEX);
         if (FAILED(hResult))
@@ -286,7 +282,7 @@ public:
             m_oSession.Close();
             return true;
         }
-        oRecord.lId = m_oCommand.GetRecord().lId;
+        oRecord.lId = oDatabaseRecord.lId;
 
         m_oCommand.Close();
         m_oSession.Close();

@@ -13,8 +13,8 @@
 /// <summary>Таблична структура от данни за таблица USERS</summary>
 struct USERS
 {
-// Constructor / Destructor
-// ----------------
+    // Constructor / Destructor
+    // ----------------
 public:
     USERS()
     {
@@ -24,12 +24,9 @@ public:
     {
         SecureZeroMemory(this, sizeof(*this));
         this->lUpdateCounter = 0;
-        _tcscpy_s(szName, name);
-        _tcscpy_s(szEmail, email);
-        _tcscpy_s(szJobTitle, job);
     }
-// Members
-// ----------------
+    // Members
+    // ----------------
     /// <summary>Уникален идентификатор за ред</summary>
     long lId;
     /// <summary>Versioning</summary>
