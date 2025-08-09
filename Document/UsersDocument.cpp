@@ -33,7 +33,7 @@ bool CUsersDocument::AddUser(USERS& oRecUser)
 		return false;
 	}
 	m_oUsersArray.Add(new USERS(oRecUser));
-	UpdateAllViews(nullptr, InsertMode, (CObject*)&oRecUser);
+	UpdateAllViews(nullptr, (long)Modes::InsertMode, (CObject*)&oRecUser);
 	return true;
 }
 
@@ -55,7 +55,7 @@ bool CUsersDocument::UpdateUser(const long lID, USERS& oRecUser)
 
 		return false;
 	}
-	UpdateAllViews(nullptr, UpdateMode, (CObject*)&oRecUser);
+	UpdateAllViews(nullptr, (long)Modes::UpdateMode, (CObject*)&oRecUser);
 	return true;
 }
 
@@ -75,7 +75,7 @@ bool CUsersDocument::DeleteUser(const long lID)
 			break;
 		}
 	}
-	UpdateAllViews(nullptr, DeleteMode, (CObject*)&m_oUsersArray[0]);
+	UpdateAllViews(nullptr, (long)Modes::DeleteMode, (CObject*)&m_oUsersArray[0]);
 	return true;
 }
 
@@ -84,7 +84,7 @@ CUsersTypedPtrArray& CUsersDocument::GetUsers()
 	return m_oUsersArray;
 }
 
-void UpdateAllViews(CView* pSender, LPARAM lHint = 0L, CObject* pHint = NULL)
+static void UpdateAllViews(CView* pSender, LPARAM lHint = 0L, CObject* pHint = NULL)
 {
 
 }

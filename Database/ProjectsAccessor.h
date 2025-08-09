@@ -43,7 +43,7 @@ protected:
             COLUMN_ENTRY(PROJECTS_COLUMN_ENTRY_NAME, m_recProject.szName)
             COLUMN_ENTRY(PROJECTS_COLUMN_ENTRY_DESCRIPTION, m_recProject.szDescription)
             COLUMN_ENTRY(PROJECTS_COLUMN_ENTRY_PROJECT_MANAGER_ID, m_recProject.lProjectManagerId)
-            COLUMN_ENTRY(PROJECTS_COLUMN_ENTRY_STATE, m_recProject.bState)
+            COLUMN_ENTRY(PROJECTS_COLUMN_ENTRY_STATE, m_recProject.sState)
             COLUMN_ENTRY(PROJECTS_COLUMN_ENTRY_TOTAL_EFFORT, m_recProject.sTotalEffort)
         END_ACCESSOR()
     END_ACCESSOR_MAP()

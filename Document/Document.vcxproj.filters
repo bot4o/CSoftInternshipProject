@@ -30,6 +30,9 @@
     <ClCompile Include="UsersDocument.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ProjectsAndTasksDocument.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Document.def">
@@ -56,6 +59,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="UsersDocument.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectsAndTasksDocument.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

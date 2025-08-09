@@ -220,6 +220,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="ProjectsView.cpp" />
     <ClCompile Include="UIView.cpp" />
     <ClCompile Include="UsersView.cpp" />
   </ItemGroup>
@@ -233,6 +234,7 @@
     <ClInclude Include="CSoftInternshipProjectView.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="ProjectsView.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="UsersView.h" />

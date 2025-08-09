@@ -16,14 +16,9 @@ class UIDialogDLL_EXP CUsersDialog : public CDialogEx
 	DECLARE_DYNAMIC(CUsersDialog)
 	DECLARE_MESSAGE_MAP()
 
-	// Constants
-	// ----------------
-
-
 	// Constructor / Destructor
 	// ----------------
 public:
-	//CUsersDialog(CWnd* pParent = nullptr);   // standard constructor
 	CUsersDialog(USERS& oSelectedUser, Modes oActionMode, CWnd* pParent = nullptr);
 	virtual ~CUsersDialog();
 
@@ -43,9 +38,6 @@ protected:
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_USERS_DIALOG };
 #endif
-	// Overrides
-	// ----------------
-
 
 	// Members
 	// ----------------

@@ -76,13 +76,13 @@ BOOL CUsersDialog::OnInitDialog()
 
 	switch (m_oActionMode)
 	{
-	case InsertMode:
+	case Modes::InsertMode:
 		SetEditBoxText();
 		break;
-	case UpdateMode:
+	case Modes::UpdateMode:
 		SetEditBoxText();
 		break;
-	case PreviewMode:
+	case Modes::DeleteMode:
 		m_edbName.SetReadOnly();
 		m_edbEmail.SetReadOnly();
 		m_edbJobTitle.SetReadOnly();
@@ -97,7 +97,7 @@ BOOL CUsersDialog::OnInitDialog()
 
 void CUsersDialog::OnOK()
 {
-	if (m_oActionMode == PreviewMode) {
+	if (m_oActionMode == Modes::PreviewMode) {
 		return CDialogEx::OnOK();
 	}
 	CString strName;

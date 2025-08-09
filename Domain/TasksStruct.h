@@ -9,6 +9,11 @@
 /////////////////////////////////////////////////////////////////////////////
 // TASKS
 
+//TODO: enum za state
+//enum State {
+//    Finnished,
+//};
+
 /// <summary>Таблична структура от данни за таблица TASKS</summary>
 struct TASKS
 {

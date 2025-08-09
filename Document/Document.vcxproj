@@ -221,6 +221,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="ProjectsAndTasksDocument.cpp" />
     <ClCompile Include="UsersDocument.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -229,6 +230,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CSoftInternshipProjectDoc.h" />
+    <ClInclude Include="ProjectsAndTasksDocument.h" />
     <ClInclude Include="UsersDocument.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />

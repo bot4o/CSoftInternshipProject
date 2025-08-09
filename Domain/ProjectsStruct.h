@@ -19,14 +19,14 @@ public:
     {
         SecureZeroMemory(this, sizeof(*this));
     }
-    PROJECTS(const CString& strName, const CString& strDescription, const long& lProjectManagerId, const bool& bState, const short& sTotalEffort)
+    PROJECTS(const CString& strName, const CString& strDescription, const long& lProjectManagerId, const bool& sState, const short& sTotalEffort)
     {
         SecureZeroMemory(this, sizeof(*this));
         this->lUpdateCounter = 0;
         _tcscpy_s(this->szName, strName);
         _tcscpy_s(this->szDescription, strDescription);
         this->lProjectManagerId = lProjectManagerId;
-        this->bState = bState;
+        this->sState = sState;
         this->sTotalEffort = sTotalEffort;
     }
     // Members
@@ -42,7 +42,7 @@ public:
     /// <summary>Идентификатор на мениджър на проекта</summary>
     long lProjectManagerId;
     /// <summary>Състояние на проекта: 0 -> Активен; 1 -> Приключен;</summary>
-    bool bState;
+    short sState;
     /// <summary>  Общо вложени усилия в проект</summary>
     short sTotalEffort;
 };

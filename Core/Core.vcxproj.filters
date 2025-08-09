@@ -52,7 +52,7 @@
     <ClInclude Include="DialogModes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="UsersAutoCleanArray.h">
+    <ClInclude Include="AutoCleanArray.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

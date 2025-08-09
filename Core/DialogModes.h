@@ -2,7 +2,7 @@
 
 #include "DLLExport.h"
 
-enum Modes
+enum class Modes
 {
 	InsertMode,
 	UpdateMode,

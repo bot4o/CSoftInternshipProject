@@ -204,7 +204,7 @@
     <None Include="res\Core.rc2" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="UsersAutoCleanArray.h" />
+    <ClInclude Include="AutoCleanArray.h" />
     <ClInclude Include="Core.h" />
     <ClInclude Include="DialogModes.h" />
     <ClInclude Include="DLLExport.h" />

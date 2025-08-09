@@ -61,12 +61,6 @@
     <ClInclude Include="TasksAccessor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ProjectsTable.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TasksTable.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Table.h">
       <Filter>Header Files</Filter>
     </ClInclude>

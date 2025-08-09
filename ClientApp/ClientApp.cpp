@@ -8,6 +8,8 @@
 #include "DBConnection.h"
 #include "UsersDocument.h"
 #include "UsersView.h"
+#include "ProjectsAndTasksDocument.h"
+#include "ProjectsView.h"
 
 #include "DLLExport.h"
                           
@@ -37,19 +39,34 @@ BOOL ClientApp::InitInstance()
 	SetRegistryKey(_T("Local AppWizard-Generated Applications"));
 	LoadStdProfileSettings(4);
 
-	CMultiDocTemplate* pDocTemplate;
-	pDocTemplate = new CMultiDocTemplate(IDR_CSoftInternshipProjectTYPE,
-		RUNTIME_CLASS(CUsersDocument),
-		RUNTIME_CLASS(CChildFrame),
-		RUNTIME_CLASS(CUsersView));
-		/*RUNTIME_CLASS(CCSoftInternshipProjectDocument),
-		RUNTIME_CLASS(CChildFrame),
-		RUNTIME_CLASS(CCSoftInternshipProjectView));*/
+	//CMultiDocTemplate* pUsersTemplate;
+	//pUsersTemplate = new CMultiDocTemplate(IDR_CSoftInternshipProjectTYPE,
+	//	RUNTIME_CLASS(CUsersDocument),
+	//	RUNTIME_CLASS(CChildFrame),
+	//	RUNTIME_CLASS(CUsersView));
+	//	/*RUNTIME_CLASS(CCSoftInternshipProjectDocument),
+	//	RUNTIME_CLASS(CChildFrame),
+	//	RUNTIME_CLASS(CCSoftInternshipProjectView));*/
 
-	if (!pDocTemplate)
-		return FALSE; 
+	//if (!pUsersTemplate)
+	//	return FALSE; 
 
-	AddDocTemplate(pDocTemplate);
+	//AddDocTemplate(pUsersTemplate);
+
+	CMultiDocTemplate* pProjectsTemplate;
+	pProjectsTemplate = new CMultiDocTemplate(IDR_CSoftInternshipProjectTYPE,
+		RUNTIME_CLASS(CProjectsAndTasksDocument),
+		RUNTIME_CLASS(CChildFrame),
+		RUNTIME_CLASS(CProjectsView));
+
+	/*RUNTIME_CLASS(CCSoftInternshipProjectDocument),
+	RUNTIME_CLASS(CChildFrame),
+	RUNTIME_CLASS(CCSoftInternshipProjectView));*/
+
+	if (!pProjectsTemplate)
+		return FALSE;
+
+	AddDocTemplate(pProjectsTemplate);
 
 	CMainFrame* pMainFrame = new CMainFrame;
 	if (!pMainFrame || !pMainFrame->LoadFrame(IDR_MAINFRAME))

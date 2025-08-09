@@ -220,12 +220,10 @@
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="ProjectsAccessor.h" />
-    <ClInclude Include="ProjectsTable.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Table.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TasksAccessor.h" />
-    <ClInclude Include="TasksTable.h" />
     <ClInclude Include="UsersAccessor.h" />
   </ItemGroup>
   <ItemGroup>

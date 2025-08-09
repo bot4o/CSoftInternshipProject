@@ -12,11 +12,30 @@
 #define IDCANCEL                        1013
 #define IDC_EDIT1                       1014
 #define IDC_EDIT2                       1015
+#define IDC_EDB_DESC                    1015
 #define IDC_EDIT4                       1016
 #define IDC_EDIT_JOB_TITLE              1016
+#define IDD_PROJECTS_DIALOG             1016
 #define IDC_STATIC_NAME                 1017
 #define IDC_STATIC_EMAIL                1018
+#define IDD_TASKS_DIALOG                1018
 #define IDC_STATIC_JOB_TITLE            1019
+#define IDC_EDIT7                       1019
+#define IDC_BTN_ADD_TASK                1020
+#define IDC_COMBO1                      1021
+#define IDC_RADIO1                      1022
+#define IDC_RADIO2                      1023
+#define IDC_LIST1                       1023
+#define IDC_RADIO3                      1024
+#define IDC_CMB_PROJECT_MANAGER         1024
+#define IDC_STT_NAME                    1025
+#define IDC_STT_DESCRIPTION             1026
+#define IDC_STT_PROJECT_MANAGER         1027
+#define IDC_STT_STATE                   1028
+#define IDC_STT_STATE_RESULT            1029
+#define IDC_STT_TOTAL_EFFORT            1030
+#define IDC_STT_TOTAL_EFFORT_RESULT     1031
+#define IDC_STT_TASKS                   1032
 #define ID_ADD_DELETE                   32771
 #define ID_ADD_NEWUSER                  32772
 #define ID_ADD_NEWUSER32773             32773
@@ -31,9 +50,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        1016
+#define _APS_NEXT_RESOURCE_VALUE        1020
 #define _APS_NEXT_COMMAND_VALUE         32781
-#define _APS_NEXT_CONTROL_VALUE         1020
+#define _APS_NEXT_CONTROL_VALUE         1033
 #define _APS_NEXT_SYMED_VALUE           1000
 #endif
 #endif

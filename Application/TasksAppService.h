@@ -1,35 +1,29 @@
 ﻿#pragma once
 #include "pch.h"
 #include "Resource.h"
-#include "ProjectsStruct.h"
 #include "TasksStruct.h"
-#include "UsersStruct.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CSampleClass
 
-class ApplicationDLL_EXP CProjectsAppService
+class ApplicationDLL_EXP CTasksAppService
 {
 	// Constructor / Destructor
 	// ----------------
 public:
-	CProjectsAppService();
-	virtual ~CProjectsAppService();
+	CTasksAppService();
+	virtual ~CTasksAppService();
 
 	// Methods
 	// ----------------
 	/// <summary>Извежда всички потребители в базата</summary>  
-	bool SelectAll(CProjectsTypedPtrArray& oProjectsArray);
+	bool SelectAll(CTasksTypedPtrArray& oTasksArray);
 	/// <summary>Извежда потребител от базата според ID</summary>  
-	bool SelectWhereID(const long lID, PROJECTS& recProject);
+	bool SelectWhereID(const long lID, TASKS& recTask);
 	/// <summary>Променя длъжноста на потребител от базата според ID</summary>  
-	bool UpdateWhereID(const long lID, PROJECTS& recProject);
+	bool UpdateWhereID(const long lID, TASKS& recTask);
 	/// <summary>Вмъква нов потребител в базата</summary>  
-	bool Insert(PROJECTS& recProject);
+	bool Insert(TASKS& recTask);
 	/// <summary>Изтрива потребител от базата според ID</summary>  
 	bool DeleteWhereID(const long lID);
-
-	bool SelectAllUsers(CUsersTypedPtrArray& oUsersArray);
-
-	bool SelectAllTasks(CTasksTypedPtrArray& oTasksArray);
 };

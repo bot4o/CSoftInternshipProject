@@ -1,8 +1,7 @@
 ﻿#include "pch.h"
 #include "UsersView.h"
 #include "DialogModes.h"
-#include "UsersDialog.h"
-#include "UsersAutoCleanArray.h"
+#include "AutoCleanArray.h"
 
 #define MODAL_OK 1
 #define MODAL_CANCEL 2
@@ -17,10 +16,10 @@ IMPLEMENT_DYNCREATE(CUsersView, CListView)
 BEGIN_MESSAGE_MAP(CUsersView, CListView)
 	ON_NOTIFY_REFLECT(NM_DBLCLK, &CUsersView::OnListDoubleClick)
 	ON_NOTIFY_REFLECT(NM_RCLICK, &CUsersView::OnNMRClick)
-	ON_COMMAND(ID_POPUP_USERS_UPDATE, &CUsersView::OnContextEdit)
-	ON_COMMAND(ID_POPUP_USERS_DELETE, &CUsersView::OnContextDelete)
-	ON_COMMAND(ID_POPUP_USERS_INSERT, &CUsersView::OnContextInsert)
-	ON_COMMAND(ID_POPUP_USERS_LOAD, &CUsersView::OnContextLoad)
+	ON_COMMAND(ID_POPUP_CRUD_UPDATE, &CUsersView::OnContextEdit)
+	ON_COMMAND(ID_POPUP_CRUD_DELETE, &CUsersView::OnContextDelete)
+	ON_COMMAND(ID_POPUP_CRUD_INSERT, &CUsersView::OnContextInsert)
+	ON_COMMAND(ID_POPUP_CRUD_LOAD, &CUsersView::OnContextLoad)
 END_MESSAGE_MAP()
 
 // Constructor / Destructor
@@ -78,14 +77,14 @@ void CUsersView::OnNMRClick(NMHDR* pNMHDR, LRESULT* pResult)
 	GetCursorPos(&oPoint);
 
 	CMenu oMenu;
-	oMenu.LoadMenu(IDR_POPUP_USERS_VIEW);
+	oMenu.LoadMenu(IDR_POPUP_CRUD_VIEW);
 	CMenu* pPopup = oMenu.GetSubMenu(0);
 
 	int nSelectedIndex = GetListCtrl().GetNextItem(-1, LVNI_SELECTED);
 	if (nSelectedIndex == -1)
 	{
-		pPopup->EnableMenuItem(ID_POPUP_USERS_DELETE, MF_GRAYED);
-		pPopup->EnableMenuItem(ID_POPUP_USERS_UPDATE, MF_GRAYED);
+		pPopup->EnableMenuItem(ID_POPUP_CRUD_DELETE, MF_GRAYED);
+		pPopup->EnableMenuItem(ID_POPUP_CRUD_UPDATE, MF_GRAYED);
 
 	}
 	if (pPopup)
@@ -229,7 +228,7 @@ void CUsersView::OnUpdate(CView* /*pSender*/, LPARAM lHint, CObject* pHint)
 
 	switch (lHint)
 	{
-	case InsertMode:
+	case (long)Modes::InsertMode:
 	{
 		int nItem = GetListCtrl().InsertItem(GetListCtrl().GetItemCount(), strId);
 		GetListCtrl().SetItemText(nItem, 1, strUpdateCounter);
@@ -238,7 +237,7 @@ void CUsersView::OnUpdate(CView* /*pSender*/, LPARAM lHint, CObject* pHint)
 		GetListCtrl().SetItemText(nItem, 4, pUser->szJobTitle);
 		break;
 	}
-	case UpdateMode:
+	case (long)Modes::UpdateMode:
 	{
 		int nSelectedIndex = GetListCtrl().GetNextItem(-1, LVNI_SELECTED);
 		if (nSelectedIndex == -1)
@@ -252,7 +251,7 @@ void CUsersView::OnUpdate(CView* /*pSender*/, LPARAM lHint, CObject* pHint)
 		GetListCtrl().SetItemText(nSelectedIndex, 4, pUser->szJobTitle);
 		break;
 	}
-	case DeleteMode:
+	case(long)Modes::DeleteMode:
 	{
 		int nSelectedIndex = GetListCtrl().GetNextItem(-1, LVNI_SELECTED);
 		if (nSelectedIndex == -1)
