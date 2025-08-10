@@ -1,4 +1,5 @@
 ﻿#include "pch.h"
+#include "TasksAppService.h"
 #include "ProjectsAppService.h"
 #include "ProjectsAccessor.h"
 #include "UsersAccessor.h"
@@ -71,26 +72,6 @@ bool CProjectsAppService::DeleteWhereID(const long lID)
 	if (!CBaseTable<PROJECTS, CProjectsAccessor>(TABLE_NAME).DeleteWhereID(lID))
 	{
 		AfxMessageBox(_T("Error at the m_oProjectsTable.DeleteWhereID() in the application layer"));
-		return false;
-	}
-	return true;
-}
-
-bool CProjectsAppService::SelectAllUsers(CUsersTypedPtrArray& oUsersArray)
-{
-	if (!CBaseTable<USERS, CUsersAccessor>(TABLE_NAME).SelectAll(oUsersArray))
-	{
-		AfxMessageBox(_T("Error at the oUsersTable.SelectAll() in the application layer"));
-		return false;
-	}
-	return true;
-}
-
-bool CProjectsAppService::SelectAllTasks(CTasksTypedPtrArray& oTasksArray)
-{
-	if (!CBaseTable<TASKS, CTasksAccessor>(TABLE_NAME).SelectAll(oTasksArray))
-	{
-		AfxMessageBox(_T("Error at the oTasksArray.SelectAll() in the application layer"));
 		return false;
 	}
 	return true;

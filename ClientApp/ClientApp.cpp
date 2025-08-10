@@ -44,9 +44,7 @@ BOOL ClientApp::InitInstance()
 	//	RUNTIME_CLASS(CUsersDocument),
 	//	RUNTIME_CLASS(CChildFrame),
 	//	RUNTIME_CLASS(CUsersView));
-	//	/*RUNTIME_CLASS(CCSoftInternshipProjectDocument),
-	//	RUNTIME_CLASS(CChildFrame),
-	//	RUNTIME_CLASS(CCSoftInternshipProjectView));*/
+
 
 	//if (!pUsersTemplate)
 	//	return FALSE; 
@@ -58,10 +56,6 @@ BOOL ClientApp::InitInstance()
 		RUNTIME_CLASS(CProjectsAndTasksDocument),
 		RUNTIME_CLASS(CChildFrame),
 		RUNTIME_CLASS(CProjectsView));
-
-	/*RUNTIME_CLASS(CCSoftInternshipProjectDocument),
-	RUNTIME_CLASS(CChildFrame),
-	RUNTIME_CLASS(CCSoftInternshipProjectView));*/
 
 	if (!pProjectsTemplate)
 		return FALSE;

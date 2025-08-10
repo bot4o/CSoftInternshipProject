@@ -28,8 +28,4 @@ public:
 	bool Insert(PROJECTS& recProject);
 	/// <summary>Изтрива потребител от базата според ID</summary>  
 	bool DeleteWhereID(const long lID);
-
-	bool SelectAllUsers(CUsersTypedPtrArray& oUsersArray);
-
-	bool SelectAllTasks(CTasksTypedPtrArray& oTasksArray);
 };

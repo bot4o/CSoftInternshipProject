@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "ProjectsAndTasksDocument.h"
+#include "UsersAppService.h"
 #include "ProjectsAppService.h"
 #include "TasksAppService.h"
 #include "DialogModes.h"
@@ -150,17 +151,9 @@ CUsersTypedPtrArray& CProjectsAndTasksDocument::GetUsers()
 	return m_oUsersArray;
 }
 
-bool CProjectsAndTasksDocument::FillUsersArray()
+bool CProjectsAndTasksDocument::LoadAllUsers()
 {
-	if (!CProjectsAppService().SelectAllUsers(m_oUsersArray))
-	{
-		return false;
-	}
-	return true;
-}
-bool CProjectsAndTasksDocument::FillTasksArray()
-{
-	if (!CProjectsAppService().SelectAllTasks(m_oTasksArray))
+	if (!CUsersAppService().SelectAll(m_oUsersArray))
 	{
 		return false;
 	}
@@ -177,8 +170,15 @@ BOOL CProjectsAndTasksDocument::OnNewDocument()
 {
 	if (!CDocument::OnNewDocument())
 		return FALSE;
-	FillUsersArray();
-	FillTasksArray();
+
+	if (!LoadAllUsers()) {
+		AfxMessageBox(_T("Cound't initialize all users into this document"));
+		return FALSE;
+	}
+	if (!LoadAllTasks()) {
+		AfxMessageBox(_T("Cound't initialize all users into this document"));
+		return FALSE;
+	}
 	if (!LoadAllProjects()) {
 		AfxMessageBox(_T("Cound't initialize all users into this document"));
 		return FALSE;

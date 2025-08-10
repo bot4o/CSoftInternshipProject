@@ -49,8 +49,8 @@ public:
 	/// <summary>Gets the already populated m_oTasksArray for the TasksView</summary>  
 
 private: 
-	bool FillUsersArray();
-	bool FillTasksArray();
+	bool LoadAllUsers();
+	
 
 	// Overrides
 	// ----------------
@@ -63,6 +63,4 @@ private:
 	CProjectsTypedPtrArray m_oProjectsArray;
 	CTasksTypedPtrArray m_oTasksArray;
 	CUsersTypedPtrArray m_oUsersArray;
-
-
 };
