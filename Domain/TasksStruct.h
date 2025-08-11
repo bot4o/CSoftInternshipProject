@@ -53,5 +53,7 @@ public:
     short sState;
     /// <summary>Усилия по задачата</summary>
     short sEffort;
+
+
 };
 typedef CTypedPtrArray<CPtrArray, TASKS*> CTasksTypedPtrArray;

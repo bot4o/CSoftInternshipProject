@@ -27,8 +27,10 @@ public:
 
 	// Methods
 	// ----------------
+public:
 	void SetDialogElementsText();
-	bool ValidateDialog(CString strName, CString strDescription, long lProjectManager, short sState, short sTotalEffort);
+	void SetTaskInfo();
+	bool ValidateDialog(const PROJECTS& oValidateProject);
 	virtual BOOL OnInitDialog();
 	virtual void OnOK();
 	virtual void OnCancel();
@@ -52,6 +54,8 @@ private:
 	CComboBox m_cmbProjectManager;
 	CStatic m_sttState;
 	CStatic m_sttTotalEffort;
+	CListBox m_lsbTasks;
 public:
 	afx_msg void OnBnClickedBtnAddTask();
+//	afx_msg void OnCbnSelchangeCmbProjectManager();
 };

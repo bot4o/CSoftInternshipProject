@@ -11,8 +11,10 @@
 #define IDOK                            1012
 #define IDCANCEL                        1013
 #define IDC_EDIT1                       1014
+#define IDC_EDB_TASK_NAME               1014
 #define IDC_EDIT2                       1015
 #define IDC_EDB_DESC                    1015
+#define IDC_EDB_TASK_DESC               1015
 #define IDC_EDIT4                       1016
 #define IDC_EDIT_JOB_TITLE              1016
 #define IDD_PROJECTS_DIALOG             1016
@@ -21,13 +23,16 @@
 #define IDD_TASKS_DIALOG                1018
 #define IDC_STATIC_JOB_TITLE            1019
 #define IDC_EDIT7                       1019
+#define IDC_EDB_TASK_EFFORT             1019
 #define IDC_BTN_ADD_TASK                1020
 #define IDC_COMBO1                      1021
+#define IDC_CMB_TASK_USER               1021
 #define IDC_RADIO1                      1022
-#define IDC_RADIO2                      1023
+#define IDC_RDB_TASK_STATE_1            1022
 #define IDC_LIST1                       1023
-#define IDC_RADIO3                      1024
+#define IDC_RDB_TASK_STATE_2            1023
 #define IDC_CMB_PROJECT_MANAGER         1024
+#define IDC_RDB_TASK_STATE_3            1024
 #define IDC_STT_NAME                    1025
 #define IDC_STT_DESCRIPTION             1026
 #define IDC_STT_PROJECT_MANAGER         1027
@@ -36,6 +41,12 @@
 #define IDC_STT_TOTAL_EFFORT            1030
 #define IDC_STT_TOTAL_EFFORT_RESULT     1031
 #define IDC_STT_TASKS                   1032
+#define IDC_STT_PROJECT                 1033
+#define IDC_STT_TASK_USER               1034
+#define IDC_STT_TASK_DESC               1035
+#define IDC_STT_TASK_EFFORT             1036
+#define IDC_STT_TASK_STATE              1037
+#define IDC_STT_TASK_NAME               1038
 #define ID_ADD_DELETE                   32771
 #define ID_ADD_NEWUSER                  32772
 #define ID_ADD_NEWUSER32773             32773
@@ -52,7 +63,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        1020
 #define _APS_NEXT_COMMAND_VALUE         32781
-#define _APS_NEXT_CONTROL_VALUE         1033
+#define _APS_NEXT_CONTROL_VALUE         1039
 #define _APS_NEXT_SYMED_VALUE           1000
 #endif
 #endif

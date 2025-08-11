@@ -42,6 +42,7 @@ CProjectsAndTasksDocument* CProjectsView::GetDocument() const
 	ASSERT(m_pDocument->IsKindOf(RUNTIME_CLASS(CProjectsAndTasksDocument)));
 	return (CProjectsAndTasksDocument*)m_pDocument;
 }
+
 void CProjectsView::OnListDoubleClick(NMHDR* pNMHDR, LRESULT* pResult)
 {
 	CUsersTypedPtrArray& oUsersArray = GetDocument()->GetUsers();
@@ -103,6 +104,8 @@ void CProjectsView::OnContextInsert()
 	CUsersTypedPtrArray& oUsersArray = GetDocument()->GetUsers();
 	CTasksTypedPtrArray& oTasksArray = GetDocument()->GetTasks();
 
+	/*CTasksTypedPtrArray oNewTasks = CTasksTypedPtrArray();*/
+	
 	PROJECTS oProject = PROJECTS();
 	CProjectsDialog oProjectsDialog(oProject, Modes::InsertMode, oUsersArray, oTasksArray);
 
@@ -112,6 +115,13 @@ void CProjectsView::OnContextInsert()
 	if (nResult == MODAL_OK)
 	{
 		GetDocument()->AddProject(oProject);
+		/*for (int i = 0; i < oTasksArray.GetSize(); i++)
+		{
+			if (oTasksArray[i]->lProjectId == oProject.lId)
+			{
+				if()
+			}
+		}*/
 	}
 }
 
@@ -209,8 +219,12 @@ void CProjectsView::OnInitialUpdate()
 	GetListCtrl().InsertColumn(0, _T("ID"), LVCFMT_LEFT, 50);
 	GetListCtrl().InsertColumn(1, _T("UPDATE_COUNTER"), LVCFMT_LEFT, 50);
 	GetListCtrl().InsertColumn(2, _T("NAME"), LVCFMT_LEFT, 200);
-	GetListCtrl().InsertColumn(3, _T("EMAIL"), LVCFMT_LEFT, 200);
-	GetListCtrl().InsertColumn(4, _T("JOB_TITLE"), LVCFMT_LEFT, 150);
+	GetListCtrl().InsertColumn(3, _T("DESCRIPTION"), LVCFMT_LEFT, 200);
+	GetListCtrl().InsertColumn(4, _T("PROJECT_MANAGER_ID"), LVCFMT_LEFT, 150);
+	GetListCtrl().InsertColumn(4, _T("STATE"), LVCFMT_LEFT, 150);
+	GetListCtrl().InsertColumn(4, _T("TOTAL_EFFORT"), LVCFMT_LEFT, 150);
+
+
 
 	OnContextLoad();
 
