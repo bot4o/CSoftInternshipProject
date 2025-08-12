@@ -78,7 +78,7 @@ void CProjectsView::OnListDoubleClick(NMHDR* pNMHDR, LRESULT* pResult)
 
 	if (nResult == MODAL_OK)
 	{
-		GetDocument()->UpdateProject(lID, oProjectDetails);
+		GetDocument()->UpdateProjectWithTasks(lID, oProjectDetails);
 	}
 }
 
@@ -156,7 +156,7 @@ void CProjectsView::OnContextEdit()
 
 	if (nResult == MODAL_OK)
 	{
-		GetDocument()->UpdateProject(lID, oProjectDetails);
+		GetDocument()->UpdateProjectWithTasks(lID, oProjectDetails);
 	}
 }
 

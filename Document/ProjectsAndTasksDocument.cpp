@@ -34,7 +34,7 @@ CProjectsAndTasksDocument::~CProjectsAndTasksDocument()
 
 bool CProjectsAndTasksDocument::LoadAllProjects()
 {
-	if (!CProjectsAppService<PROJECTS, CProjectsAccessor>(TABLE_NAME_PROJECTS).SelectAll(m_oProjectsArray))
+	if (!CProjectsAppService().SelectAllProjects(m_oProjectsArray))
 	{
 		AfxMessageBox(_T("Error at the CProjectsAppService().SelectAll() in the document layer"));
 		return false;
@@ -42,9 +42,9 @@ bool CProjectsAndTasksDocument::LoadAllProjects()
 	return true;
 }
 
-bool CProjectsAndTasksDocument::UpdateProject(const long lID, CProjectDetails& oRecProject)
+bool CProjectsAndTasksDocument::UpdateProject(const long lID, PROJECTS& oRecProject)
 {
-	if (!CProjectsAppService<CProjectDetails, CProjectsAccessor>(TABLE_NAME_PROJECTS).UpdateWhereID(lID, oRecProject))
+	if (!CProjectsAppService().UpdateProjectByID(lID, oRecProject))
 	{
 		AfxMessageBox(_T("Error at the CProjectsAppService().UpdateWhereID() in the document layer"));
 
@@ -56,7 +56,7 @@ bool CProjectsAndTasksDocument::UpdateProject(const long lID, CProjectDetails& o
 
 bool CProjectsAndTasksDocument::DeleteProject(const long lID)
 {
-	if (!CProjectsAppService<PROJECTS, CProjectsAccessor>(TABLE_NAME_PROJECTS).DeleteWhereID(lID))
+	if (!CProjectsAppService().DeleteProjectByID(lID))
 	{
 		AfxMessageBox(_T("Error at the CProjectsAppService().DeleteWhereID() in the document layer"));
 
@@ -76,7 +76,7 @@ bool CProjectsAndTasksDocument::DeleteProject(const long lID)
 
 bool CProjectsAndTasksDocument::LoadAllTasks()
 {
-	if (!CProjectsAppService<TASKS, CTasksAccessor>(TABLE_NAME_TASKS).SelectAll(m_oTasksArray))
+	if (!CProjectsAppService().SelectAllTasks(m_oTasksArray))
 	{
 		AfxMessageBox(_T("Error at the CTasksAppService().SelectAll() in the document layer"));
 		return false;
@@ -86,7 +86,7 @@ bool CProjectsAndTasksDocument::LoadAllTasks()
 
 bool CProjectsAndTasksDocument::UpdateTask(const long lID, TASKS& oRecTask)
 {
-	if (!CProjectsAppService<TASKS, CTasksAccessor>(TABLE_NAME_TASKS).UpdateWhereID(lID, oRecTask))
+	if (!CProjectsAppService().UpdateTaskByID(lID, oRecTask))
 	{
 		AfxMessageBox(_T("Error at the CTasksAppService().UpdateWhereID() in the document layer"));
 
@@ -98,7 +98,7 @@ bool CProjectsAndTasksDocument::UpdateTask(const long lID, TASKS& oRecTask)
 
 bool CProjectsAndTasksDocument::DeleteTask(const long lID)
 {
-	if (!CProjectsAppService<TASKS, CTasksAccessor>(TABLE_NAME_TASKS).DeleteWhereID(lID))
+	if (!CProjectsAppService().DeleteTaskByID(lID))
 	{
 		AfxMessageBox(_T("Error at the CTasksAppService().DeleteWhereID() in the document layer"));
 
@@ -169,7 +169,16 @@ BOOL CProjectsAndTasksDocument::OnNewDocument()
 
 bool CProjectsAndTasksDocument::AddProjectWithTasks(CProjectDetails& oProjectDetails)
 {
-	if (!CProjectsAppService<PROJECTS, CProjectsAccessor>::AddProjectWithTasks(oProjectDetails))
+	if (!CProjectsAppService().AddProjectWithTasks(oProjectDetails))
+	{
+		AfxMessageBox(_T("Error at AddProjectWithTasks() in the Document Layer"));
+		return false;
+	}
+	return true;
+}
+bool CProjectsAndTasksDocument::UpdateProjectWithTasks(const long lProjectID, CProjectDetails& oProjectDetails)
+{
+	if(!CProjectsAppService().UpdateProjectWithTasks(lProjectID, oProjectDetails))
 	{
 		AfxMessageBox(_T("Error at AddProjectWithTasks() in the Document Layer"));
 		return false;

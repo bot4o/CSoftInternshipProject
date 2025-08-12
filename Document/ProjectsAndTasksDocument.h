@@ -32,7 +32,7 @@ public:
 	/// <summary>Loads all projects from the PROJECTS table</summary>  
 	bool LoadAllProjects();
 	/// <summary>Alters the role of a specific project in the PROJECTS table</summary>  
-	bool UpdateProject(const long lID, CProjectDetails& recProject);
+	bool UpdateProject(const long lID, PROJECTS& recProject);
 	/// <summary>Removes a specific project from the PROJECTS table</summary>  
 	bool DeleteProject(const long lID);
 	/// <summary>Gets the already populated m_oProjectsArray for the ProjectsView</summary>  
@@ -45,7 +45,9 @@ public:
 	/// <summary>Removes a specific Task from the Task table</summary>  
 	bool DeleteTask(const long lID);
 	/// <summary>Gets the already populated m_oTasksArray for the TasksView</summary>
-	bool AddProjectWithTasks(CProjectDetails& ProjectDetails);
+	bool AddProjectWithTasks(CProjectDetails& oProjectDetails);
+
+	bool UpdateProjectWithTasks(const long lProjectID, CProjectDetails& oProjectDetails);
 private:
 	bool LoadAllUsers();
 	// Overrides

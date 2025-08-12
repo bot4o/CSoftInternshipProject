@@ -161,7 +161,8 @@ void CProjectsDialog::OnCancel()
 
 void CProjectsDialog::SetTaskInfo()
 {
-	short sState, sTotalEffort = 0;
+	short sState = -1;
+	short sTotalEffort = 0;
 	for (int i = 0; i < m_oTasksArray.GetSize(); i++)
 	{
 		TASKS* oCurTask = m_oTasksArray[i];
@@ -176,7 +177,7 @@ void CProjectsDialog::SetTaskInfo()
 			}
 			else if (sTaskState == 2)
 			{
-				sTaskState = 0;
+				sState = 0;
 			}
 			else
 			{
@@ -185,8 +186,25 @@ void CProjectsDialog::SetTaskInfo()
 			}
 		}
 	}
-	m_sttState.SetWindowTextW(_T("%d", sState));
-	m_sttTotalEffort.SetWindowTextW(_T("%i", sTotalEffort));
+	CString stateStr, effortStr;
+
+	switch (sState)
+	{
+	case 0:
+		stateStr = _T("Active");
+		break;
+	case 1:
+		stateStr = _T("Finished");
+		break;
+	default:
+		stateStr = _T("None");
+		break;
+	}
+	
+	effortStr.Format(_T("%d"), sTotalEffort);
+
+	m_sttState.SetWindowTextW(stateStr);
+	m_sttTotalEffort.SetWindowTextW(effortStr);
 }
 
 void CProjectsDialog::OnBnClickedBtnAddTask()
