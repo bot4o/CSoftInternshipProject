@@ -24,12 +24,6 @@
     <ClCompile Include="UsersAppService.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ProjectsAppService.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TasksAppService.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Application.def">
@@ -59,9 +53,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ProjectsAppService.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TasksAppService.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

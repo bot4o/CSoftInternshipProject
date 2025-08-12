@@ -3,6 +3,7 @@
 #include "DialogModes.h"
 #include "ProjectsView.h"
 #include "ProjectsDialog.h"
+#include "ProjectDetails.h"
 
 
 #define MODAL_OK 1
@@ -65,8 +66,7 @@ void CProjectsView::OnListDoubleClick(NMHDR* pNMHDR, LRESULT* pResult)
 			oRefferedProject = oProjectsArray[i];
 		}
 	}
-
-	CProjectsDialog oProjectsDialog(*oRefferedProject, Modes::PreviewMode, oUsersArray, oTasksArray);
+	CProjectsDialog oProjectsDialog(, Modes::PreviewMode, oUsersArray, oTasksArray);
 
 	INT_PTR nResult = -1;
 	nResult = oProjectsDialog.DoModal();
@@ -104,24 +104,16 @@ void CProjectsView::OnContextInsert()
 	CUsersTypedPtrArray& oUsersArray = GetDocument()->GetUsers();
 	CTasksTypedPtrArray& oTasksArray = GetDocument()->GetTasks();
 
-	/*CTasksTypedPtrArray oNewTasks = CTasksTypedPtrArray();*/
-	
-	PROJECTS oProject = PROJECTS();
-	CProjectsDialog oProjectsDialog(oProject, Modes::InsertMode, oUsersArray, oTasksArray);
+	CProjectDetails oProjectDetails = CProjectDetails();
+
+	CProjectsDialog oProjectsDialog(oProjectDetails, Modes::InsertMode, oUsersArray, oTasksArray);
 
 	INT_PTR nResult = -1;
 	nResult = oProjectsDialog.DoModal();
 
 	if (nResult == MODAL_OK)
 	{
-		GetDocument()->AddProject(oProject);
-		/*for (int i = 0; i < oTasksArray.GetSize(); i++)
-		{
-			if (oTasksArray[i]->lProjectId == oProject.lId)
-			{
-				if()
-			}
-		}*/
+		GetDocument()->AddProjectWithTasks(oProjectDetails);
 	}
 }
 
@@ -147,7 +139,9 @@ void CProjectsView::OnContextEdit()
 			oRefferedProject = oProjectsArray[i];
 		}
 	}
-	CProjectsDialog oProjectsDialog(*oRefferedProject,  Modes::UpdateMode, oUsersArray, oTasksArray);
+	CTasksTypedPtrArray oNewTasksArray = CTasksTypedPtrArray();
+
+	CProjectsDialog oProjectsDialog(*oRefferedProject, oNewTasksArray, Modes::UpdateMode, oUsersArray, oTasksArray);
 
 	INT_PTR nResult = -1;
 	nResult = oProjectsDialog.DoModal();

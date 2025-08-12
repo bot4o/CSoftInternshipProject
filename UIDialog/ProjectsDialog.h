@@ -7,6 +7,7 @@
 #include "TasksStruct.h"
 #include "DialogModes.h"
 #include "UsersStruct.h"
+#include "ProjectDetails.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CUsersDialog
@@ -21,7 +22,7 @@ class UIDialogDLL_EXP CProjectsDialog : public CDialogEx
 	// Constructor / Destructor
 	// ----------------
 public:
-	CProjectsDialog(PROJECTS& oSelectedProject, Modes oActionMode, CUsersTypedPtrArray& oUsersArray,
+	CProjectsDialog(CProjectDetails oProjectDetails, Modes oActionMode, CUsersTypedPtrArray& oUsersArray,
 		CTasksTypedPtrArray& oTasksArray,  CWnd* pParent = nullptr);   // standard constructor
 	virtual ~CProjectsDialog();
 
@@ -45,6 +46,7 @@ protected:
 	// Members
 	// ----------------
 private:
+	CTasksTypedPtrArray& m_oNewTasksArray;
 	Modes m_oActionMode;
 	PROJECTS& m_oProject;
 	CUsersTypedPtrArray& m_oUsersArray;

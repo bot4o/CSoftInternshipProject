@@ -9,11 +9,6 @@
 /////////////////////////////////////////////////////////////////////////////
 // TASKS
 
-//TODO: enum za state
-//enum State {
-//    Finnished,
-//};
-
 /// <summary>Таблична структура от данни за таблица TASKS</summary>
 struct TASKS
 {
@@ -23,17 +18,6 @@ public:
     TASKS()
     {
         SecureZeroMemory(this, sizeof(*this));
-    }
-    TASKS(const CString& strName, const CString& strDescription, const long& lProjectId, const short& sState, const short& sEffort)
-    {
-        SecureZeroMemory(this, sizeof(*this));
-        this->lUpdateCounter = 0;
-        _tcscpy_s(this->szName, strName);
-        _tcscpy_s(this->szDescription, strDescription);
-        this->lProjectId = lProjectId;
-        this->lUserId = lUserId;
-        this->sState = sState;
-        this->sEffort = sEffort;
     }
     // Members
     // ----------------

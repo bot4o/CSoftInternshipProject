@@ -5,6 +5,8 @@
 #include "UsersStruct.h"
 #include "ProjectsStruct.h"
 #include "TasksStruct.h"
+#include "ProjectDetails.h"
+
 
 /////////////////////////////////////////////////////////////////////////////
 // CProjectsDocument
@@ -27,8 +29,6 @@ public:
 	CTasksTypedPtrArray& GetTasks();
 	CUsersTypedPtrArray& GetUsers();
 
-	/// <summary>Adds a new project to the PROJECTS table</summary>  
-	bool AddProject(PROJECTS& recProject);
 	/// <summary>Loads all projects from the PROJECTS table</summary>  
 	bool LoadAllProjects();
 	/// <summary>Alters the role of a specific project in the PROJECTS table</summary>  
@@ -38,18 +38,18 @@ public:
 	/// <summary>Gets the already populated m_oProjectsArray for the ProjectsView</summary>  
 	
 
-	/// <summary>Adds a new Task to the TASKS table</summary>  
-	bool AddTask(TASKS& recTask);
 	/// <summary>Loads all Task from the TASKS table</summary>  
 	bool LoadAllTasks();
 	/// <summary>Alters the role of a specific Task in the TASKS Table</summary>  
 	bool UpdateTask(const long lID, TASKS& recTask);
 	/// <summary>Removes a specific Task from the Task table</summary>  
 	bool DeleteTask(const long lID);
-	/// <summary>Gets the already populated m_oTasksArray for the TasksView</summary>  
+	/// <summary>Gets the already populated m_oTasksArray for the TasksView</summary>
+	bool AddProjectWithTasks(CProjectDetails &ProjectDetails);
 
 private: 
 	bool LoadAllUsers();
+
 	
 
 	// Overrides

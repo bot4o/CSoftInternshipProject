@@ -18,8 +18,8 @@ END_MESSAGE_MAP()
 // Constructor / Destructor
 // ----------------
 
-CTasksDialog::CTasksDialog(TASKS& oSelectedTask, Modes oActionMode, CUsersTypedPtrArray& oUsersArray, PROJECTS& oProject, CWnd* pParent /*=nullptr*/)
-	: CDialogEx(IDD_TASKS_DIALOG, pParent), m_oTask(oSelectedTask), m_oActionMode(oActionMode), m_oUsersArray(oUsersArray), m_oProject(oProject)
+CTasksDialog::CTasksDialog(TASKS& oSelectedTask, CTasksTypedPtrArray& oNewTasksArray, Modes oActionMode, CUsersTypedPtrArray& oUsersArray, PROJECTS& oProject, CWnd* pParent /*=nullptr*/)
+	: CDialogEx(IDD_TASKS_DIALOG, pParent), m_oTask(oSelectedTask), m_oNewTasksArray(oNewTasksArray), m_oActionMode(oActionMode), m_oUsersArray(oUsersArray), m_oProject(oProject)
 {
 
 }
@@ -150,6 +150,7 @@ void CTasksDialog::OnOK()
 		m_oTask.sState = sState;
 		m_oTask.sEffort = sEffort;
 		
+		m_oNewTasksArray.Add(&m_oTask);
 	}
 
 	return CDialogEx::OnOK();

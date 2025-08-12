@@ -3,7 +3,7 @@
 #include "pch.h"
 #include "resource.h"
 #include <afxcview.h> 
-#include "../Document/ProjectsAndTasksDocument.h"
+#include "ProjectsAndTasksDocument.h"
 
 //#include "ProjectsDialog.h"
 
@@ -40,4 +40,5 @@ public:
 
 	// Members
 	// ----------------
+private:
 };

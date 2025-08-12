@@ -7,6 +7,7 @@
 #include "DialogModes.h"
 #include "UsersStruct.h"
 #include "ProjectsStruct.h"
+#include "../Domain/ProjectDetails.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CTasksDialog
@@ -30,7 +31,7 @@ class CTasksDialog : public CDialogEx
 	// Constructor / Destructor
 	// ----------------
 public:
-	CTasksDialog(TASKS& oSelectedTask, Modes nActionMode, CUsersTypedPtrArray& oUsersArray, PROJECTS& oProject, CWnd* pParent = nullptr);   // standard constructor
+	CTasksDialog(CProjectDetails oProjectDetails, Modes nActionMode, CUsersTypedPtrArray& oUsersArray, PROJECTS& oProject, CWnd* pParent = nullptr);   // standard constructor
 	virtual ~CTasksDialog();
 
 	// Dialog Data
@@ -60,6 +61,7 @@ private:
 	TASKS& m_oTask;
 	PROJECTS& m_oProject;
 	CUsersTypedPtrArray& m_oUsersArray;
+	CTasksTypedPtrArray& m_oNewTasksArray;
 
 	short sRdbCheck = -1;
 

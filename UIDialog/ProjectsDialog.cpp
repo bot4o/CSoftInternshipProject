@@ -2,7 +2,7 @@
 #include "afxdialogex.h"
 #include "ProjectsDialog.h"
 #include "TasksDialog.h"
-#include "../UIView/ProjectsView.h"
+#include "ProjectsView.h"
 /////////////////////////////////////////////////////////////////////////////
 // CProjectsDialog
 
@@ -20,9 +20,9 @@ END_MESSAGE_MAP()
 
 // Constructor / Destructor
 // ----------------
-CProjectsDialog::CProjectsDialog(PROJECTS& oSelectedProject, Modes oActionMode, CUsersTypedPtrArray& oUsersArray, 
+CProjectsDialog::CProjectsDialog(CProjectDetails oProjectDetails, Modes oActionMode, CUsersTypedPtrArray& oUsersArray,
 	CTasksTypedPtrArray& oTasksArray, CWnd* pParent)
-	: CDialogEx(IDD_PROJECTS_DIALOG, pParent), m_oProject(oSelectedProject), m_oActionMode(oActionMode), m_oUsersArray(oUsersArray), m_oTasksArray(oTasksArray)
+	: CDialogEx(IDD_PROJECTS_DIALOG, pParent), m_oProject(oProjectDetails.m_oProject), m_oNewTasksArray(oProjectDetails.m_oTasksArray), m_oActionMode(oActionMode), m_oUsersArray(oUsersArray), m_oTasksArray(oTasksArray)
 {
 
 }
@@ -192,7 +192,7 @@ void CProjectsDialog::SetTaskInfo()
 void CProjectsDialog::OnBnClickedBtnAddTask()
 {
 	TASKS* oTask = new TASKS();
-	CTasksDialog oProjectsDialog(*oTask, Modes::InsertMode, m_oUsersArray, m_oProject);
+	CTasksDialog oProjectsDialog(*oTask, m_oNewTasksArray, Modes::InsertMode, m_oUsersArray, m_oProject);
 	int nResult = oProjectsDialog.DoModal();
 	if (nResult == MODAL_OK)
 	{
