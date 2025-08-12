@@ -1,4 +1,6 @@
 #include "pch.h"
+#include "Resource.h"
+#include "framework.h"
 #include "AutoCleanArray.h"
 #include "DialogModes.h"
 #include "ProjectsView.h"
@@ -48,6 +50,7 @@ void CProjectsView::OnListDoubleClick(NMHDR* pNMHDR, LRESULT* pResult)
 {
 	CUsersTypedPtrArray& oUsersArray = GetDocument()->GetUsers();
 	CTasksTypedPtrArray& oTasksArray = GetDocument()->GetTasks();
+	CProjectsTypedPtrArray& oProjectsArray = GetDocument()->GetProjects();
 
 	int nSelectedIndex = GetListCtrl().GetNextItem(-1, LVNI_SELECTED);
 	if (nSelectedIndex == -1)
@@ -55,7 +58,6 @@ void CProjectsView::OnListDoubleClick(NMHDR* pNMHDR, LRESULT* pResult)
 		return;
 	}
 
-	CProjectsTypedPtrArray& oProjectsArray = GetDocument()->GetProjects();
 	long lID = oProjectsArray[nSelectedIndex]->lId;
 
 	PROJECTS* oRefferedProject = nullptr;
@@ -66,14 +68,17 @@ void CProjectsView::OnListDoubleClick(NMHDR* pNMHDR, LRESULT* pResult)
 			oRefferedProject = oProjectsArray[i];
 		}
 	}
-	CProjectsDialog oProjectsDialog(, Modes::PreviewMode, oUsersArray, oTasksArray);
+
+	CProjectDetails oProjectDetails = CProjectDetails(*oRefferedProject, CTasksTypedPtrArray());
+
+	CProjectsDialog oProjectsDialog(oProjectDetails, Modes::PreviewMode, oUsersArray, oTasksArray);
 
 	INT_PTR nResult = -1;
 	nResult = oProjectsDialog.DoModal();
 
 	if (nResult == MODAL_OK)
 	{
-		GetDocument()->UpdateProject(lID, *oRefferedProject);
+		GetDocument()->UpdateProject(lID, oProjectDetails);
 	}
 }
 
@@ -104,7 +109,9 @@ void CProjectsView::OnContextInsert()
 	CUsersTypedPtrArray& oUsersArray = GetDocument()->GetUsers();
 	CTasksTypedPtrArray& oTasksArray = GetDocument()->GetTasks();
 
-	CProjectDetails oProjectDetails = CProjectDetails();
+	PROJECTS* oNewProject = new PROJECTS();
+	CTasksTypedPtrArray* oNewTasksArray = new CTasksTypedPtrArray();
+	CProjectDetails oProjectDetails = CProjectDetails(*oNewProject, *oNewTasksArray);
 
 	CProjectsDialog oProjectsDialog(oProjectDetails, Modes::InsertMode, oUsersArray, oTasksArray);
 
@@ -131,24 +138,25 @@ void CProjectsView::OnContextEdit()
 	CProjectsTypedPtrArray& oProjectsArray = GetDocument()->GetProjects();
 	long lID = oProjectsArray[nSelectedIndex]->lId;
 
-	PROJECTS* oRefferedProject = nullptr;
+	PROJECTS oRefferedProject = PROJECTS();
 	for (int i = 0; i < oProjectsArray.GetSize(); i++)
 	{
 		if (lID == oProjectsArray[i]->lId)
 		{
-			oRefferedProject = oProjectsArray[i];
+			oRefferedProject = *oProjectsArray[i];
 		}
 	}
-	CTasksTypedPtrArray oNewTasksArray = CTasksTypedPtrArray();
+	CTasksTypedPtrArray* oNewArray = new CTasksTypedPtrArray();
+	CProjectDetails oProjectDetails = CProjectDetails(oRefferedProject, *oNewArray);
 
-	CProjectsDialog oProjectsDialog(*oRefferedProject, oNewTasksArray, Modes::UpdateMode, oUsersArray, oTasksArray);
+	CProjectsDialog oProjectsDialog(oProjectDetails, Modes::UpdateMode, oUsersArray, oTasksArray);
 
 	INT_PTR nResult = -1;
 	nResult = oProjectsDialog.DoModal();
 
 	if (nResult == MODAL_OK)
 	{
-		GetDocument()->UpdateProject(lID, *oRefferedProject);
+		GetDocument()->UpdateProject(lID, oProjectDetails);
 	}
 }
 

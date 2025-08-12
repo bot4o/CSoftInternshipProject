@@ -1,11 +1,9 @@
 ﻿#pragma once
 #include "DLLExport.h"
+#include "framework.h"
 #include "pch.h"
-#include "resource.h"
-#include <afxcview.h> 
-#include "ProjectsAndTasksDocument.h"
-
-//#include "ProjectsDialog.h"
+#include "afxcview.h"
+#include "../Document/ProjectsAndTasksDocument.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CProjectsView

@@ -31,7 +31,7 @@ class CTasksDialog : public CDialogEx
 	// Constructor / Destructor
 	// ----------------
 public:
-	CTasksDialog(CProjectDetails oProjectDetails, Modes nActionMode, CUsersTypedPtrArray& oUsersArray, PROJECTS& oProject, CWnd* pParent = nullptr);   // standard constructor
+	CTasksDialog(TASKS& oSelectedTask, CTasksTypedPtrArray& oNewTasksArray, Modes nActionMode, CUsersTypedPtrArray& oUsersArray, PROJECTS& oProject, CWnd* pParent = nullptr);   // standard constructor
 	virtual ~CTasksDialog();
 
 	// Dialog Data

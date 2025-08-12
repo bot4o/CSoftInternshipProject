@@ -2,7 +2,7 @@
 #include "afxdialogex.h"
 #include "ProjectsDialog.h"
 #include "TasksDialog.h"
-#include "ProjectsView.h"
+#include "../UIView/ProjectsView.h"
 /////////////////////////////////////////////////////////////////////////////
 // CProjectsDialog
 
@@ -22,7 +22,7 @@ END_MESSAGE_MAP()
 // ----------------
 CProjectsDialog::CProjectsDialog(CProjectDetails oProjectDetails, Modes oActionMode, CUsersTypedPtrArray& oUsersArray,
 	CTasksTypedPtrArray& oTasksArray, CWnd* pParent)
-	: CDialogEx(IDD_PROJECTS_DIALOG, pParent), m_oProject(oProjectDetails.m_oProject), m_oNewTasksArray(oProjectDetails.m_oTasksArray), m_oActionMode(oActionMode), m_oUsersArray(oUsersArray), m_oTasksArray(oTasksArray)
+	: CDialogEx(IDD_PROJECTS_DIALOG, pParent), m_oProject(oProjectDetails.GetProject()), m_oNewTasksArray(oProjectDetails.GetTasks()), m_oActionMode(oActionMode), m_oUsersArray(oUsersArray), m_oTasksArray(oTasksArray)
 {
 
 }
@@ -200,6 +200,4 @@ void CProjectsDialog::OnBnClickedBtnAddTask()
 		SetTaskInfo();
 		return;
 	}
-	
-	// TODO: Add your control notification handler code here
 }

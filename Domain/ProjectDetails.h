@@ -15,11 +15,22 @@ class DomainDLL_EXP CProjectDetails
     // Constructor / Destructor
     // ----------------
 public:
-    CProjectDetails();
+    CProjectDetails(PROJECTS& oProject, CTasksTypedPtrArray& oTasksArray) : m_oProject(oProject), m_oTasksArray(oTasksArray) {}
     ~CProjectDetails();
+
+    // Methods
+    // ----------------
+    PROJECTS& GetProject()
+    {
+        return m_oProject;
+    }
+    CTasksTypedPtrArray& GetTasks() 
+    {
+        return m_oTasksArray;
+    }
     // Members
     // ----------------
-    /// <summary>Уникален идентификатор за ред</summary>
+private:
     PROJECTS& m_oProject;
     CTasksTypedPtrArray& m_oTasksArray;
 };

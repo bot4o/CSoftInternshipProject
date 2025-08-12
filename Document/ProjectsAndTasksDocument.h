@@ -32,11 +32,11 @@ public:
 	/// <summary>Loads all projects from the PROJECTS table</summary>  
 	bool LoadAllProjects();
 	/// <summary>Alters the role of a specific project in the PROJECTS table</summary>  
-	bool UpdateProject(const long lID, PROJECTS& recProject);
+	bool UpdateProject(const long lID, CProjectDetails& recProject);
 	/// <summary>Removes a specific project from the PROJECTS table</summary>  
 	bool DeleteProject(const long lID);
 	/// <summary>Gets the already populated m_oProjectsArray for the ProjectsView</summary>  
-	
+
 
 	/// <summary>Loads all Task from the TASKS table</summary>  
 	bool LoadAllTasks();
@@ -45,16 +45,13 @@ public:
 	/// <summary>Removes a specific Task from the Task table</summary>  
 	bool DeleteTask(const long lID);
 	/// <summary>Gets the already populated m_oTasksArray for the TasksView</summary>
-	bool AddProjectWithTasks(CProjectDetails &ProjectDetails);
-
-private: 
+	bool AddProjectWithTasks(CProjectDetails& ProjectDetails);
+private:
 	bool LoadAllUsers();
-
-	
-
 	// Overrides
 	// ----------------
-		/// <summary>Дава възможност да заредим данните</summary>  
+public:
+	/// <summary>Дава възможност да заредим данните</summary>  
 	BOOL OnNewDocument() override;
 
 	// Members

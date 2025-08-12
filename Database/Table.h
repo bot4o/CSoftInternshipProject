@@ -1,6 +1,6 @@
 ﻿#pragma once
-#include "Resource.h"  
 #include "pch.h"  
+#include "Resource.h"  
 #include "atldbcli.h"
 #include "DBConnection.h"
 #include "DLLExport.h"
@@ -194,7 +194,7 @@ public:
             return true;
         }
 
-        TRecord& oDatabaseRecord = m_oCommand.GetRecord(); //<--
+        TRecord& oDatabaseRecord = m_oCommand.GetRecord();
         if (oRecord.lUpdateCounter != oDatabaseRecord.lUpdateCounter)
         {
             AfxMessageBox(_T("Update counters do not match in the database"));

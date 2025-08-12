@@ -42,9 +42,9 @@ bool CProjectsAndTasksDocument::LoadAllProjects()
 	return true;
 }
 
-bool CProjectsAndTasksDocument::UpdateProject(const long lID, PROJECTS& oRecProject)
+bool CProjectsAndTasksDocument::UpdateProject(const long lID, CProjectDetails& oRecProject)
 {
-	if (!CProjectsAppService<PROJECTS, CProjectsAccessor>(TABLE_NAME_PROJECTS).UpdateWhereID(lID, oRecProject))
+	if (!CProjectsAppService<CProjectDetails, CProjectsAccessor>(TABLE_NAME_PROJECTS).UpdateWhereID(lID, oRecProject))
 	{
 		AfxMessageBox(_T("Error at the CProjectsAppService().UpdateWhereID() in the document layer"));
 
@@ -139,6 +139,7 @@ bool CProjectsAndTasksDocument::LoadAllUsers()
 	}
 	return true;
 }
+
 void UpdateAllViews(CView* pSender, LPARAM lHint = 0L, CObject* pHint = NULL)
 {
 
@@ -165,10 +166,13 @@ BOOL CProjectsAndTasksDocument::OnNewDocument()
 	}
 	return TRUE;
 }
+
 bool CProjectsAndTasksDocument::AddProjectWithTasks(CProjectDetails& oProjectDetails)
 {
-	if (!CProjectsAppService<CProjectDetails, CTasksAccessor>(TABLE_NAME_TASKS).Insert(oProjectDetails))
+	if (!CProjectsAppService<PROJECTS, CProjectsAccessor>::AddProjectWithTasks(oProjectDetails))
 	{
-
+		AfxMessageBox(_T("Error at AddProjectWithTasks() in the Document Layer"));
+		return false;
 	}
+	return true;
 }
