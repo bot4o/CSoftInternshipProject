@@ -29,6 +29,7 @@
 #define IDC_CMB_TASK_USER               1021
 #define IDC_RADIO1                      1022
 #define IDC_RDB_TASK_STATE_1            1022
+#define IDC_BTN_DELETE_TASK             1022
 #define IDC_LIST1                       1023
 #define IDC_RDB_TASK_STATE_2            1023
 #define IDC_CMB_PROJECT_MANAGER         1024
@@ -42,6 +43,7 @@
 #define IDC_STT_TOTAL_EFFORT_RESULT     1031
 #define IDC_STT_TASKS                   1032
 #define IDC_STT_PROJECT                 1033
+#define IDC_BTN_EDIT_TASK               1033
 #define IDC_STT_TASK_USER               1034
 #define IDC_STT_TASK_DESC               1035
 #define IDC_STT_TASK_EFFORT             1036
@@ -61,8 +63,8 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        1020
-#define _APS_NEXT_COMMAND_VALUE         32781
+#define _APS_NEXT_RESOURCE_VALUE        1021
+#define _APS_NEXT_COMMAND_VALUE         32783
 #define _APS_NEXT_CONTROL_VALUE         1039
 #define _APS_NEXT_SYMED_VALUE           1000
 #endif

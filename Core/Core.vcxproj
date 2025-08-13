@@ -210,8 +210,10 @@
     <ClInclude Include="DLLExport.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="ProjectStates.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="TaskStates.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Core.rc" />

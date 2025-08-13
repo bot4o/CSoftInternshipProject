@@ -2,6 +2,8 @@
 #include "afxdialogex.h"
 #include "TasksDialog.h"
 
+#define RDB_CHECKED 1
+#define RDB_UNCHECKED 0
 
 /////////////////////////////////////////////////////////////////////////////
 // CSampleClass
@@ -11,15 +13,18 @@
 IMPLEMENT_DYNAMIC(CTasksDialog, CDialogEx)
 
 BEGIN_MESSAGE_MAP(CTasksDialog, CDialogEx)
-	ON_BN_CLICKED(IDC_RDB_TASK_STATE_1, &CTasksDialog::OnBnClickedRdbTaskState1)
-	ON_BN_CLICKED(IDC_RDB_TASK_STATE_2, &CTasksDialog::OnBnClickedRdbTaskState2)
-	ON_BN_CLICKED(IDC_RDB_TASK_STATE_3, &CTasksDialog::OnBnClickedRdbTaskState3)
+//	ON_BN_CLICKED(IDC_RDB_TASK_STATE_1, &CTasksDialog::OnBnClickedRdbTaskState1)
+//	ON_BN_CLICKED(IDC_RDB_TASK_STATE_2, &CTasksDialog::OnBnClickedRdbTaskState2)
+//	ON_BN_CLICKED(IDC_RDB_TASK_STATE_3, &CTasksDialog::OnBnClickedRdbTaskState3)
+ON_BN_CLICKED(IDC_RDB_TASK_STATE_1, &CTasksDialog::OnBnClickedRdbTaskState1)
+ON_BN_CLICKED(IDC_RDB_TASK_STATE_2, &CTasksDialog::OnBnClickedRdbTaskState2)
+ON_BN_CLICKED(IDC_RDB_TASK_STATE_3, &CTasksDialog::OnBnClickedRdbTaskState3)
 END_MESSAGE_MAP()
 // Constructor / Destructor
 // ----------------
 
-CTasksDialog::CTasksDialog(TASKS& oSelectedTask, CTasksTypedPtrArray& oNewTasksArray, Modes oActionMode, CUsersTypedPtrArray& oUsersArray, PROJECTS& oProject, CWnd* pParent /*=nullptr*/)
-	: CDialogEx(IDD_TASKS_DIALOG, pParent), m_oTask(oSelectedTask), m_oNewTasksArray(oNewTasksArray), m_oActionMode(oActionMode), m_oUsersArray(oUsersArray), m_oProject(oProject)
+CTasksDialog::CTasksDialog(TASKS& oSelectedTask, Modes oActionMode, CUsersTypedPtrArray& oUsersArray, PROJECTS& oProject, CWnd* pParent /*=nullptr*/)
+	: CDialogEx(IDD_TASKS_DIALOG, pParent), m_oTask(oSelectedTask), m_oActionMode(oActionMode), m_oUsersArray(oUsersArray), m_oProject(oProject)
 {
 
 }
@@ -38,7 +43,7 @@ void CTasksDialog::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EDB_TASK_DESC, m_edbDesc);
 	DDX_Control(pDX, IDC_CMB_TASK_USER, m_cmbUsers);
 	DDX_Control(pDX, IDC_RDB_TASK_STATE_1, m_rdbState1);
-	DDX_Control(pDX, IDC_RDB_TASK_STATE_2, m_rdbState);
+	DDX_Control(pDX, IDC_RDB_TASK_STATE_2, m_rdbState2);
 	DDX_Control(pDX, IDC_RDB_TASK_STATE_3, m_rdbState3);
 	DDX_Control(pDX, IDC_EDB_TASK_EFFORT, m_edbEffort);
 	DDX_Control(pDX, IDC_STT_PROJECT, m_sttProject);
@@ -61,7 +66,9 @@ void CTasksDialog::SetDialogElementsText()
 {
 	m_edbName.SetWindowTextW(m_oTask.szName);
 	m_edbDesc.SetWindowTextW(m_oTask.szDescription);
-	m_edbEffort.SetWindowTextW(_T("%i", m_oTask.sEffort));
+	CString strEdbEffort;
+	strEdbEffort.Format(_T("%i"), m_oTask.sEffort);
+	m_edbEffort.SetWindowTextW(strEdbEffort);
 	
 	for (int i = 0; i < m_oUsersArray.GetSize(); i++)
 	{		
@@ -69,18 +76,25 @@ void CTasksDialog::SetDialogElementsText()
 		CString strTaskUser = oCurUser->szName;
 		int nIndex = m_cmbUsers.AddString(strTaskUser);
 		m_cmbUsers.SetItemData(nIndex, (DWORD_PTR)oCurUser->lId);
+		if (m_cmbUsers.GetItemData(i) == m_oTask.lUserId)
+		{
+			m_cmbUsers.SetCurSel(i);
+		}
 	}
-
+	
 	switch (m_oTask.sState)
 	{
-	case (short)RadioButtonState::Waiting:
-		OnBnClickedRdbTaskState1();
+	case (short)TaskStates::Waiting:
+		m_rdbState1.SetCheck(RDB_CHECKED);
+		m_oRdbCheck = TaskStates::Waiting;
 		break;
-	case (short)RadioButtonState::InProgress:
-		OnBnClickedRdbTaskState2();
+	case (short)TaskStates::InProgress:
+		m_rdbState2.SetCheck(RDB_CHECKED);
+		m_oRdbCheck = TaskStates::InProgress;
 		break;
-	case (short)RadioButtonState::Finished:
-		OnBnClickedRdbTaskState3();
+	case (short)TaskStates::Finished:
+		m_rdbState3.SetCheck(RDB_CHECKED);
+		m_oRdbCheck = TaskStates::Finished;
 		break;
 	default:
 		break;
@@ -127,7 +141,7 @@ void CTasksDialog::OnOK()
 		sEffort = _ttoi(strEffort);
 		lProjectId = m_oProject.lId;
 		lUserId = m_cmbUsers.GetCurSel();
-		sState = sRdbCheck;
+		sState = (short)m_oRdbCheck;
 
 		oValidateTask = TASKS();
 		_tcscpy_s(oValidateTask.szName, strName);
@@ -149,10 +163,7 @@ void CTasksDialog::OnOK()
 		m_oTask.lUserId = lUserId;
 		m_oTask.sState = sState;
 		m_oTask.sEffort = sEffort;
-		
-		m_oNewTasksArray.Add(&m_oTask);
 	}
-
 	return CDialogEx::OnOK();
 }
 
@@ -172,24 +183,15 @@ void CTasksDialog::OnCancel()
 // ----------------
 void CTasksDialog::OnBnClickedRdbTaskState1()
 {
-	sRdbCheck = (short)RadioButtonState::Waiting;
-	m_rdbState.GetCheck();
-	// TODO: Add your control notification handler code here
+	m_oRdbCheck = TaskStates::Waiting;
 }
 
 void CTasksDialog::OnBnClickedRdbTaskState2()
 {
-	sRdbCheck = (short)RadioButtonState::InProgress;
-	m_rdbState.GetCheck();
-
-	// TODO: Add your control notification handler code here
+	m_oRdbCheck = TaskStates::InProgress;
 }
 
 void CTasksDialog::OnBnClickedRdbTaskState3()
 {
-	sRdbCheck = (short)RadioButtonState::Finished;
-	m_rdbState.GetCheck();
-	// TODO: Add your control notification handler code here
+	m_oRdbCheck = TaskStates::Finished;
 }
-
-

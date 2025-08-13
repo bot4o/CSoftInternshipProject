@@ -6,12 +6,13 @@
 #include "ProjectsStruct.h"
 #include "TasksStruct.h"
 #include "DialogModes.h"
+#include "ProjectStates.h"
+#include "TaskStates.h"
 #include "UsersStruct.h"
 #include "ProjectDetails.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CUsersDialog
-
 class UIDialogDLL_EXP CProjectsDialog : public CDialogEx
 {
 	// Macros
@@ -22,7 +23,7 @@ class UIDialogDLL_EXP CProjectsDialog : public CDialogEx
 	// Constructor / Destructor
 	// ----------------
 public:
-	CProjectsDialog(CProjectDetails oProjectDetails, Modes oActionMode, CUsersTypedPtrArray& oUsersArray,
+	CProjectsDialog(CProjectDetails& oProjectDetails, Modes oActionMode, CUsersTypedPtrArray& oUsersArray,
 		CTasksTypedPtrArray& oTasksArray,  CWnd* pParent = nullptr);   // standard constructor
 	virtual ~CProjectsDialog();
 
@@ -36,6 +37,10 @@ public:
 	virtual void OnOK();
 	virtual void OnCancel();
 	virtual void OnAbort();
+	afx_msg void OnLbnSelchangeList1();
+	afx_msg void OnBnClickedBtnAddTask();
+	afx_msg void OnBnClickedBtnDeleteTask();
+	afx_msg void OnBnClickedBtnEditTask();
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 // Dialog Data
@@ -46,18 +51,20 @@ protected:
 	// Members
 	// ----------------
 private:
-	CTasksTypedPtrArray& m_oNewTasksArray;
 	Modes m_oActionMode;
 	PROJECTS& m_oProject;
 	CUsersTypedPtrArray& m_oUsersArray;
 	CTasksTypedPtrArray& m_oTasksArray;
+	CTasksTypedPtrArray& m_oProjectTasksArray;
+
 	CEdit m_edbName;
 	CEdit m_edbDescription;
 	CComboBox m_cmbProjectManager;
 	CStatic m_sttState;
 	CStatic m_sttTotalEffort;
 	CListBox m_lsbTasks;
-public:
-	afx_msg void OnBnClickedBtnAddTask();
-//	afx_msg void OnCbnSelchangeCmbProjectManager();
+	CButton m_btnEdit;
+	CButton m_btnDelete;
+	CButton m_btnAdd;
+
 };

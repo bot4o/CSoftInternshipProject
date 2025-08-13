@@ -7,16 +7,12 @@
 #include "DialogModes.h"
 #include "UsersStruct.h"
 #include "ProjectsStruct.h"
-#include "../Domain/ProjectDetails.h"
+#include "ProjectDetails.h"
+#include "TaskStates.h"
+
 
 /////////////////////////////////////////////////////////////////////////////
 // CTasksDialog
-enum class RadioButtonState
-{
-	Waiting = 0,
-	InProgress = 1,
-	Finished = 2,
-};
 class CTasksDialog : public CDialogEx
 {
 
@@ -31,7 +27,7 @@ class CTasksDialog : public CDialogEx
 	// Constructor / Destructor
 	// ----------------
 public:
-	CTasksDialog(TASKS& oSelectedTask, CTasksTypedPtrArray& oNewTasksArray, Modes nActionMode, CUsersTypedPtrArray& oUsersArray, PROJECTS& oProject, CWnd* pParent = nullptr);   // standard constructor
+	CTasksDialog(TASKS& oSelectedTask, Modes nActionMode, CUsersTypedPtrArray& oUsersArray, PROJECTS& oProject, CWnd* pParent = nullptr);   // standard constructor
 	virtual ~CTasksDialog();
 
 	// Dialog Data
@@ -61,17 +57,14 @@ private:
 	TASKS& m_oTask;
 	PROJECTS& m_oProject;
 	CUsersTypedPtrArray& m_oUsersArray;
-	CTasksTypedPtrArray& m_oNewTasksArray;
-
-	short sRdbCheck = -1;
-
+	TaskStates m_oRdbCheck;
 	Modes m_oActionMode;
 	CStatic m_sttProject;
 	CEdit m_edbName;
 	CEdit m_edbDesc;
 	CComboBox m_cmbUsers;
 	CButton m_rdbState1;
-	CButton m_rdbState;
+	CButton m_rdbState2;
 	CButton m_rdbState3;
 	CEdit m_edbEffort;
 public:

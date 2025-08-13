@@ -55,6 +55,12 @@
     <ClInclude Include="AutoCleanArray.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ProjectStates.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TaskStates.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Core.rc">
