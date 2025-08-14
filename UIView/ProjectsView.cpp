@@ -120,7 +120,7 @@ void CProjectsView::OnContextInsert()
 
 	if (nResult == MODAL_OK)
 	{
-		//GetDocument()->AddProjectWithTasks(oProjectDetails);
+		GetDocument()->AddProjectWithTasks(oProjectDetails);
 	}
 }
 

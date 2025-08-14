@@ -93,15 +93,202 @@ void CProjectsDialog::SetDialogElementsText()
 			}
 		}
 	}
+	//State; Total Effort; Tasks.
 	short sState = (short)ProjectStates::None;
 	CString stateStr = _T("None");
 	m_sttState.SetWindowTextW(stateStr);
-	//State; Total Effort; Tasks.
 	if (m_oActionMode != Modes::InsertMode)
 	{
 		SetTaskInfo();
 	}
+
 	return;
+}
+void CProjectsDialog::InsertTaskToProject(TASKS& oTask)
+{
+	m_oProjectTasksArray.Add(&oTask);
+
+	short sTotalEffort = 0;
+	int nIndex = m_lsbTasks.AddString(oTask.szName);
+	m_lsbTasks.SetItemData(nIndex, (DWORD_PTR)oTask.lId); //insert: id = 0
+
+	//project State check
+	short sState = (short)ProjectStates::Finished;
+	bool bHasNonFinishedTask = false;
+	for (int i = 0; i < m_oProjectTasksArray.GetSize(); i++)
+	{
+		sTotalEffort += m_oProjectTasksArray[i]->sEffort;
+		if (m_oProjectTasksArray[i]->sState != (short)TaskStates::Finished)
+		{
+			bHasNonFinishedTask = true;
+		}
+	}
+	if (bHasNonFinishedTask)
+	{
+		sState = (short)ProjectStates::Active;
+	}
+
+	CString stateStr, effortStr;
+	switch (sState)
+	{
+	case (short)ProjectStates::Active:
+		stateStr = _T("Active");
+		break;
+	case (short)ProjectStates::Finished:
+		stateStr = _T("Finished");
+		break;
+	default:
+		stateStr = _T("None");
+		break;
+	}
+
+	effortStr.Format(_T("%d"), sTotalEffort);
+
+	m_sttState.SetWindowTextW(stateStr);
+	m_sttTotalEffort.SetWindowTextW(effortStr);
+}
+void CProjectsDialog::DeleteTaskFromProject(const int selIndex)
+{
+	m_oProjectTasksArray.RemoveAt(selIndex);
+	m_lsbTasks.DeleteString(selIndex);
+
+	short sTotalEffort = 0;
+	short sState = (short)ProjectStates::Finished;
+
+	bool bHasNonFinishedTask = false;
+
+	for (int i = 0; i < m_oProjectTasksArray.GetSize(); i++)
+	{
+		sTotalEffort += m_oProjectTasksArray[i]->sEffort;
+		if (m_oProjectTasksArray[i]->sState != (short)TaskStates::Finished)
+		{
+			bHasNonFinishedTask = true;
+		}
+	}
+	if (bHasNonFinishedTask)
+	{
+		sState = (short)ProjectStates::Active;
+	}
+
+	CString stateStr, effortStr;
+	switch (sState)
+	{
+	case (short)ProjectStates::Active:
+		stateStr = _T("Active");
+		break;
+	case (short)ProjectStates::Finished:
+		stateStr = _T("Finished");
+		break;
+	default:
+		stateStr = _T("None");
+		break;
+	}
+
+	effortStr.Format(_T("%d"), sTotalEffort);
+
+	m_sttState.SetWindowTextW(stateStr);
+	m_sttTotalEffort.SetWindowTextW(effortStr);
+
+}
+void CProjectsDialog::UpdateTaskFromProject(const int nSelIndex, TASKS& oTask)
+{
+	m_oProjectTasksArray[nSelIndex] = &oTask;
+
+	short sTotalEffort = 0;
+	short sState = (short)ProjectStates::Finished;
+
+	bool bHasNonFinishedTask = false;
+
+	for (int i = 0; i < m_oProjectTasksArray.GetSize(); i++)
+	{
+		sTotalEffort += m_oProjectTasksArray[i]->sEffort;
+		if (m_oProjectTasksArray[i]->sState != (short)TaskStates::Finished)
+		{
+			bHasNonFinishedTask = true;
+		}
+	}
+	if (bHasNonFinishedTask)
+	{
+		sState = (short)ProjectStates::Active;
+	}
+
+	CString stateStr, effortStr;
+	switch (sState)
+	{
+	case (short)ProjectStates::Active:
+		stateStr = _T("Active");
+		break;
+	case (short)ProjectStates::Finished:
+		stateStr = _T("Finished");
+		break;
+	default:
+		stateStr = _T("None");
+		break;
+	}
+
+	effortStr.Format(_T("%d"), sTotalEffort);
+
+	m_sttState.SetWindowTextW(stateStr);
+	m_sttTotalEffort.SetWindowTextW(effortStr);
+}
+void CProjectsDialog::SetTaskInfo()
+{
+	m_lsbTasks.ResetContent();
+	m_oProjectTasksArray.RemoveAll();
+
+	short sTotalEffort = 0;
+	short sState = (short)ProjectStates::Finished;
+	//Fill list box and total effort:
+	for (int i = 0; i < m_oTasksArray.GetSize(); i++)
+	{
+		TASKS* oNewTask = m_oTasksArray[i];
+		if (oNewTask->lProjectId == m_oProject.lId)
+		{
+			m_oProjectTasksArray.Add(oNewTask);
+			int nIndex = m_lsbTasks.AddString(oNewTask->szName);
+			m_lsbTasks.SetItemData(nIndex, (DWORD_PTR)oNewTask->lId);
+
+			sTotalEffort += oNewTask->sEffort;
+		}
+	}
+	//project State check
+	bool bHasNonFinishedTask = false;
+
+	for (int i = 0; i < m_oProjectTasksArray.GetSize(); i++)
+	{
+		if (m_oProjectTasksArray.GetSize() == 0)
+		{
+			sState = (short)ProjectStates::None;
+		}
+		if (m_oProjectTasksArray[i]->sState != (short)TaskStates::Finished)
+		{
+			bHasNonFinishedTask = true;
+			break;
+		}
+	}
+	if (bHasNonFinishedTask)
+	{
+		sState = (short)ProjectStates::Active;
+	}
+
+	CString stateStr, effortStr;
+	switch (sState)
+	{
+	case (short)ProjectStates::Active:
+		stateStr = _T("Active");
+		break;
+	case (short)ProjectStates::Finished:
+		stateStr = _T("Finished");
+		break;
+	default:
+		stateStr = _T("None");
+		break;
+	}
+
+	effortStr.Format(_T("%d"), sTotalEffort);
+
+	m_sttState.SetWindowTextW(stateStr);
+	m_sttTotalEffort.SetWindowTextW(effortStr);
 }
 
 BOOL CProjectsDialog::OnInitDialog()
@@ -194,70 +381,6 @@ void CProjectsDialog::OnCancel()
 	return CDialogEx::OnCancel();
 }
 
-// CProjectsDialog message handlers
-void CProjectsDialog::SetTaskInfo()
-{
-	m_lsbTasks.ResetContent();
-	m_oProjectTasksArray.RemoveAll();
-
-
-	short sTotalEffort = 0;
-	short sState = (short)ProjectStates::Finished;
-	//Fill list box and total effort:
-	
-	for (int i = 0; i < m_oTasksArray.GetSize(); i++)
-	{
-		TASKS* oNewTask = m_oTasksArray[i];
-		if(oNewTask->lProjectId == m_oProject.lId)
-		{
-			//Filling list box and array
-			m_oProjectTasksArray.Add(oNewTask);
-			int nIndex = m_lsbTasks.AddString(oNewTask->szName);
-			m_lsbTasks.SetItemData(nIndex, (DWORD_PTR)oNewTask->lId);
-
-			sTotalEffort += oNewTask->sEffort;
-		}
-	}
-	//project State check
-	bool bHasNonFinishedTask = false;
-	
-	for (int i = 0; i < m_oProjectTasksArray.GetSize(); i++)
-	{
-		if (m_oProjectTasksArray.GetSize() == 0)
-		{
-			sState = (short)ProjectStates::None;
-		}
-		if (m_oProjectTasksArray[i]->sState != (short)TaskStates::Finished)
-		{
-			bHasNonFinishedTask = true;
-			break;
-		}
-	}
-	if (bHasNonFinishedTask)
-	{
-		sState = (short)ProjectStates::Active;
-	}
-
-	CString stateStr, effortStr;
-	switch (sState)
-	{
-	case (short)ProjectStates::Active:
-		stateStr = _T("Active");
-		break;
-	case (short)ProjectStates::Finished:
-		stateStr = _T("Finished");
-		break;
-	default:
-		stateStr = _T("None");
-		break;
-	}
-	
-	effortStr.Format(_T("%d"), sTotalEffort);
-
-	m_sttState.SetWindowTextW(stateStr);
-	m_sttTotalEffort.SetWindowTextW(effortStr);
-}
-
 void CProjectsDialog::OnLbnSelchangeList1()
 {
 	int selIndex = m_lsbTasks.GetCurSel();
@@ -274,18 +397,7 @@ void CProjectsDialog::OnBnClickedBtnAddTask()
 	int nResult = oTasksDialog.DoModal();
 	if (nResult == MODAL_OK)
 	{
-		for (int i = 5; i < m_oTasksArray.GetSize(); i++)
-		{
-			TASKS oNewTask = *m_oTasksArray[i];
-			int a = 0;
-		}
-		m_oTasksArray.Add(oTask);
-		for (int i = 5; i < m_oTasksArray.GetSize(); i++)
-		{
-			TASKS oNewTask = *m_oTasksArray[i];
-			int a = 0;
-		}
-		SetTaskInfo();
+		InsertTaskToProject(*oTask);
 		return;
 	}
 }
@@ -301,7 +413,7 @@ void CProjectsDialog::OnBnClickedBtnDeleteTask()
 	if (result == IDYES)
 	{
 		AfxMessageBox(_T("Task deleted"));
-		//Delete it
+		DeleteTaskFromProject(selIndex);
 	}
 	OnLbnSelchangeList1();
 }
@@ -309,24 +421,13 @@ void CProjectsDialog::OnBnClickedBtnDeleteTask()
 void CProjectsDialog::OnBnClickedBtnEditTask()
 {
 	int nSelIndex = m_lsbTasks.GetCurSel();
-	DWORD_PTR lId = m_lsbTasks.GetItemData(nSelIndex);
 	TASKS* oTask = m_oProjectTasksArray[nSelIndex];
-	/*for (int i = 0; i < m_oProjectTasksArray.GetSize(); i++)
-	{
-		if (m_oProjectTasksArray[i]->lId == lId)
-		{
-			
-			break;
-		}
-	}*/
 
 	CTasksDialog oTasksDialog(*oTask, Modes::UpdateMode, m_oUsersArray, m_oProject);
 	int nResult = oTasksDialog.DoModal();
 	if (nResult == MODAL_OK)
 	{
-		TASKS* tempTask = m_oProjectTasksArray[nSelIndex];
-		m_oProjectTasksArray[nSelIndex] = oTask;
+		UpdateTaskFromProject(nSelIndex, *oTask);
 	}
-	SetTaskInfo();
 	OnLbnSelchangeList1();
 }

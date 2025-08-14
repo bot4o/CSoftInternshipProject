@@ -69,14 +69,15 @@ void CTasksDialog::SetDialogElementsText()
 	CString strEdbEffort;
 	strEdbEffort.Format(_T("%i"), m_oTask.sEffort);
 	m_edbEffort.SetWindowTextW(strEdbEffort);
-	
+
 	for (int i = 0; i < m_oUsersArray.GetSize(); i++)
 	{		
 		USERS* oCurUser = m_oUsersArray[i];
 		CString strTaskUser = oCurUser->szName;
 		int nIndex = m_cmbUsers.AddString(strTaskUser);
 		m_cmbUsers.SetItemData(nIndex, (DWORD_PTR)oCurUser->lId);
-		if (m_cmbUsers.GetItemData(nIndex) == m_oTask.lUserId)
+		DWORD_PTR temp = m_cmbUsers.GetItemData(nIndex);
+		if (temp == m_oTask.lUserId)
 		{
 			m_cmbUsers.SetCurSel(nIndex);
 		}

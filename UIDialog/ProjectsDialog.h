@@ -32,7 +32,9 @@ public:
 public:
 	void SetDialogElementsText();
 	void SetTaskInfo();
-
+	void InsertTaskToProject(TASKS& oTask);
+	void UpdateTaskFromProject(const int nSelIndex, TASKS& oTask);
+	void DeleteTaskFromProject(const int selIndex);
 	bool ValidateDialog(const PROJECTS& oValidateProject);
 	virtual BOOL OnInitDialog();
 	virtual void OnOK();
