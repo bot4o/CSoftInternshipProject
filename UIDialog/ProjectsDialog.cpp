@@ -2,6 +2,7 @@
 #include "afxdialogex.h"
 #include "ProjectsDialog.h"
 #include "TasksDialog.h"
+
 #include "../UIView/ProjectsView.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -76,7 +77,6 @@ void CProjectsDialog::SetDialogElementsText()
 	m_edbName.SetWindowTextW(m_oProject.szName);
 	//Description:
 	m_edbDescription.SetWindowTextW(m_oProject.szDescription);
-
 	//Manager:
 	for (int i = 0; i < m_oUsersArray.GetSize(); i++)
 	{
@@ -93,9 +93,14 @@ void CProjectsDialog::SetDialogElementsText()
 			}
 		}
 	}
+	short sState = (short)ProjectStates::None;
+	CString stateStr = _T("None");
+	m_sttState.SetWindowTextW(stateStr);
 	//State; Total Effort; Tasks.
-	SetTaskInfo();
-
+	if (m_oActionMode != Modes::InsertMode)
+	{
+		SetTaskInfo();
+	}
 	return;
 }
 
@@ -122,7 +127,6 @@ BOOL CProjectsDialog::OnInitDialog()
 		m_btnAdd.EnableWindow(FALSE);
 		m_btnDelete.EnableWindow(FALSE); 
 		m_btnEdit.EnableWindow(FALSE);
-		
 		SetDialogElementsText();
 		break;
 	default:
@@ -180,35 +184,38 @@ void CProjectsDialog::OnOK()
 
 void CProjectsDialog::OnAbort()
 {
+	m_oProjectTasksArray.RemoveAll();
 	return CDialogEx::OnCancel();
 }
 
 void CProjectsDialog::OnCancel()
 {
+	m_oProjectTasksArray.RemoveAll();
 	return CDialogEx::OnCancel();
 }
 
 // CProjectsDialog message handlers
-
 void CProjectsDialog::SetTaskInfo()
 {
 	m_lsbTasks.ResetContent();
+	m_oProjectTasksArray.RemoveAll();
+
+
 	short sTotalEffort = 0;
 	short sState = (short)ProjectStates::Finished;
 	//Fill list box and total effort:
+	
 	for (int i = 0; i < m_oTasksArray.GetSize(); i++)
 	{
-		//Gleda prez masiva s vsichki taskove i pulni tezi otgovarqshti na proekta
-		TASKS* oCurTask = m_oTasksArray[i];
-		if (oCurTask->lProjectId == m_oProject.lId)
+		TASKS* oNewTask = m_oTasksArray[i];
+		if(oNewTask->lProjectId == m_oProject.lId)
 		{
 			//Filling list box and array
-			m_oProjectTasksArray.Add(oCurTask);
+			m_oProjectTasksArray.Add(oNewTask);
+			int nIndex = m_lsbTasks.AddString(oNewTask->szName);
+			m_lsbTasks.SetItemData(nIndex, (DWORD_PTR)oNewTask->lId);
 
-			int nIndex = m_lsbTasks.AddString(oCurTask->szName);
-			m_lsbTasks.SetItemData(nIndex, (DWORD_PTR)oCurTask->lId);
-
-			sTotalEffort += oCurTask->sEffort;
+			sTotalEffort += oNewTask->sEffort;
 		}
 	}
 	//project State check
@@ -251,7 +258,6 @@ void CProjectsDialog::SetTaskInfo()
 	m_sttTotalEffort.SetWindowTextW(effortStr);
 }
 
-
 void CProjectsDialog::OnLbnSelchangeList1()
 {
 	int selIndex = m_lsbTasks.GetCurSel();
@@ -268,8 +274,17 @@ void CProjectsDialog::OnBnClickedBtnAddTask()
 	int nResult = oTasksDialog.DoModal();
 	if (nResult == MODAL_OK)
 	{
+		for (int i = 5; i < m_oTasksArray.GetSize(); i++)
+		{
+			TASKS oNewTask = *m_oTasksArray[i];
+			int a = 0;
+		}
 		m_oTasksArray.Add(oTask);
-		m_oProjectTasksArray.Add(oTask);
+		for (int i = 5; i < m_oTasksArray.GetSize(); i++)
+		{
+			TASKS oNewTask = *m_oTasksArray[i];
+			int a = 0;
+		}
 		SetTaskInfo();
 		return;
 	}
@@ -294,29 +309,24 @@ void CProjectsDialog::OnBnClickedBtnDeleteTask()
 void CProjectsDialog::OnBnClickedBtnEditTask()
 {
 	int nSelIndex = m_lsbTasks.GetCurSel();
-
 	DWORD_PTR lId = m_lsbTasks.GetItemData(nSelIndex);
-	TASKS* oTask = nullptr;
-	for (int i = 0; i < m_oProjectTasksArray.GetSize(); i++)
+	TASKS* oTask = m_oProjectTasksArray[nSelIndex];
+	/*for (int i = 0; i < m_oProjectTasksArray.GetSize(); i++)
 	{
 		if (m_oProjectTasksArray[i]->lId == lId)
 		{
-			oTask = m_oProjectTasksArray[i];
+			
+			break;
 		}
-	}
+	}*/
 
 	CTasksDialog oTasksDialog(*oTask, Modes::UpdateMode, m_oUsersArray, m_oProject);
 	int nResult = oTasksDialog.DoModal();
 	if (nResult == MODAL_OK)
 	{
-		for (int i = 0; i < m_oProjectTasksArray.GetSize(); i++)
-		{
-			if (oTask->lId == m_oProjectTasksArray[i]->lId)
-			{
-				m_oProjectTasksArray[i] = oTask;
-			}
-		}
-		SetTaskInfo();
+		TASKS* tempTask = m_oProjectTasksArray[nSelIndex];
+		m_oProjectTasksArray[nSelIndex] = oTask;
 	}
+	SetTaskInfo();
 	OnLbnSelchangeList1();
 }

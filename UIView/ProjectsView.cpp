@@ -109,9 +109,9 @@ void CProjectsView::OnContextInsert()
 	CUsersTypedPtrArray& oUsersArray = GetDocument()->GetUsers();
 	CTasksTypedPtrArray& oTasksArray = GetDocument()->GetTasks();
 
-	PROJECTS* oNewProject = new PROJECTS();
+	PROJECTS oNewProject = PROJECTS();
 	CTasksTypedPtrArray* oNewTasksArray = new CTasksTypedPtrArray();
-	CProjectDetails oProjectDetails = CProjectDetails(*oNewProject, *oNewTasksArray);
+	CProjectDetails oProjectDetails = CProjectDetails(oNewProject, *oNewTasksArray);
 
 	CProjectsDialog oProjectsDialog(oProjectDetails, Modes::InsertMode, oUsersArray, oTasksArray);
 
@@ -120,7 +120,7 @@ void CProjectsView::OnContextInsert()
 
 	if (nResult == MODAL_OK)
 	{
-		GetDocument()->AddProjectWithTasks(oProjectDetails);
+		//GetDocument()->AddProjectWithTasks(oProjectDetails);
 	}
 }
 
@@ -156,7 +156,7 @@ void CProjectsView::OnContextEdit()
 
 	if (nResult == MODAL_OK)
 	{
-		GetDocument()->UpdateProjectWithTasks(lID, oProjectDetails);
+		//GetDocument()->UpdateProjectWithTasks(lID, oProjectDetails);
 	}
 }
 
@@ -172,7 +172,7 @@ void CProjectsView::OnContextDelete()
 	CProjectsTypedPtrArray& oProjectsArray = GetDocument()->GetProjects();
 	long lID = oProjectsArray[nSelectedIndex]->lId;
 
-	GetDocument()->DeleteProject(lID);
+	//GetDocument()->DeleteProject(lID);
 }
 
 void CProjectsView::OnContextLoad()

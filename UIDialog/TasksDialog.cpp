@@ -76,9 +76,9 @@ void CTasksDialog::SetDialogElementsText()
 		CString strTaskUser = oCurUser->szName;
 		int nIndex = m_cmbUsers.AddString(strTaskUser);
 		m_cmbUsers.SetItemData(nIndex, (DWORD_PTR)oCurUser->lId);
-		if (m_cmbUsers.GetItemData(i) == m_oTask.lUserId)
+		if (m_cmbUsers.GetItemData(nIndex) == m_oTask.lUserId)
 		{
-			m_cmbUsers.SetCurSel(i);
+			m_cmbUsers.SetCurSel(nIndex);
 		}
 	}
 	
@@ -109,6 +109,7 @@ BOOL CTasksDialog::OnInitDialog()
 	switch (m_oActionMode)
 	{
 	case Modes::InsertMode:
+		m_rdbState3.EnableWindow(FALSE);
 		SetDialogElementsText();
 		break;
 	case Modes::UpdateMode:
@@ -154,6 +155,7 @@ void CTasksDialog::OnOK()
 
 		if (!ValidateDialog(oValidateTask))
 		{
+			AfxMessageBox(_T("No changes were made"));
 			return;
 		}
 
@@ -162,7 +164,7 @@ void CTasksDialog::OnOK()
 		m_oTask.lProjectId = lProjectId;
 		m_oTask.lUserId = lUserId;
 		m_oTask.sState = sState;
-		m_oTask.sEffort = sEffort;
+		m_oTask.sEffort = sEffort; 
 	}
 	return CDialogEx::OnOK();
 }

@@ -32,6 +32,7 @@ public:
 public:
 	void SetDialogElementsText();
 	void SetTaskInfo();
+
 	bool ValidateDialog(const PROJECTS& oValidateProject);
 	virtual BOOL OnInitDialog();
 	virtual void OnOK();
@@ -54,7 +55,7 @@ private:
 	Modes m_oActionMode;
 	PROJECTS& m_oProject;
 	CUsersTypedPtrArray& m_oUsersArray;
-	CTasksTypedPtrArray& m_oTasksArray;
+	CTasksTypedPtrArray&m_oTasksArray;
 	CTasksTypedPtrArray& m_oProjectTasksArray;
 
 	CEdit m_edbName;
@@ -66,5 +67,4 @@ private:
 	CButton m_btnEdit;
 	CButton m_btnDelete;
 	CButton m_btnAdd;
-
 };
