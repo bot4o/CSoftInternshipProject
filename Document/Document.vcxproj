@@ -199,7 +199,6 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CSoftInternshipProjectDoc.cpp" />
     <ClCompile Include="dllmain.cpp">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
@@ -229,7 +228,6 @@
     <None Include="res\Document.rc2" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CSoftInternshipProjectDoc.h" />
     <ClInclude Include="ProjectsAndTasksDocument.h" />
     <ClInclude Include="UsersDocument.h" />
     <ClInclude Include="framework.h" />
