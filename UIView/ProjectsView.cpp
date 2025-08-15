@@ -109,9 +109,7 @@ void CProjectsView::OnContextInsert()
 	CUsersTypedPtrArray& oUsersArray = GetDocument()->GetUsers();
 	CTasksTypedPtrArray& oTasksArray = GetDocument()->GetTasks();
 
-	PROJECTS oNewProject = PROJECTS();
-	CTasksTypedPtrArray* oNewTasksArray = new CTasksTypedPtrArray();
-	CProjectDetails oProjectDetails = CProjectDetails(oNewProject, *oNewTasksArray);
+	CProjectDetails oProjectDetails = CProjectDetails(PROJECTS(), CTasksTypedPtrArray());
 
 	CProjectsDialog oProjectsDialog(oProjectDetails, Modes::InsertMode, oUsersArray, oTasksArray);
 
@@ -156,7 +154,7 @@ void CProjectsView::OnContextEdit()
 
 	if (nResult == MODAL_OK)
 	{
-		//GetDocument()->UpdateProjectWithTasks(lID, oProjectDetails);
+		GetDocument()->UpdateProjectWithTasks(lID, oProjectDetails);
 	}
 }
 
@@ -172,7 +170,27 @@ void CProjectsView::OnContextDelete()
 	CProjectsTypedPtrArray& oProjectsArray = GetDocument()->GetProjects();
 	long lID = oProjectsArray[nSelectedIndex]->lId;
 
-	//GetDocument()->DeleteProject(lID);
+	int result = AfxMessageBox(
+		_T("Whoa! You sure you want to delete this project and its tasks?"),
+		MB_YESNO | MB_ICONASTERISK      // Buttons + icon
+	);
+	if (result == IDYES)
+	{
+		PROJECTS* oProject = oProjectsArray[nSelectedIndex];
+		CTasksTypedPtrArray& oTasksArray = GetDocument()->GetTasks();
+		CTasksTypedPtrArray oProjectTasksArray;
+		for (int i = 0; i < oTasksArray.GetSize(); i++)
+		{
+			if (oTasksArray[i]->lProjectId == lID)
+			{
+				oProjectTasksArray.Add(oTasksArray[i]);
+			}
+		}
+		CProjectDetails oProjectDetails = CProjectDetails(*oProject, oProjectTasksArray);
+
+		AfxMessageBox(_T("Project deleted"));
+		GetDocument()->DeleteProjectWithTasks(lID, oProjectDetails);
+	}
 }
 
 void CProjectsView::OnContextLoad()
@@ -223,8 +241,8 @@ void CProjectsView::OnInitialUpdate()
 	GetListCtrl().InsertColumn(2, _T("NAME"), LVCFMT_LEFT, 200);
 	GetListCtrl().InsertColumn(3, _T("DESCRIPTION"), LVCFMT_LEFT, 200);
 	GetListCtrl().InsertColumn(4, _T("PROJECT_MANAGER_ID"), LVCFMT_LEFT, 150);
-	GetListCtrl().InsertColumn(4, _T("STATE"), LVCFMT_LEFT, 150);
-	GetListCtrl().InsertColumn(4, _T("TOTAL_EFFORT"), LVCFMT_LEFT, 150);
+	GetListCtrl().InsertColumn(5, _T("STATE"), LVCFMT_LEFT, 150);
+	GetListCtrl().InsertColumn(6, _T("TOTAL_EFFORT"), LVCFMT_LEFT, 150);
 
 
 

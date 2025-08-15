@@ -48,6 +48,8 @@ public:
 	bool AddProjectWithTasks(CProjectDetails& oProjectDetails);
 
 	bool UpdateProjectWithTasks(const long lProjectID, CProjectDetails& oProjectDetails);
+
+	bool DeleteProjectWithTasks(const long lProjectID, CProjectDetails& oProjectDetails);
 private:
 	bool LoadAllUsers();
 	// Overrides

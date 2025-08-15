@@ -174,6 +174,8 @@ bool CProjectsAndTasksDocument::AddProjectWithTasks(CProjectDetails& oProjectDet
 		AfxMessageBox(_T("Error at AddProjectWithTasks() in the Document Layer"));
 		return false;
 	}
+	PROJECTS& oProject = oProjectDetails.GetProject();
+	UpdateAllViews(nullptr, (long)Modes::InsertMode, (CObject*)&oProject);
 	return true;
 }
 bool CProjectsAndTasksDocument::UpdateProjectWithTasks(const long lProjectID, CProjectDetails& oProjectDetails)
@@ -183,5 +185,17 @@ bool CProjectsAndTasksDocument::UpdateProjectWithTasks(const long lProjectID, CP
 		AfxMessageBox(_T("Error at AddProjectWithTasks() in the Document Layer"));
 		return false;
 	}
+	PROJECTS& oProject = oProjectDetails.GetProject();
+	UpdateAllViews(nullptr, (long)Modes::UpdateMode, (CObject*)&oProject);
+	return true;
+}
+bool CProjectsAndTasksDocument::DeleteProjectWithTasks(const long lProjectID, CProjectDetails& oProjectDetails)
+{
+	if (!CProjectsAppService().DeleteProjectWithTasks(lProjectID, oProjectDetails))
+	{
+		AfxMessageBox(_T("Error at AddProjectWithTasks() in the Document Layer"));
+		return false;
+	}
+	UpdateAllViews(nullptr, (long)Modes::DeleteMode, (CObject*)&oProjectDetails.GetProject());
 	return true;
 }

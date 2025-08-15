@@ -1,5 +1,4 @@
 #include "pch.h"
-#include "afxdialogex.h"
 #include "TasksDialog.h"
 
 #define RDB_CHECKED 1
@@ -50,6 +49,11 @@ void CTasksDialog::DoDataExchange(CDataExchange* pDX)
 }
 bool CTasksDialog::ValidateDialog(const TASKS& oValidateTask)
 {
+	if (_tcslen(oValidateTask.szName) == 0 || _tcslen(oValidateTask.szDescription) == 0 || oValidateTask.lUserId == -1 || oValidateTask.sEffort == 0 || oValidateTask.sState == -1)
+	{
+		AfxMessageBox(_T("Please fill each field"));
+		return false;
+	}
 	if (m_oTask.lId == oValidateTask.lId &&
 		_tcscmp(m_oTask.szName, oValidateTask.szName) == 0 &&
 		_tcscmp(m_oTask.szDescription, oValidateTask.szDescription) == 0 &&
@@ -58,6 +62,7 @@ bool CTasksDialog::ValidateDialog(const TASKS& oValidateTask)
 		m_oTask.sState == oValidateTask.sState &&
 		m_oTask.sEffort == oValidateTask.sEffort)
 	{
+		AfxMessageBox(_T("No changes were made"));
 		return false;
 	}
 	return true;
@@ -70,19 +75,22 @@ void CTasksDialog::SetDialogElementsText()
 	strEdbEffort.Format(_T("%i"), m_oTask.sEffort);
 	m_edbEffort.SetWindowTextW(strEdbEffort);
 
+	int selIndex = -1;
+
 	for (int i = 0; i < m_oUsersArray.GetSize(); i++)
 	{		
 		USERS* oCurUser = m_oUsersArray[i];
-		CString strTaskUser = oCurUser->szName;
-		int nIndex = m_cmbUsers.AddString(strTaskUser);
-		m_cmbUsers.SetItemData(nIndex, (DWORD_PTR)oCurUser->lId);
-		DWORD_PTR temp = m_cmbUsers.GetItemData(nIndex);
-		if (temp == m_oTask.lUserId)
-		{
-			m_cmbUsers.SetCurSel(nIndex);
-		}
+		int nIndex = m_cmbUsers.AddString(oCurUser->szName);
+		nIndex = m_cmbUsers.FindStringExact(-1, oCurUser->szName); // get actual index after sort
+		m_cmbUsers.SetItemData(nIndex, (DWORD_PTR)oCurUser->lId);	
+		if (oCurUser->lId == m_oTask.lUserId)
+			selIndex = nIndex;
 	}
-	
+	if (selIndex != -1)
+	{
+		m_cmbUsers.SetCurSel(selIndex);
+	}
+
 	switch (m_oTask.sState)
 	{
 	case (short)TaskStates::Waiting:
@@ -142,7 +150,8 @@ void CTasksDialog::OnOK()
 		m_edbEffort.GetWindowText(strEffort);
 		sEffort = _ttoi(strEffort);
 		lProjectId = m_oProject.lId;
-		lUserId = m_cmbUsers.GetCurSel();
+		int nIndex = m_cmbUsers.GetCurSel();
+		lUserId = m_cmbUsers.GetItemData(nIndex);
 		sState = (short)m_oRdbCheck;
 
 		oValidateTask = TASKS();
@@ -156,7 +165,6 @@ void CTasksDialog::OnOK()
 
 		if (!ValidateDialog(oValidateTask))
 		{
-			AfxMessageBox(_T("No changes were made"));
 			return;
 		}
 

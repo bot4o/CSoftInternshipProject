@@ -59,6 +59,11 @@ void CProjectsDialog::DoDataExchange(CDataExchange* pDX)
 
 bool CProjectsDialog::ValidateDialog(const PROJECTS& oValidateProject)
 {
+	if (_tcslen(oValidateProject.szName) == 0 || _tcslen(oValidateProject.szDescription) == 0 || oValidateProject.lProjectManagerId == -1)
+	{
+		AfxMessageBox(_T("Please fill each field"));
+		return false;
+	}
 	if (m_oProject.lId == oValidateProject.lId &&
 		_tcscmp(m_oProject.szName, oValidateProject.szName) == 0 &&
 		_tcscmp(m_oProject.szDescription, oValidateProject.szDescription) == 0 &&
@@ -66,6 +71,7 @@ bool CProjectsDialog::ValidateDialog(const PROJECTS& oValidateProject)
 		m_oProject.sState == oValidateProject.sState &&
 		m_oProject.sTotalEffort == oValidateProject.sTotalEffort)
 	{
+		AfxMessageBox(_T("No changes were made"));
 		return false;
 	}
 	return true;
@@ -336,12 +342,8 @@ void CProjectsDialog::OnOK()
 		m_edbDescription.GetWindowText(strDescription);
 		m_sttTotalEffort.GetWindowText(strTotalEffort);
 		m_sttState.GetWindowText(strState);
-		lProjectManagerId = m_cmbProjectManager.GetCurSel();
-		if (lProjectManagerId == CB_ERR)
-		{
-			AfxMessageBox(_T("Select a Project manager"));
-			return;
-		}
+		int nIndex = m_cmbProjectManager.GetCurSel();
+		lProjectManagerId = m_cmbProjectManager.GetItemData(nIndex);
 
 		sState = _ttoi(strState);
 		sTotalEffort = _ttoi(strTotalEffort);
@@ -355,7 +357,6 @@ void CProjectsDialog::OnOK()
 
 		if (!ValidateDialog(oValidateProject))
 		{
-			AfxMessageBox(_T("No changes were made"));
 			return;
 		}
 

@@ -215,11 +215,15 @@ void CUsersView::OnInitialUpdate()
 void CUsersView::OnUpdate(CView* /*pSender*/, LPARAM lHint, CObject* pHint)
 {
 	if (pHint == nullptr)
+	{
 		return;
+	}
 
 	USERS* pUser = (USERS*)pHint;
 	if (pUser == nullptr)
+	{
 		return;
+	}
 
 	CString strId;
 	strId.Format(_T("%d"), pUser->lId);

@@ -139,13 +139,20 @@ bool CProjectsAppService::AddProjectWithTasks(CProjectDetails& oProjectDetails)
 	CTasksTypedPtrArray& oTasksArray = oProjectDetails.GetTasks();
 
 	if (!InsertProject(oProject))
+	{
+		AfxMessageBox(_T("Error at the m_oTasksTable.InsertProject() in the application layer"));
 		return false;
+	}
+		
 
 	for (int i = 0; i < oTasksArray.GetSize(); ++i)
 	{
-		TASKS* pTask = oTasksArray[i];
+ 		TASKS* pTask = oTasksArray[i];
+		pTask->lProjectId = oProject.lId;
 		if (!InsertTask(*pTask))
+		{
 			return false;
+		}
 	}
 
 	return true;
@@ -156,15 +163,52 @@ bool CProjectsAppService::UpdateProjectWithTasks(const long lProjectID, CProject
 	CTasksTypedPtrArray& oTasksArray = oProjectDetails.GetTasks();
 
 	if (!UpdateProjectByID(lProjectID, oProject))
+	{
+		AfxMessageBox(_T("Error at the m_oTasksTable.UpdateProjectByID() on UpdateProjectWithTasks in the application layer"));
 		return false;
+	}
 
 	for (int i = 0; i < oTasksArray.GetSize(); ++i)
 	{
 		TASKS* pTask = oTasksArray[i];
+		if (pTask->lId == 0)
+		{
+			//ID = 0 -> newly created task;
+			if (!InsertTask(*pTask))
+			{
+				AfxMessageBox(_T("Error at the m_oTasksTable.InsertTask() on UpdateProjectWithTasks in the application layer"));
+				return false;
+			}
+				
+		}
 		long lTaskId = pTask->lId;
 		if (!UpdateTaskByID(lTaskId, *pTask))
+		{
+			AfxMessageBox(_T("Error at the m_oTasksTable.UpdateTaskByID() on UpdateProjectWithTasks in the application layer"));
 			return false;
+		}
 	}
-
 	return true;
 }
+bool CProjectsAppService::DeleteProjectWithTasks(const long lProjectID, CProjectDetails& oProjectDetails)
+{
+	PROJECTS& oProject = oProjectDetails.GetProject();
+	CTasksTypedPtrArray& oProjectTasksArray = oProjectDetails.GetTasks();
+
+	for (int i = 0; i < oProjectTasksArray.GetSize(); i++)
+	{
+		if (!CProjectsAppService().DeleteTaskByID(oProjectTasksArray[i]->lId))
+		{
+			AfxMessageBox(_T("Error at the CTasksAppService().DeleteWhereID() in the document layer"));
+			return false;
+		}
+	}
+
+	if (!CProjectsAppService().DeleteProjectByID(lProjectID))
+	{
+		AfxMessageBox(_T("Error at the CProjectsAppService().DeleteWhereID() in the document layer"));
+		return false;
+	}
+	return true;
+}
+
