@@ -2,6 +2,7 @@
 #include "pch.h"
 #include "resource.h"
 #include "DLLExport.h"
+#include "AutoCleanArray.h"
 
 #define TASKS_NAME_LENGTH 64
 #define TASKS_DESCRIPTION_LENGTH 128
@@ -40,4 +41,4 @@ public:
 
 
 };
-typedef CTypedPtrArray<CPtrArray, TASKS*> CTasksTypedPtrArray;
+typedef CAutoCleanArray<TASKS> CTasksTypedPtrArray;

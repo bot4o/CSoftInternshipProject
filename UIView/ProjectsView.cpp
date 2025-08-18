@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "Resource.h"
 #include "framework.h"
-#include "AutoCleanArray.h"
 #include "DialogModes.h"
 #include "ProjectsView.h"
 #include "ProjectsDialog.h"
@@ -60,26 +59,29 @@ void CProjectsView::OnListDoubleClick(NMHDR* pNMHDR, LRESULT* pResult)
 
 	long lID = oProjectsArray[nSelectedIndex]->lId;
 
-	PROJECTS* oRefferedProject = nullptr;
+	PROJECTS oRefferedProject;
 	for (int i = 0; i < oProjectsArray.GetSize(); i++)
 	{
 		if (lID == oProjectsArray[i]->lId)
 		{
-			oRefferedProject = oProjectsArray[i];
+			oRefferedProject = *oProjectsArray[i];
+		}
+	}
+	CTasksTypedPtrArray oProjectsTasksArray;
+	for (int i = 0; i < oTasksArray.GetSize(); i++)
+	{
+		if (oTasksArray[i]->lProjectId == oRefferedProject.lId)
+		{
+			oProjectsTasksArray.Add(oTasksArray[i]);
 		}
 	}
 
-	CProjectDetails oProjectDetails = CProjectDetails(*oRefferedProject, CTasksTypedPtrArray());
+	CProjectDetails oProjectDetails = CProjectDetails(oRefferedProject, oProjectsTasksArray);
 
-	CProjectsDialog oProjectsDialog(oProjectDetails, Modes::PreviewMode, oUsersArray, oTasksArray);
+	CProjectsDialog oProjectsDialog(oProjectDetails, Modes::PreviewMode, oUsersArray);
 
 	INT_PTR nResult = -1;
 	nResult = oProjectsDialog.DoModal();
-
-	if (nResult == MODAL_OK)
-	{
-		GetDocument()->UpdateProjectWithTasks(lID, oProjectDetails);
-	}
 }
 
 void CProjectsView::OnNMRClick(NMHDR* pNMHDR, LRESULT* pResult)
@@ -107,15 +109,13 @@ void CProjectsView::OnNMRClick(NMHDR* pNMHDR, LRESULT* pResult)
 void CProjectsView::OnContextInsert()
 {
 	CUsersTypedPtrArray& oUsersArray = GetDocument()->GetUsers();
-	CTasksTypedPtrArray& oTasksArray = GetDocument()->GetTasks();
 
 	CProjectDetails oProjectDetails = CProjectDetails(PROJECTS(), CTasksTypedPtrArray());
 
-	CProjectsDialog oProjectsDialog(oProjectDetails, Modes::InsertMode, oUsersArray, oTasksArray);
+	CProjectsDialog oProjectsDialog(oProjectDetails, Modes::InsertMode, oUsersArray);
 
 	INT_PTR nResult = -1;
 	nResult = oProjectsDialog.DoModal();
-
 	if (nResult == MODAL_OK)
 	{
 		GetDocument()->AddProjectWithTasks(oProjectDetails);
@@ -124,8 +124,9 @@ void CProjectsView::OnContextInsert()
 
 void CProjectsView::OnContextEdit()
 {
-	CUsersTypedPtrArray& oUsersArray = GetDocument()->GetUsers();
+	CProjectsTypedPtrArray& oProjectsArray = GetDocument()->GetProjects();
 	CTasksTypedPtrArray& oTasksArray = GetDocument()->GetTasks();
+	CUsersTypedPtrArray& oUsersArray = GetDocument()->GetUsers();
 
 	int nSelectedIndex = GetListCtrl().GetNextItem(-1, LVNI_SELECTED);
 	if (nSelectedIndex == -1)
@@ -133,7 +134,6 @@ void CProjectsView::OnContextEdit()
 		AfxMessageBox(_T("No user selected."));
 		return;
 	}
-	CProjectsTypedPtrArray& oProjectsArray = GetDocument()->GetProjects();
 	long lID = oProjectsArray[nSelectedIndex]->lId;
 
 	PROJECTS oRefferedProject = PROJECTS();
@@ -144,10 +144,19 @@ void CProjectsView::OnContextEdit()
 			oRefferedProject = *oProjectsArray[i];
 		}
 	}
-	CTasksTypedPtrArray* oNewArray = new CTasksTypedPtrArray();
-	CProjectDetails oProjectDetails = CProjectDetails(oRefferedProject, *oNewArray);
+	CTasksTypedPtrArray oProjectsTasksArray;
+	for (int i = 0; i < oTasksArray.GetSize(); i++)
+	{
+		TASKS* oNewTask = oTasksArray[i];
+		if (oNewTask->lProjectId == oRefferedProject.lId)
+		{
+			oProjectsTasksArray.Add(oNewTask);
+		}
+	}
 
-	CProjectsDialog oProjectsDialog(oProjectDetails, Modes::UpdateMode, oUsersArray, oTasksArray);
+	CProjectDetails oProjectDetails = CProjectDetails(oRefferedProject, oProjectsTasksArray);
+
+	CProjectsDialog oProjectsDialog(oProjectDetails, Modes::UpdateMode, oUsersArray);
 
 	INT_PTR nResult = -1;
 	nResult = oProjectsDialog.DoModal();
@@ -160,6 +169,8 @@ void CProjectsView::OnContextEdit()
 
 void CProjectsView::OnContextDelete()
 {
+	CProjectsTypedPtrArray& oProjectsArray = GetDocument()->GetProjects();
+
 	int nSelectedIndex = GetListCtrl().GetNextItem(-1, LVNI_SELECTED);
 	if (nSelectedIndex == -1)
 	{
@@ -167,12 +178,11 @@ void CProjectsView::OnContextDelete()
 		return;
 	}
 
-	CProjectsTypedPtrArray& oProjectsArray = GetDocument()->GetProjects();
 	long lID = oProjectsArray[nSelectedIndex]->lId;
 
 	int result = AfxMessageBox(
 		_T("Whoa! You sure you want to delete this project and its tasks?"),
-		MB_YESNO | MB_ICONASTERISK      // Buttons + icon
+		MB_YESNO | MB_ICONASTERISK
 	);
 	if (result == IDYES)
 	{
@@ -202,27 +212,27 @@ void CProjectsView::OnContextLoad()
 
 	for (int i = 0; i < oProjectsArray.GetSize(); i++)
 	{
-		PROJECTS* pProject = oProjectsArray[i];
+		PROJECTS* oProject = oProjectsArray[i];
 
 		CString strId;
-		strId.Format(_T("%d"), pProject->lId);
+		strId.Format(_T("%d"), oProject->lId);
 
 		CString strUpdateCounter;
-		strUpdateCounter.Format(_T("%d"), pProject->lUpdateCounter);
+		strUpdateCounter.Format(_T("%d"), oProject->lUpdateCounter);
 
 		CString strProjectManagerId;
-		strProjectManagerId.Format(_T("%d"), pProject->lProjectManagerId);
+		strProjectManagerId.Format(_T("%d"), oProject->lProjectManagerId);
 
 		CString strState;
-		strState.Format(_T("%d"), pProject->sState);
+		strState.Format(_T("%d"), oProject->sState);
 
 		CString strTotalEffort;
-		strTotalEffort.Format(_T("%d"), pProject->sTotalEffort);
+		strTotalEffort.Format(_T("%d"), oProject->sTotalEffort);
 
 		int nItem = GetListCtrl().InsertItem(i, strId);
 		GetListCtrl().SetItemText(nItem, 1, strUpdateCounter);
-		GetListCtrl().SetItemText(nItem, 2, pProject->szName);
-		GetListCtrl().SetItemText(nItem, 3, pProject->szDescription);
+		GetListCtrl().SetItemText(nItem, 2, oProject->szName);
+		GetListCtrl().SetItemText(nItem, 3, oProject->szDescription);
 		GetListCtrl().SetItemText(nItem, 4, strProjectManagerId);
 		GetListCtrl().SetItemText(nItem, 5, strState);
 		GetListCtrl().SetItemText(nItem, 6, strTotalEffort);
@@ -255,36 +265,44 @@ void CProjectsView::OnUpdate(CView* /*pSender*/, LPARAM lHint, CObject* pHint)
 {
 	if (pHint == nullptr)
 		return;
-
+	CProjectDetails* oProjectDetails = (CProjectDetails*)pHint;
 	Modes lDialogMode = (Modes)lHint;
-	PROJECTS* pProject = (PROJECTS*)pHint;
-	if (pProject == nullptr)
+	PROJECTS& oProject = oProjectDetails->GetProject();
+	CTasksTypedPtrArray& oProjectTasksArray = oProjectDetails->GetTasks();
+	CTasksTypedPtrArray& oTasksArray = GetDocument()->GetTasks();
+
+	if (oProjectDetails == nullptr)
 		return;
 
 
 	CString strId;
-	strId.Format(_T("%d"), pProject->lId);
+	strId.Format(_T("%d"), oProject.lId);
 
 	CString strUpdateCounter;
-	strUpdateCounter.Format(_T("%d"), pProject->lUpdateCounter);
+	strUpdateCounter.Format(_T("%d"), oProject.lUpdateCounter);
 
 	CString strProjectManagerId;
-	strProjectManagerId.Format(_T("%d"), pProject->lProjectManagerId);
+	strProjectManagerId.Format(_T("%d"), oProject.lProjectManagerId);
 
 	CString strState;
-	strState.Format(_T("%d"), pProject->sState);
+	strState.Format(_T("%d"), oProject.sState);
 
 	CString strTotalEffort;
-	strTotalEffort.Format(_T("%d"), pProject->sTotalEffort);
+	strTotalEffort.Format(_T("%d"), oProject.sTotalEffort);
 
 	switch (lDialogMode)
 	{
 	case Modes::InsertMode:
 	{
+		for (int i = 0; i < oProjectTasksArray.GetSize(); i++)
+		{
+			oTasksArray.Add(oProjectTasksArray[i]);
+		}
+
 		int nItem = GetListCtrl().InsertItem(GetListCtrl().GetItemCount(), strId);
 		GetListCtrl().SetItemText(nItem, 1, strUpdateCounter);
-		GetListCtrl().SetItemText(nItem, 2, pProject->szName);
-		GetListCtrl().SetItemText(nItem, 3, pProject->szDescription);
+		GetListCtrl().SetItemText(nItem, 2, oProject.szName);
+		GetListCtrl().SetItemText(nItem, 3, oProject.szDescription);
 		GetListCtrl().SetItemText(nItem, 4, strProjectManagerId);
 		GetListCtrl().SetItemText(nItem, 5, strState);
 		GetListCtrl().SetItemText(nItem, 6, strTotalEffort);
@@ -292,6 +310,20 @@ void CProjectsView::OnUpdate(CView* /*pSender*/, LPARAM lHint, CObject* pHint)
 	}
 	case Modes::UpdateMode:
 	{
+		for (int i = 0; i < oProjectTasksArray.GetSize(); i++)
+		{
+			for (int j = 0; j < oTasksArray.GetSize(); i++)
+			{
+				TASKS* oProjectTask = oProjectTasksArray[i];
+				TASKS* oTask = oTasksArray[j];
+
+				if (oProjectTask->lId == oTask->lId)
+				{
+					oTask = oProjectTask;
+				}
+			}
+			
+		}
 		int nSelectedIndex = GetListCtrl().GetNextItem(-1, LVNI_SELECTED);
 		if (nSelectedIndex == -1)
 		{
@@ -299,8 +331,8 @@ void CProjectsView::OnUpdate(CView* /*pSender*/, LPARAM lHint, CObject* pHint)
 			return;
 		}
 		GetListCtrl().SetItemText(nSelectedIndex, 1, strUpdateCounter);
-		GetListCtrl().SetItemText(nSelectedIndex, 2, pProject->szName);
-		GetListCtrl().SetItemText(nSelectedIndex, 3, pProject->szDescription);
+		GetListCtrl().SetItemText(nSelectedIndex, 2, oProject.szName);
+		GetListCtrl().SetItemText(nSelectedIndex, 3, oProject.szDescription);
 		GetListCtrl().SetItemText(nSelectedIndex, 4, strProjectManagerId);
 		GetListCtrl().SetItemText(nSelectedIndex, 5, strState);
 		GetListCtrl().SetItemText(nSelectedIndex, 6, strTotalEffort);
@@ -308,6 +340,19 @@ void CProjectsView::OnUpdate(CView* /*pSender*/, LPARAM lHint, CObject* pHint)
 	}
 	case Modes::DeleteMode:
 	{
+		for (int i = 0; i < oProjectTasksArray.GetSize(); i++)
+		{
+			int n = 0;
+			while (oTasksArray[n] == nullptr)
+			{
+				if (oProjectTasksArray[i]->lId == oTasksArray[n]->lId)
+				{
+					oTasksArray.RemoveAt(n);
+				}
+				n++;
+			}
+		}
+
 		int nSelectedIndex = GetListCtrl().GetNextItem(-1, LVNI_SELECTED);
 		if (nSelectedIndex == -1)
 		{

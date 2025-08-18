@@ -23,8 +23,7 @@ class UIDialogDLL_EXP CProjectsDialog : public CDialogEx
 	// Constructor / Destructor
 	// ----------------
 public:
-	CProjectsDialog(CProjectDetails& oProjectDetails, Modes oActionMode, CUsersTypedPtrArray& oUsersArray,
-		CTasksTypedPtrArray& oTasksArray,  CWnd* pParent = nullptr);   // standard constructor
+	CProjectsDialog(CProjectDetails& oProjectDetails, Modes oActionMode, CUsersTypedPtrArray& oUsersArray,  CWnd* pParent = nullptr);   // standard constructor
 	virtual ~CProjectsDialog();
 
 	// Methods
@@ -57,8 +56,9 @@ private:
 	Modes m_oActionMode;
 	PROJECTS& m_oProject;
 	CUsersTypedPtrArray& m_oUsersArray;
-	CTasksTypedPtrArray&m_oTasksArray;
 	CTasksTypedPtrArray& m_oProjectTasksArray;
+
+	ProjectStates m_oProjectState;
 
 	CEdit m_edbName;
 	CEdit m_edbDescription;

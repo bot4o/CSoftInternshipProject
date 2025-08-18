@@ -2,6 +2,8 @@
 #include "pch.h"
 #include "resource.h"
 #include "DLLExport.h"
+#include "AutoCleanArray.h"
+
 
 #define USERS_NAME_LENGTH 64
 #define USERS_EMAIL_LENGTH 64
@@ -38,4 +40,4 @@ public:
     /// <summary>Длъжност на потребителя</summary>
     TCHAR szJobTitle[USERS_JOB_TITLE_LENGTH];
 };
-typedef CTypedPtrArray<CPtrArray, USERS*> CUsersTypedPtrArray;
+typedef CAutoCleanArray<USERS> CUsersTypedPtrArray;

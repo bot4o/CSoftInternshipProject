@@ -6,6 +6,7 @@
 #include "ProjectsStruct.h"
 #include "TasksStruct.h"
 #include "ProjectDetails.h"
+#include "AutoCleanArray.h"
 
 
 /////////////////////////////////////////////////////////////////////////////

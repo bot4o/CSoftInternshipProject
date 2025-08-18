@@ -54,8 +54,7 @@ bool CTasksDialog::ValidateDialog(const TASKS& oValidateTask)
 		AfxMessageBox(_T("Please fill each field"));
 		return false;
 	}
-	if (m_oTask.lId == oValidateTask.lId &&
-		_tcscmp(m_oTask.szName, oValidateTask.szName) == 0 &&
+	if (_tcscmp(m_oTask.szName, oValidateTask.szName) == 0 &&
 		_tcscmp(m_oTask.szDescription, oValidateTask.szDescription) == 0 &&
 		m_oTask.lProjectId == oValidateTask.lProjectId &&
 		m_oTask.lUserId == oValidateTask.lUserId &&

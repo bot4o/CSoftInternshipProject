@@ -2,6 +2,7 @@
 #include "pch.h"
 #include "resource.h"
 #include "DLLExport.h"
+#include "AutoCleanArray.h"
 
 #define PROJECTS_NAME_LENGTH 64
 #define PROJECTS_DESCRIPTION_LENGTH 128
@@ -46,4 +47,4 @@ public:
     /// <summary>  Общо вложени усилия в проект</summary>
     short sTotalEffort;
 };
-typedef CTypedPtrArray<CPtrArray, PROJECTS*> CProjectsTypedPtrArray;
+typedef CAutoCleanArray<PROJECTS> CProjectsTypedPtrArray;

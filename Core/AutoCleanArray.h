@@ -1,4 +1,4 @@
-#pragma on
+#pragma once
 
 #include "DLLExport.h"
 #include "pch.h"
@@ -8,18 +8,23 @@
 /////////////////////////////////////////////////////////////////////////////
 // CAutoCleanArray
 
-template<class Array, class TYPE>
-class CAutoCleanArray : CTypedPtrArray<CPtrArray, TYPE>
+template<class TYPE>
+class CAutoCleanArray : public CTypedPtrArray<CPtrArray, TYPE*>
 {
     // Constructor / Destructor
     // ----------------
 public:
-    CAutoCleanArray();
+    CAutoCleanArray() {}
     virtual ~CAutoCleanArray() {
-        for (int i = 0; i < GetSize(); i++) 
-        {
-            delete GetAt(i);
-        }
-        RemoveAll();
+        CleanArray();
     }
+    void CleanArray()
+    {
+        for (int i = 0; i < this->GetSize(); i++)
+        {
+            delete this->GetAt(i);
+        }
+        this->RemoveAll();
+    }
+    
 };

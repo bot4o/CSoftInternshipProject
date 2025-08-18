@@ -12,6 +12,8 @@ CProjectDetails::CProjectDetails(PROJECTS& oProject, CTasksTypedPtrArray& oTasks
 {
 
 }
+
+
 CProjectDetails::~CProjectDetails() {
     // Add any cleanup code if needed
 }
