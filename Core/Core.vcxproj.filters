@@ -21,6 +21,9 @@
     <ClCompile Include="pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SessionManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Core.def">
@@ -59,6 +62,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TaskStates.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SessionManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

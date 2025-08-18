@@ -1,7 +1,7 @@
 ﻿#include "pch.h"
 #include "UsersAppService.h"
 #include "UsersAccessor.h"
-#include "Table.h"
+#include "BaseTable.h"
 
 
 #define TABLE_NAME _T("USERS")

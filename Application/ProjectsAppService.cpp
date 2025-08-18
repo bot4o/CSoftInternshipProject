@@ -3,7 +3,7 @@
 #include "ProjectsAccessor.h"
 #include "UsersAccessor.h"
 #include "TasksAccessor.h"
-#include "Table.h"
+#include "BaseTable.h"
 #include "ProjectDetails.h"
 
 
@@ -138,12 +138,14 @@ bool CProjectsAppService::AddProjectWithTasks(CProjectDetails& oProjectDetails)
 	PROJECTS& oProject = oProjectDetails.GetProject();
 	CTasksTypedPtrArray& oTasksArray = oProjectDetails.GetTasks();
 
+	BeginTransaction(); 
+
 	if (!InsertProject(oProject))
 	{
+		RollbackTransaction();
 		AfxMessageBox(_T("Error at the m_oTasksTable.InsertProject() in the application layer"));
 		return false;
 	}
-		
 
 	for (int i = 0; i < oTasksArray.GetSize(); ++i)
 	{
@@ -151,9 +153,12 @@ bool CProjectsAppService::AddProjectWithTasks(CProjectDetails& oProjectDetails)
 		pTask->lProjectId = oProject.lId;
 		if (!InsertTask(*pTask))
 		{
+			RollbackTransaction();
+			AfxMessageBox(_T("Error inserting task"));
 			return false;
 		}
 	}
+	CommitTransaction();
 
 	return true;
 }
@@ -161,6 +166,8 @@ bool CProjectsAppService::UpdateProjectWithTasks(const long lProjectID, CProject
 {
 	PROJECTS& oProject = oProjectDetails.GetProject();
 	CTasksTypedPtrArray& oTasksArray = oProjectDetails.GetTasks();
+
+	BeginTransaction();
 
 	if (!UpdateProjectByID(lProjectID, oProject))
 	{
@@ -176,6 +183,8 @@ bool CProjectsAppService::UpdateProjectWithTasks(const long lProjectID, CProject
 			//ID = 0 -> newly created task;
 			if (!InsertTask(*pTask))
 			{
+				RollbackTransaction();
+
 				AfxMessageBox(_T("Error at the m_oTasksTable.InsertTask() on UpdateProjectWithTasks in the application layer"));
 				return false;
 			}
@@ -184,10 +193,14 @@ bool CProjectsAppService::UpdateProjectWithTasks(const long lProjectID, CProject
 		long lTaskId = pTask->lId;
 		if (!UpdateTaskByID(lTaskId, *pTask))
 		{
+			RollbackTransaction();
+
 			AfxMessageBox(_T("Error at the m_oTasksTable.UpdateTaskByID() on UpdateProjectWithTasks in the application layer"));
 			return false;
 		}
 	}
+
+	CommitTransaction();
 	return true;
 }
 bool CProjectsAppService::DeleteProjectWithTasks(const long lProjectID, CProjectDetails& oProjectDetails)
@@ -195,20 +208,26 @@ bool CProjectsAppService::DeleteProjectWithTasks(const long lProjectID, CProject
 	PROJECTS& oProject = oProjectDetails.GetProject();
 	CTasksTypedPtrArray& oProjectTasksArray = oProjectDetails.GetTasks();
 
+	BeginTransaction();
+
 	for (int i = 0; i < oProjectTasksArray.GetSize(); i++)
 	{
-		if (!CProjectsAppService().DeleteTaskByID(oProjectTasksArray[i]->lId))
+		if (!DeleteTaskByID(oProjectTasksArray[i]->lId))
 		{
+			RollbackTransaction();
 			AfxMessageBox(_T("Error at the CTasksAppService().DeleteWhereID() in the document layer"));
 			return false;
 		}
 	}
 
-	if (!CProjectsAppService().DeleteProjectByID(lProjectID))
+	if (!DeleteProjectByID(lProjectID))
 	{
+		RollbackTransaction();
 		AfxMessageBox(_T("Error at the CProjectsAppService().DeleteWhereID() in the document layer"));
 		return false;
 	}
+
+	CommitTransaction();
 	return true;
 }
 
