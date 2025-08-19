@@ -12,12 +12,9 @@
 IMPLEMENT_DYNAMIC(CTasksDialog, CDialogEx)
 
 BEGIN_MESSAGE_MAP(CTasksDialog, CDialogEx)
-//	ON_BN_CLICKED(IDC_RDB_TASK_STATE_1, &CTasksDialog::OnBnClickedRdbTaskState1)
-//	ON_BN_CLICKED(IDC_RDB_TASK_STATE_2, &CTasksDialog::OnBnClickedRdbTaskState2)
-//	ON_BN_CLICKED(IDC_RDB_TASK_STATE_3, &CTasksDialog::OnBnClickedRdbTaskState3)
-ON_BN_CLICKED(IDC_RDB_TASK_STATE_1, &CTasksDialog::OnBnClickedRdbTaskState1)
-ON_BN_CLICKED(IDC_RDB_TASK_STATE_2, &CTasksDialog::OnBnClickedRdbTaskState2)
-ON_BN_CLICKED(IDC_RDB_TASK_STATE_3, &CTasksDialog::OnBnClickedRdbTaskState3)
+	ON_BN_CLICKED(IDC_RDB_TASK_STATE_1, &CTasksDialog::OnBnClickedRdbTaskState1)
+	ON_BN_CLICKED(IDC_RDB_TASK_STATE_2, &CTasksDialog::OnBnClickedRdbTaskState2)
+	ON_BN_CLICKED(IDC_RDB_TASK_STATE_3, &CTasksDialog::OnBnClickedRdbTaskState3)
 END_MESSAGE_MAP()
 // Constructor / Destructor
 // ----------------

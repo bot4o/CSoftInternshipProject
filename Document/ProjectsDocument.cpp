@@ -199,10 +199,6 @@ BOOL CProjectsDocument::OnNewDocument()
 		AfxMessageBox(_T("Cound't initialize all users into this document"));
 		return FALSE;
 	}
-	/*if (!LoadAllTasks()) {
-		AfxMessageBox(_T("Cound't initialize all tasks into this document"));
-		return FALSE;
-	}*/
 	if (!LoadAllProjects()) {
 		AfxMessageBox(_T("Cound't initialize all projects into this document"));
 		return FALSE;

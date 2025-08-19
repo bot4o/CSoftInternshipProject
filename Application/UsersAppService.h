@@ -2,9 +2,10 @@
 #include "pch.h"
 #include "Resource.h"
 #include "UsersStruct.h"
+#include "SessionManager.h"
 
 /////////////////////////////////////////////////////////////////////////////
-// CSampleClass
+// CUsersAppService
 
 class ApplicationDLL_EXP CUsersAppService
 {
@@ -26,4 +27,9 @@ public:
 	bool Insert(USERS& recUser);
 	/// <summary>Изтрива потребител от базата според ID</summary>  
 	bool DeleteWhereID(const long lID);
+
+	// Members
+	// ----------------
+private:
+	CSessionManager m_oSessionManager;
 };

@@ -27,7 +27,7 @@ CProjectsAppService::~CProjectsAppService()
 /// <summary>Извежда всички потребители в базата</summary>  
 bool CProjectsAppService::SelectAllProjects(CProjectsTypedPtrArray& oProjectsArray)
 {
-	if (!CBaseTable<PROJECTS, CProjectsAccessor>(TABLE_NAME_PROJECTS).SelectAll(oProjectsArray))
+	if (!CBaseTable<PROJECTS, CProjectsAccessor>(&m_oSessionManager, TABLE_NAME_PROJECTS).SelectAll(oProjectsArray))
 	{
 		AfxMessageBox(_T("Error at the m_oProjectsTable.SelectAll() in the application layer"));
 		return false;
@@ -38,7 +38,7 @@ bool CProjectsAppService::SelectAllProjects(CProjectsTypedPtrArray& oProjectsArr
 /// <summary>Извежда потребител от базата според ID</summary>  
 bool CProjectsAppService::SelectProjectByID(const long lID, PROJECTS& recProject)
 {
-	if (!CBaseTable<PROJECTS, CProjectsAccessor>(TABLE_NAME_PROJECTS).SelectWhereID(lID, recProject))
+	if (!CBaseTable<PROJECTS, CProjectsAccessor>(&m_oSessionManager, TABLE_NAME_PROJECTS).SelectWhereID(lID, recProject))
 	{
 		AfxMessageBox(_T("Error at the m_oProjectsTable.SelectWhereID() in the application layer"));
 		return false;
@@ -49,7 +49,7 @@ bool CProjectsAppService::SelectProjectByID(const long lID, PROJECTS& recProject
 /// <summary>Променя длъжноста на потребител от базата според ID</summary>  
 bool CProjectsAppService::UpdateProjectByID(const long lID, PROJECTS& recProject)
 {
-	if (!CBaseTable<PROJECTS, CProjectsAccessor>(TABLE_NAME_PROJECTS).UpdateWhereID(lID, recProject))
+	if (!CBaseTable<PROJECTS, CProjectsAccessor>(&m_oSessionManager, TABLE_NAME_PROJECTS).UpdateWhereID(lID, recProject))
 	{
 		AfxMessageBox(_T("Error at the m_oProjectsTable.UpdateWhereID() in the application layer"));
 		return false;
@@ -60,7 +60,7 @@ bool CProjectsAppService::UpdateProjectByID(const long lID, PROJECTS& recProject
 /// <summary>Вмъква нов потребител в базата</summary>  
 bool CProjectsAppService::InsertProject(PROJECTS& recProject)
 {
-	if (!CBaseTable<PROJECTS, CProjectsAccessor>(TABLE_NAME_PROJECTS).Insert(recProject))
+	if (!CBaseTable<PROJECTS, CProjectsAccessor>(&m_oSessionManager, TABLE_NAME_PROJECTS).Insert(recProject))
 	{
 		AfxMessageBox(_T("Error at the m_oProjectsTable.Insert() in the application layer"));
 		return false;
@@ -71,7 +71,7 @@ bool CProjectsAppService::InsertProject(PROJECTS& recProject)
 /// <summary>Изтрива потребител от базата според ID</summary>  
 bool CProjectsAppService::DeleteProjectByID(const long lID)
 {
-	if (!CBaseTable<PROJECTS, CProjectsAccessor>(TABLE_NAME_PROJECTS).DeleteWhereID(lID))
+	if (!CBaseTable<PROJECTS, CProjectsAccessor>(&m_oSessionManager, TABLE_NAME_PROJECTS).DeleteWhereID(lID))
 	{
 		AfxMessageBox(_T("Error at the m_oProjectsTable.DeleteWhereID() in the application layer"));
 		return false;
@@ -82,7 +82,7 @@ bool CProjectsAppService::DeleteProjectByID(const long lID)
 /// <summary>Извежда всички потребители в базата</summary>  
 bool CProjectsAppService::SelectAllTasks(CTasksTypedPtrArray& oTasksArray)
 {
-	if (!CBaseTable<TASKS, CTasksAccessor>(TABLE_NAME_TASKS).SelectAll(oTasksArray))
+	if (!CBaseTable<TASKS, CTasksAccessor>(&m_oSessionManager, TABLE_NAME_TASKS).SelectAll(oTasksArray))
 	{
 		AfxMessageBox(_T("Error at the m_oTasksTable.SelectAll() in the application layer"));
 		return false;
@@ -93,7 +93,7 @@ bool CProjectsAppService::SelectAllTasks(CTasksTypedPtrArray& oTasksArray)
 /// <summary>Извежда потребител от базата според ID</summary>  
 bool CProjectsAppService::SelectTaskByID(const long lID, TASKS& recTask)
 {
-	if (!CBaseTable<TASKS, CTasksAccessor>(TABLE_NAME_TASKS).SelectWhereID(lID, recTask))
+	if (!CBaseTable<TASKS, CTasksAccessor>(&m_oSessionManager, TABLE_NAME_TASKS).SelectWhereID(lID, recTask))
 	{
 		AfxMessageBox(_T("Error at the m_oTasksTable.SelectWhereID() in the application layer"));
 		return false;
@@ -104,7 +104,7 @@ bool CProjectsAppService::SelectTaskByID(const long lID, TASKS& recTask)
 /// <summary>Променя длъжноста на потребител от базата според ID</summary>  
 bool CProjectsAppService::UpdateTaskByID(const long lID, TASKS& recTask)
 {
-	if (!CBaseTable<TASKS, CTasksAccessor>(TABLE_NAME_TASKS).UpdateWhereID(lID, recTask))
+	if (!CBaseTable<TASKS, CTasksAccessor>(&m_oSessionManager, TABLE_NAME_TASKS).UpdateWhereID(lID, recTask))
 	{
 		AfxMessageBox(_T("Error at the m_oTasksTable.UpdateWhereID() in the application layer"));
 		return false;
@@ -115,7 +115,7 @@ bool CProjectsAppService::UpdateTaskByID(const long lID, TASKS& recTask)
 /// <summary>Вмъква нов потребител в базата</summary>  
 bool CProjectsAppService::InsertTask(TASKS& recTask)
 {
-	if (!CBaseTable<TASKS, CTasksAccessor>(TABLE_NAME_TASKS).Insert(recTask))
+	if (!CBaseTable<TASKS, CTasksAccessor>(&m_oSessionManager, TABLE_NAME_TASKS).Insert(recTask))
 	{
 		AfxMessageBox(_T("Error at the m_oTasksTable.Insert() in the application layer"));
 		return false;
@@ -126,7 +126,7 @@ bool CProjectsAppService::InsertTask(TASKS& recTask)
 /// <summary>Изтрива потребител от базата според ID</summary>  
 bool CProjectsAppService::DeleteTaskByID(const long lID)
 {
-	if (!CBaseTable<TASKS, CTasksAccessor>(TABLE_NAME_TASKS).DeleteWhereID(lID))
+	if (!CBaseTable<TASKS, CTasksAccessor>(&m_oSessionManager, TABLE_NAME_TASKS).DeleteWhereID(lID))
 	{
 		AfxMessageBox(_T("Error at the m_oTasksTable.DeleteWhereID() in the application layer"));
 		return false;
@@ -136,44 +136,67 @@ bool CProjectsAppService::DeleteTaskByID(const long lID)
 
 bool CProjectsAppService::AddProjectWithTasks(CProjectDetails& oProjectDetails)
 {
+	HRESULT hResult = m_oSessionManager.BeginTransaction();
+	if (FAILED(hResult))
+	{
+		CString strMessage;
+		strMessage.Format(_T("Failed to start transaction. Error: %d", hResult));
+		AfxMessageBox(strMessage);
+		m_oSessionManager.CloseSession();
+		return false;
+	}
+
 	PROJECTS& oProject = oProjectDetails.GetProject();
 	CTasksTypedPtrArray& oTasksArray = oProjectDetails.GetTasks();
 
-	CSessionManager<PROJECTS, CProjectsAccessor> oSessionManager = CSessionManager<PROJECTS, CProjectsAccessor>();
-
-	oSessionManager.BeginTransaction();
 	if (!InsertProject(oProject))
 	{
-		oSessionManager.RollbackTransaction();
 		AfxMessageBox(_T("Error at the m_oTasksTable.InsertProject() in the application layer"));
+		//m_oSessionManager.RollbackTransaction();
 		return false;
 	}
 
 	for (int i = 0; i < oTasksArray.GetSize(); ++i)
 	{
- 		TASKS* pTask = oTasksArray[i];
+		TASKS* pTask = oTasksArray[i];
 		pTask->lProjectId = oProject.lId;
 		if (!InsertTask(*pTask))
 		{
-			oSessionManager.RollbackTransaction();
 			AfxMessageBox(_T("Error inserting task"));
+			//m_oSessionManager.RollbackTransaction();
 			return false;
 		}
 	}
-	oSessionManager.CommitTransaction();
+
+	hResult = m_oSessionManager.CommitTransaction();
+	if (FAILED(hResult))
+	{
+		CString strMessage;
+		strMessage.Format(_T("Failed to commit transaction. At AddProjectWithTasks Error: %d", hResult));
+		AfxMessageBox(strMessage);
+		m_oSessionManager.CloseSession();
+		return false;
+	}
 	return true;
 }
 bool CProjectsAppService::UpdateProjectWithTasks(const long lProjectID, CProjectDetails& oProjectDetails)
 {
 	PROJECTS& oProject = oProjectDetails.GetProject();
-	CTasksTypedPtrArray& oTasksArray = oProjectDetails.GetTasks();	
+	CTasksTypedPtrArray& oTasksArray = oProjectDetails.GetTasks();
 
-	CSessionManager<PROJECTS, CProjectsAccessor> oSessionManager = CSessionManager<PROJECTS, CProjectsAccessor>();
+	HRESULT hResult = m_oSessionManager.BeginTransaction();
+	if (FAILED(hResult))
+	{
+		CString strMessage;
+		strMessage.Format(_T("Failed to begin transaction. Error: %d", hResult));
+		AfxMessageBox(strMessage);
+		m_oSessionManager.CloseSession();
+		return false;
+	}
 
-	oSessionManager.BeginTransaction();
 	if (!UpdateProjectByID(lProjectID, oProject))
 	{
-		oSessionManager.RollbackTransaction();
+		m_oSessionManager.RollbackTransaction();
 		AfxMessageBox(_T("Error at the m_oTasksTable.UpdateProjectByID() on UpdateProjectWithTasks in the application layer"));
 		return false;
 	}
@@ -185,21 +208,29 @@ bool CProjectsAppService::UpdateProjectWithTasks(const long lProjectID, CProject
 		{
 			if (!InsertTask(*pTask))
 			{
-				oSessionManager.RollbackTransaction();
+				m_oSessionManager.RollbackTransaction();
 				AfxMessageBox(_T("Error at the m_oTasksTable.InsertTask() on UpdateProjectWithTasks in the application layer"));
 				return false;
 			}
-				
+
 		}
 		long lTaskId = pTask->lId;
 		if (!UpdateTaskByID(lTaskId, *pTask))
 		{
-			oSessionManager.RollbackTransaction();
+			m_oSessionManager.RollbackTransaction();
 			AfxMessageBox(_T("Error at the m_oTasksTable.UpdateTaskByID() on UpdateProjectWithTasks in the application layer"));
 			return false;
 		}
 	}
-	oSessionManager.CommitTransaction();
+	hResult = m_oSessionManager.CommitTransaction();
+	if (FAILED(hResult))
+	{
+		CString strMessage;
+		strMessage.Format(_T("Failed to commit transaction. Error: %d", hResult));
+		AfxMessageBox(strMessage);
+		m_oSessionManager.CloseSession();
+		return false;
+	}
 
 	return true;
 }
@@ -207,15 +238,22 @@ bool CProjectsAppService::DeleteProjectWithTasks(const long lProjectID, CProject
 {
 	PROJECTS& oProject = oProjectDetails.GetProject();
 	CTasksTypedPtrArray& oProjectTasksArray = oProjectDetails.GetTasks();
-	CSessionManager<PROJECTS, CProjectsAccessor> oSessionManager = CSessionManager<PROJECTS, CProjectsAccessor>();
 
-	oSessionManager.BeginTransaction();
+	HRESULT hResult = m_oSessionManager.BeginTransaction();
+	if (FAILED(hResult))
+	{
+		CString strMessage;
+		strMessage.Format(_T("Failed to begin transaction. Error: %d", hResult));
+		AfxMessageBox(strMessage);
+		m_oSessionManager.CloseSession();
+		return false;
+	}
 
 	for (int i = 0; i < oProjectTasksArray.GetSize(); i++)
 	{
 		if (!DeleteTaskByID(oProjectTasksArray[i]->lId))
 		{
-			oSessionManager.RollbackTransaction();
+			m_oSessionManager.RollbackTransaction();
 			AfxMessageBox(_T("Error at the CTasksAppService().DeleteWhereID() in the document layer"));
 			return false;
 		}
@@ -223,11 +261,20 @@ bool CProjectsAppService::DeleteProjectWithTasks(const long lProjectID, CProject
 
 	if (!DeleteProjectByID(lProjectID))
 	{
-		oSessionManager.RollbackTransaction();
+		m_oSessionManager.RollbackTransaction();
 		AfxMessageBox(_T("Error at the CProjectsAppService().DeleteWhereID() in the document layer"));
 		return false;
 	}
-	oSessionManager.CommitTransaction();
+
+	hResult = m_oSessionManager.CommitTransaction();
+	if (FAILED(hResult))
+	{
+		CString strMessage;
+		strMessage.Format(_T("Failed to commit transaction. Error: %d", hResult));
+		AfxMessageBox(strMessage);
+		m_oSessionManager.CloseSession();
+		return false;
+	}
 
 	return true;
 }

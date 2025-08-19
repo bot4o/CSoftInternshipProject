@@ -135,7 +135,7 @@ void CProjectsView::OnContextEdit()
 		return;
 	}
 
-	PROJECTS& oRefferedProject = *oProjectsArray[nSelectedIndex];
+	PROJECTS oRefferedProject = *oProjectsArray[nSelectedIndex];
 	long lID = oRefferedProject.lId;
 	CTasksTypedPtrArray oProjectTasksArray;
 	GetDocument()->GetProjectTasks(lID, oProjectTasksArray);
@@ -177,8 +177,8 @@ void CProjectsView::OnContextDelete()
 
 		CProjectDetails oProjectDetails = CProjectDetails(*oProject, oProjectTasksArray);
 
-		AfxMessageBox(_T("Project deleted"));
 		GetDocument()->DeleteProjectWithTasks(lID, oProjectDetails);
+		AfxMessageBox(_T("Project deleted"));
 	}
 }
 
@@ -248,43 +248,58 @@ void CProjectsView::OnUpdate(CView* /*pSender*/, LPARAM lHint, CObject* pHint)
 	if (oProjectDetails == nullptr)
 		return;
 
-	PROJECTS& oProject = oProjectDetails->GetProject();
-	CTasksTypedPtrArray& oProjectTasksArray = oProjectDetails->GetTasks();
+	PROJECTS* oProject = new PROJECTS(oProjectDetails->GetProject());
 
 	CString strId;
-	strId.Format(_T("%d"), oProject.lId);
+	strId.Format(_T("%d"), oProject->lId);
 	CString strUpdateCounter;
-	strUpdateCounter.Format(_T("%d"), oProject.lUpdateCounter);
+	strUpdateCounter.Format(_T("%d"), oProject->lUpdateCounter);
 	CString strProjectManagerId;
-	strProjectManagerId.Format(_T("%d"), oProject.lProjectManagerId);
+	strProjectManagerId.Format(_T("%d"), oProject->lProjectManagerId);
 	CString strState;
-	strState.Format(_T("%d"), oProject.sState);
+	strState.Format(_T("%d"), oProject->sState);
 	CString strTotalEffort;
-	strTotalEffort.Format(_T("%d"), oProject.sTotalEffort);
+	strTotalEffort.Format(_T("%d"), oProject->sTotalEffort);
 
 	switch (lDialogMode)
 	{
 	case Modes::InsertMode:
 	{
+		CProjectsTypedPtrArray& oProjectsArray = GetDocument()->GetProjects();
+		oProjectsArray.Add(oProject);
+
 		int nItem = GetListCtrl().GetItemCount();
-		SetItemToListCtrl(nItem, oProject);
+		SetItemToListCtrl(nItem, *oProject);
 
 		break;
 	}
 	case Modes::UpdateMode:
 	{
+		CProjectsTypedPtrArray& oProjectsArray = GetDocument()->GetProjects();
+
 		int nSelectedIndex = GetListCtrl().GetNextItem(-1, LVNI_SELECTED);
 		if (nSelectedIndex == -1)
 		{
 			AfxMessageBox(_T("No user selected."));
 			return;
 		}
-		SetItemToListCtrl(nSelectedIndex, oProject);
+
+		oProjectsArray[nSelectedIndex] = oProject;
+		GetListCtrl().DeleteItem(nSelectedIndex);
+		SetItemToListCtrl(nSelectedIndex, *oProject);
 		break;
 	}
 	case Modes::DeleteMode:
 	{
+		CProjectsTypedPtrArray& oProjectsArray = GetDocument()->GetProjects();
 
+		for (int i = 0; i < oProjectsArray.GetSize(); i++)
+		{
+			if (oProject->lId == oProjectsArray[i]->lId)
+			{
+				oProjectsArray.RemoveAt(i);
+			}
+		}
 		int nSelectedIndex = GetListCtrl().GetNextItem(-1, LVNI_SELECTED);
 		if (nSelectedIndex == -1)
 		{

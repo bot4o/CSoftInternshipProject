@@ -5,6 +5,7 @@
 #include "TasksStruct.h"
 #include "UsersStruct.h"
 #include "ProjectDetails.h"
+#include "SessionManager.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CSampleClass
@@ -19,32 +20,36 @@ public:
 
 	// Methods
 	// ----------------
-	/// <summary>Извежда всички потребители в базата</summary>  
+	/// <summary>Извежда всички проекти в базата</summary>  
 	bool SelectAllProjects(CProjectsTypedPtrArray& oProjectsArray);
-	/// <summary>Извежда потребител от базата според ID</summary>  
+	/// <summary>Извежда проект от базата</summary>  
 	bool SelectProjectByID(const long lID, PROJECTS& recProject);
-	/// <summary>Променя длъжноста на потребител от базата според ID</summary>  
+	/// <summary>Променя длъжноста на проект от базата</summary>  
 	bool UpdateProjectByID(const long lID, PROJECTS& recProject);
-	/// <summary>Вмъква нов потребител в базата</summary>  
+	/// <summary>Вмъква нов проект в базата</summary>  
 	bool InsertProject(PROJECTS& recProject);
-	/// <summary>Изтрива потребител от базата според ID</summary>  
+	/// <summary>Изтрива проект от базата</summary>  
 	bool DeleteProjectByID(const long lID);
 
+	/// <summary>Извежда всички задачи от базата</summary>  
 	bool SelectAllTasks(CTasksTypedPtrArray& oTasksArray);
-	/// <summary>Извежда потребител от базата според ID</summary>  
+	/// <summary>Извежда задача от базата</summary>  
 	bool SelectTaskByID(const long lID, TASKS& recTask);
-	/// <summary>Променя длъжноста на потребител от базата според ID</summary>  
+	/// <summary>Променя задача от базата</summary>  
 	bool UpdateTaskByID(const long lID, TASKS& recTask);
-	/// <summary>Вмъква нов потребител в базата</summary>  
+	/// <summary>Вмъква нова задача в базата</summary>  
 	bool InsertTask(TASKS& recTask);
-	/// <summary>Изтрива потребител от базата според ID</summary>  
+	/// <summary>Изтрива задача от базата</summary>  
 	bool DeleteTaskByID(const long lID);
-	
+
 	bool GetProjectTasks(const long lProjectID, CTasksTypedPtrArray& oProjectsTasksArray);
 
 	bool AddProjectWithTasks(CProjectDetails& oProjectDetails);
 
-	bool UpdateProjectWithTasks(const long lProjectID, CProjectDetails& oProjectDetails);
+	bool UpdateProjectWithTasks( const long lProjectID, CProjectDetails& oProjectDetails);
 
 	bool DeleteProjectWithTasks(const long lProjectID, CProjectDetails& oProjectDetails);
+
+private:
+	CSessionManager m_oSessionManager;
 };

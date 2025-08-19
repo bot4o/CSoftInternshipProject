@@ -2,7 +2,6 @@
 #include "afxdialogex.h"
 #include "ProjectsDialog.h"
 #include "TasksDialog.h"
-
 #include "../UIView/ProjectsView.h"
 
 /////////////////////////////////////////////////////////////////////////////

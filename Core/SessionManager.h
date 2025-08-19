@@ -2,29 +2,24 @@
 #include "pch.h"  
 #include "Resource.h"  
 #include "atldbcli.h"
-#include "DBConnection.h"
+#include "../Database/DBConnection.h"
 #include "DLLExport.h"
 
-
 /////////////////////////////////////////////////////////////////////////////
-// CSampleClass
-template<typename TRecord, typename TAccessor>
+// CSessionManager
+
 class CSessionManager
 {
-
-	// Constants
-	// ----------------
-
-
 	// Constructor / Destructor
 	// ---------------- 
 public:
-	CSessionManager()
+	CSessionManager() : m_bInTransaction(false)
 	{
 		OpenSession();
 	}
 	virtual ~CSessionManager()
 	{
+
 		CloseSession();
 	}
 
@@ -32,39 +27,104 @@ public:
 	// ----------------
 	bool OpenSession()
 	{
-		if (m_oSession.m_spOpenRowset != NULL)
+		if (m_oSession.m_spOpenRowset == NULL)
 		{
-			return true; //Session opened already
-		}
-        CDataSource& oDataSource = CDBConnection::GetDataSource();
-        if (oDataSource.m_spInit == nullptr)
-        {
-            if (!CDBConnection::OpenConnection())
-            {
-                AfxMessageBox(_T("Failed to initialize data source."));
-                return false;
-            }
-        }
+			CDataSource& oDataSource = CDBConnection::GetDataSource();
+			if (oDataSource.m_spInit == nullptr)
+			{
+				if (!CDBConnection::OpenConnection())
+				{
+					AfxMessageBox(_T("Failed to initialize data source."));
+					return false;
+				}
+			}
 
-        HRESULT hResult = m_oSession.Open(oDataSource);
-        if (FAILED(hResult))
-        {
-            CString strMessage;
-            strMessage.Format(_T("Unable to open session. HRESULT: 0x%08X"), hResult);
-            AfxMessageBox(strMessage);
-            return false;
-        }
+			HRESULT hResult = m_oSession.Open(oDataSource);
+			if (FAILED(hResult))
+			{
+				CString strMessage;
+				strMessage.Format(_T("Unable to open session. HRESULT: 0x%08X"), hResult);
+				AfxMessageBox(strMessage);
+				return false;
+			}
+		}
+
         return true;
 	}
+
 	void CloseSession()
 	{
 		if (m_oSession.m_spOpenRowset != NULL)
 		{
-			m_oCommand.Close();
 			m_oSession.Close();
 		}
 	}
-	bool ExecuteQuery(CString strSQLCommand, CDBPropSet* pPropSet = nullptr)
+
+	bool BeginTransaction()
+	{
+		if (m_bInTransaction)
+		{
+			return false;
+		}
+		if (!OpenSession())
+		{
+			return false;
+		}
+		HRESULT hResult = m_oSession.StartTransaction();
+		if (FAILED(hResult))
+		{
+			CString strMessage;
+			strMessage.Format(_T("Unable to start transaction. HRESULT: 0x%08X"), hResult);
+			AfxMessageBox(strMessage);
+		}
+		m_bInTransaction = true;
+		return true;
+	}
+
+	bool RollbackTransaction()
+	{
+		if (!m_bInTransaction)
+		{
+			return false;
+		}
+		if (!OpenSession())
+		{
+			return false;
+		}
+		HRESULT hResult = m_oSession.Abort();
+		if (FAILED(hResult))
+		{
+			CString strMessage;
+			strMessage.Format(_T("Unable to abort transaction. HRESULT: 0x%08X"), hResult);
+			AfxMessageBox(strMessage);
+		}
+		m_bInTransaction = false;
+		return true;
+	}
+
+	bool CommitTransaction()
+	{
+		if (!m_bInTransaction)
+		{
+			return false;
+		}
+		if (!OpenSession())
+		{
+			return false;
+		}
+		HRESULT hResult = m_oSession.Commit();
+		if (FAILED(hResult))
+		{
+			CString strMessage;
+			strMessage.Format(_T("Unable to commit transaction. HRESULT: 0x%08X"), hResult);
+			AfxMessageBox(strMessage);
+			return false;
+		}
+		m_bInTransaction = false;
+		return true;
+	}
+	template <typename TAccessor>
+	bool ExecuteQuery(CString strSQLCommand, CCommand<CAccessor<TAccessor>>& oCommand, CDBPropSet* pPropSet = nullptr)
 	{
 		if (m_oSession.m_spOpenRowset == NULL)
 		{
@@ -77,125 +137,20 @@ public:
 
 		if (pPropSet != nullptr)
 		{
-			hResult = m_oCommand.Open(m_oSession, strSQLCommand, pPropSet);
+			hResult = oCommand.Open(m_oSession, strSQLCommand, pPropSet);
 		}
 		else
 		{
-			hResult = m_oCommand.Open(m_oSession, strSQLCommand);
+			hResult = oCommand.Open(m_oSession, strSQLCommand);
 		}
 		
 		return true;
-	}
-	bool BeginTransaction()
-	{
-		if (m_oSession.m_spOpenRowset == NULL) 
-		{
-			if (!OpenSession())
-			{
-				return false;
-			}
-		}
-		XACTTRANSINFO oTransInfo;
-		HRESULT hResult = m_oSession.GetTransactionInfo(&oTransInfo);
-		if (hResult == XACT_E_NOTRANSACTION)
-		{
-			hResult = m_oSession.StartTransaction();
-			if (FAILED(hResult))
-			{
-				CString strMessage;
-				strMessage.Format(_T("Unable to start transaction. HRESULT: 0x%08X"), hResult);
-				AfxMessageBox(strMessage);
-				return false;
-			}
-			return true;
-		}
-		else if (SUCCEEDED(hResult))
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-		
-	}
-	bool RollbackTransaction()
-	{
-		if (m_oSession.m_spOpenRowset == NULL)
-		{
-			if (!OpenSession())
-			{
-				return false;
-			}
-		}
-
-		HRESULT hResult = m_oSession.Abort();
-		if (FAILED(hResult))
-		{
-			CString strMessage;
-			strMessage.Format(_T("Unable to abort transaction. HRESULT: 0x%08X"), hResult);
-			AfxMessageBox(strMessage);
-			return false;
-		}
-		return true;
-
-	}
-	bool CommitTransaction()
-	{
-		if (m_oSession.m_spOpenRowset == NULL)
-		{
-			if (!OpenSession())
-			{
-				return false;
-			}
-		}
-
-		HRESULT hResult = m_oSession.Commit();
-		if (FAILED(hResult))
-		{
-			CString strMessage;
-			strMessage.Format(_T("Unable to commit transaction. HRESULT: 0x%08X"), hResult);
-			AfxMessageBox(strMessage);
-			return false;
-		}
-		return true;
-	}
-
-	TRecord& GetRecord()
-	{
-		return m_oCommand.GetRecord();
-	}
-
-	HRESULT InsertData(int nAccessorIndex)
-	{
-		HRESULT hResult = m_oCommand.Insert(nAccessorIndex);
-		return hResult;
-	}
-	HRESULT MoveNext()
-	{
-		HRESULT hResult = m_oCommand.MoveNext();
-		return hResult;
-	}
-	HRESULT MoveFirst()
-	{
-		HRESULT hResult = m_oCommand.MoveFirst();
-		return hResult;
-	}
-	HRESULT SetData(int nAccessorIndex)
-	{
-		HRESULT hResult = m_oCommand.SetData(nAccessorIndex);
-		return hResult;
-	}
-	HRESULT Delete()
-	{
-		HRESULT hResult = m_oCommand.Delete();
-		return hResult;
 	}
 
 	// Members
 	// ----------------
 private:
-	CCommand<CAccessor<TAccessor>> m_oCommand;
-	/// <summary>Самата сесия</summary
+	/// <summary>Сесия</summary
 	CSession m_oSession;
+	bool m_bInTransaction;
 };
