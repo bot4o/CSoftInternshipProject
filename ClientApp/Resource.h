@@ -5,6 +5,8 @@
 #define IDD_ABOUTBOX                    100
 #define IDR_MAINFRAME                   128
 #define IDR_CSoftInternshipProjectTYPE  130
+#define IDR_USERS_PROJECTTYPE			132
+#define IDR_PROJECTS_PROJECTTYPE		133
 #define ID_WINDOW_MANAGER               131
 #define File                            32779
 #define ID_FILE_ADDUSER                 32780

@@ -39,20 +39,20 @@ BOOL ClientApp::InitInstance()
 	SetRegistryKey(_T("Local AppWizard-Generated Applications"));
 	LoadStdProfileSettings(4);
 
-	//CMultiDocTemplate* pUsersTemplate;
-	//pUsersTemplate = new CMultiDocTemplate(IDR_CSoftInternshipProjectTYPE,
-	//	RUNTIME_CLASS(CUsersDocument),
-	//	RUNTIME_CLASS(CChildFrame),
-	//	RUNTIME_CLASS(CUsersView));
+	CMultiDocTemplate* pUsersTemplate;
+	pUsersTemplate = new CMultiDocTemplate(IDR_USERS_PROJECTTYPE,
+		RUNTIME_CLASS(CUsersDocument),
+		RUNTIME_CLASS(CChildFrame),
+		RUNTIME_CLASS(CUsersView));
 
 
-	//if (!pUsersTemplate)
-	//	return FALSE; 
+	if (!pUsersTemplate)
+		return FALSE; 
 
-	//AddDocTemplate(pUsersTemplate);
+	AddDocTemplate(pUsersTemplate);
 
 	CMultiDocTemplate* pProjectsTemplate;
-	pProjectsTemplate = new CMultiDocTemplate(IDR_CSoftInternshipProjectTYPE,
+	pProjectsTemplate = new CMultiDocTemplate(IDR_PROJECTS_PROJECTTYPE,
 		RUNTIME_CLASS(CProjectsDocument),
 		RUNTIME_CLASS(CChildFrame),
 		RUNTIME_CLASS(CProjectsView));
