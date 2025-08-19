@@ -48,7 +48,6 @@ CProjectsDocument* CProjectsView::GetDocument() const
 void CProjectsView::OnListDoubleClick(NMHDR* pNMHDR, LRESULT* pResult)
 {
 	CUsersTypedPtrArray& oUsersArray = GetDocument()->GetUsers();
-	CTasksTypedPtrArray& oTasksArray = GetDocument()->GetTasks();
 	CProjectsTypedPtrArray& oProjectsArray = GetDocument()->GetProjects();
 
 	int nSelectedIndex = GetListCtrl().GetNextItem(-1, LVNI_SELECTED);
@@ -57,31 +56,15 @@ void CProjectsView::OnListDoubleClick(NMHDR* pNMHDR, LRESULT* pResult)
 		return;
 	}
 
-	long lID = oProjectsArray[nSelectedIndex]->lId;
-
-	PROJECTS oRefferedProject;
-	for (int i = 0; i < oProjectsArray.GetSize(); i++)
-	{
-		if (lID == oProjectsArray[i]->lId)
-		{
-			oRefferedProject = *oProjectsArray[i];
-		}
-	}
-	CTasksTypedPtrArray oProjectsTasksArray;
-	for (int i = 0; i < oTasksArray.GetSize(); i++)
-	{
-		if (oTasksArray[i]->lProjectId == oRefferedProject.lId)
-		{
-			oProjectsTasksArray.Add(oTasksArray[i]);
-		}
-	}
-
-	CProjectDetails oProjectDetails = CProjectDetails(oRefferedProject, oProjectsTasksArray);
+	PROJECTS oRefferedProject = *oProjectsArray[nSelectedIndex];
+	long lID = oRefferedProject.lId;
+	CTasksTypedPtrArray oProjectTasksArray;
+	GetDocument()->GetProjectTasks(lID, oProjectTasksArray);
+	CProjectDetails oProjectDetails = CProjectDetails(oRefferedProject, oProjectTasksArray);
 
 	CProjectsDialog oProjectsDialog(oProjectDetails, Modes::PreviewMode, oUsersArray);
-
-	INT_PTR nResult = -1;
-	nResult = oProjectsDialog.DoModal();
+	
+	oProjectsDialog.DoModal();
 }
 
 void CProjectsView::OnNMRClick(NMHDR* pNMHDR, LRESULT* pResult)
@@ -125,7 +108,6 @@ void CProjectsView::OnContextInsert()
 void CProjectsView::OnContextEdit()
 {
 	CProjectsTypedPtrArray& oProjectsArray = GetDocument()->GetProjects();
-	//CTasksTypedPtrArray& oTasksArray = GetDocument()->GetTasks();
 	CUsersTypedPtrArray& oUsersArray = GetDocument()->GetUsers();
 
 	int nSelectedIndex = GetListCtrl().GetNextItem(-1, LVNI_SELECTED);
