@@ -42,14 +42,16 @@ public:
 	/// <summary>Изтрива задача от базата</summary>  
 	bool DeleteTaskByID(const long lID);
 
+	/// <summary>Метод за взимане на задачите по проект</summary>  
 	bool GetProjectTasks(const long lProjectID, CTasksTypedPtrArray& oProjectsTasksArray);
-
+	/// <summary>Метод за добавяне проект и неговите</summary>  
 	bool AddProjectWithTasks(CProjectDetails& oProjectDetails);
-
-	bool UpdateProjectWithTasks( const long lProjectID, CProjectDetails& oProjectDetails);
-
+	/// <summary>Метод за промяна проект и неговите</summary>  
+	bool UpdateProjectWithTasks(const long lProjectID, CProjectDetails& oProjectDetails);
+	/// <summary>Метод за изтриване проект и неговите</summary>  
 	bool DeleteProjectWithTasks(const long lProjectID, CProjectDetails& oProjectDetails);
 
 private:
+	/// <summary>Мениджър на сесията</summary>  
 	CSessionManager m_oSessionManager;
 };

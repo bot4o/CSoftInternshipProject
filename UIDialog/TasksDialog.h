@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "DLLExport.h"
 #include "pch.h"
 #include "resource.h"
@@ -38,19 +38,26 @@ public:
 	// Methods
 	// ----------------
 public:
+	// <summary>Поставя начални стойности на диалога</summary>
 	void SetDialogElementsText();
+	// <summary>Проверява дали диалога е валиден</summary>
 	bool ValidateDialog(const TASKS& oValidateTask);
+	// <summary>Методът който се извиква при начално зареждане на диалога</summary>
 	virtual BOOL OnInitDialog();
+	///<summary>Ок бутонът от диалога</summary>
 	virtual void OnOK();
+	///<summary>Cancel бутонът от диалога</summary>
 	virtual void OnCancel();
+	///<summary>Close бутонът от диалога</summary>
 	virtual void OnAbort();
+
+	//EVENTS
+public:
+	afx_msg void OnBnClickedRdbTaskState1();
+	afx_msg void OnBnClickedRdbTaskState2();
+	afx_msg void OnBnClickedRdbTaskState3();
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
-
-	// Overrides
-	// ----------------
-
-
 	// Members
 	// ----------------
 private:
@@ -67,8 +74,5 @@ private:
 	CButton m_rdbState2;
 	CButton m_rdbState3;
 	CEdit m_edbEffort;
-public:
-	afx_msg void OnBnClickedRdbTaskState1();
-	afx_msg void OnBnClickedRdbTaskState2();
-	afx_msg void OnBnClickedRdbTaskState3();
+
 };

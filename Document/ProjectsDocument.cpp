@@ -30,7 +30,6 @@ CProjectsDocument::~CProjectsDocument()
 
 // Methods
 // ----------------
-//CRUD
 
 bool CProjectsDocument::LoadAllProjects()
 {
@@ -42,88 +41,9 @@ bool CProjectsDocument::LoadAllProjects()
 	return true;
 }
 
-bool CProjectsDocument::UpdateProject(const long lID, PROJECTS& oRecProject)
-{
-	if (!CProjectsAppService().UpdateProjectByID(lID, oRecProject))
-	{
-		AfxMessageBox(_T("Error at the CProjectsAppService().UpdateWhereID() in the document layer"));
-
-		return false;
-	}
-	UpdateAllViews(nullptr, (long)Modes::UpdateMode, (CObject*)&oRecProject);
-	return true;
-}
-
-bool CProjectsDocument::DeleteProject(const long lID)
-{
-	if (!CProjectsAppService().DeleteProjectByID(lID))
-	{
-		AfxMessageBox(_T("Error at the CProjectsAppService().DeleteWhereID() in the document layer"));
-
-		return false;
-	}
-	for (int i = 0; i < m_oProjectsArray.GetSize(); i++)
-	{
-		if (lID == m_oProjectsArray[i]->lId)
-		{
-			m_oProjectsArray.RemoveAt(i);
-			break;
-		}
-	}
-	UpdateAllViews(nullptr, long(Modes::DeleteMode), (CObject*)&m_oProjectsArray[0]);
-	return true;
-}
-
-bool CProjectsDocument::LoadAllTasks()
-{
-	if (!CProjectsAppService().SelectAllTasks(m_oTasksArray))
-	{
-		AfxMessageBox(_T("Error at the CTasksAppService().SelectAll() in the document layer"));
-		return false;
-	}
-	return true;
-}
-
-bool CProjectsDocument::UpdateTask(const long lID, TASKS& oRecTask)
-{
-	if (!CProjectsAppService().UpdateTaskByID(lID, oRecTask))
-	{
-		AfxMessageBox(_T("Error at the CTasksAppService().UpdateWhereID() in the document layer"));
-
-		return false;
-	}
-	UpdateAllViews(nullptr, (long)Modes::UpdateMode, (CObject*)&oRecTask);
-	return true;
-}
-
-bool CProjectsDocument::DeleteTask(const long lID)
-{
-	if (!CProjectsAppService().DeleteTaskByID(lID))
-	{
-		AfxMessageBox(_T("Error at the CTasksAppService().DeleteWhereID() in the document layer"));
-
-		return false;
-	}
-	for (int i = 0; i < m_oTasksArray.GetSize(); i++)
-	{
-		if (lID == m_oTasksArray[i]->lId)
-		{
-			m_oTasksArray.RemoveAt(i);
-			break;
-		}
-	}
-	UpdateAllViews(nullptr, (long)Modes::DeleteMode, (CObject*)&m_oTasksArray[0]);
-	return true;
-}
-
 CProjectsTypedPtrArray& CProjectsDocument::GetProjects()
 {
 	return m_oProjectsArray;
-}
-
-CTasksTypedPtrArray& CProjectsDocument::GetTasks()
-{
-	return m_oTasksArray;
 }
 
 CUsersTypedPtrArray& CProjectsDocument::GetUsers()

@@ -19,12 +19,12 @@ public:
 	}
 	virtual ~CSessionManager()
 	{
-
 		CloseSession();
 	}
 
 	// Methods
 	// ----------------
+	///<summary>Проверява връзката за базата и отваря нова сесия</summary>
 	bool OpenSession()
 	{
 		if (m_oSession.m_spOpenRowset == NULL)
@@ -51,7 +51,7 @@ public:
 
         return true;
 	}
-
+	///<summary>Затваря сесията</summary>
 	void CloseSession()
 	{
 		if (m_oSession.m_spOpenRowset != NULL)
@@ -59,7 +59,7 @@ public:
 			m_oSession.Close();
 		}
 	}
-
+	///<summary>Стартира танзакцията</summary>
 	bool BeginTransaction()
 	{
 		if (m_bInTransaction)
@@ -80,7 +80,7 @@ public:
 		m_bInTransaction = true;
 		return true;
 	}
-
+	///<summary>Прекъсва танзакцията</summary>
 	bool RollbackTransaction()
 	{
 		if (!m_bInTransaction)
@@ -102,6 +102,7 @@ public:
 		return true;
 	}
 
+	///<summary>Приключва танзакцията</summary>
 	bool CommitTransaction()
 	{
 		if (!m_bInTransaction)
@@ -123,6 +124,7 @@ public:
 		m_bInTransaction = false;
 		return true;
 	}
+	///<summary>Изпълнява завка</summary>
 	template <typename TAccessor>
 	bool ExecuteQuery(CString strSQLCommand, CCommand<CAccessor<TAccessor>>& oCommand, CDBPropSet* pPropSet = nullptr)
 	{
@@ -150,7 +152,8 @@ public:
 	// Members
 	// ----------------
 private:
-	/// <summary>Сесия</summary
+	///<summary>Сесия</summary>
 	CSession m_oSession;
+	///<summary>За проверка за съществуваща транзакция</summary>
 	bool m_bInTransaction;
 };

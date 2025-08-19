@@ -33,7 +33,7 @@ public:
 
     // Methods
     // ----------------
-        /// <summary>Извежда всички потребители в базата</summary>  
+    /// <summary>Извежда всички потребители в базата</summary>  
     bool SelectAll(CTypedPtrArray<CPtrArray, TRecord*>& oRecordArray)
     {
         CString strQuery;
@@ -302,9 +302,10 @@ public:
     // Members
     // ----------------
 private:
+    /// <summary>Мениджър на сесията</summary>  
     CSessionManager& m_oSessionManager; 
-
+    /// <summary>Команда</summary>  
     CCommand<CAccessor<TAccessor>> m_oCommand;
-    // <summary>От коя таблица ще се извличат данни в заявките</summary>
+    /// <summary>От коя таблица ще се извличат данни в заявките</summary>
     CString m_strTable;
 };

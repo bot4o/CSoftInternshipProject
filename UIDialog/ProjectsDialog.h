@@ -29,16 +29,29 @@ public:
 	// Methods
 	// ----------------
 public:
+	///<summary>Поставя начални стойности на диалога</summary>
 	void SetDialogElementsText();
+	///<summary>Поставя начални стойности относно тасковете</summary>
 	void SetTaskInfo();
+	///<summary>Създава нова задача към проекта</summary>
 	void InsertTaskToProject(TASKS& oTask);
+	///<summary>Променя задача към проекта</summary>
 	void UpdateTaskFromProject(const int nSelIndex, TASKS& oTask);
+	///<summary>Изтрива задача към проекта</summary>
 	void DeleteTaskFromProject(const int selIndex);
+	///<summary>Проверява дали диалога е валиден</summary>
 	bool ValidateDialog(const PROJECTS& oValidateProject);
+	///<summary>Методът който се извиква при начално зареждане на диалога</summary>
 	virtual BOOL OnInitDialog();
+	///<summary>Ок бутонът от диалога</summary>
 	virtual void OnOK();
+	///<summary>Cancel бутонът от диалога</summary>
 	virtual void OnCancel();
+	///<summary>Close бутонът от диалога</summary>
 	virtual void OnAbort();
+
+	//EVENTS
+public:
 	afx_msg void OnLbnSelchangeList1();
 	afx_msg void OnBnClickedBtnAddTask();
 	afx_msg void OnBnClickedBtnDeleteTask();
@@ -57,9 +70,7 @@ private:
 	PROJECTS& m_oProject;
 	CUsersTypedPtrArray& m_oUsersArray;
 	CTasksTypedPtrArray& m_oProjectTasksArray;
-
 	ProjectStates m_oProjectState;
-
 	CEdit m_edbName;
 	CEdit m_edbDescription;
 	CComboBox m_cmbProjectManager;

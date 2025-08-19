@@ -32,29 +32,18 @@ public:
 
 	/// <summary>Loads all projects from the PROJECTS table</summary>  
 	bool LoadAllProjects();
-	/// <summary>Alters the role of a specific project in the PROJECTS table</summary>  
-	bool UpdateProject(const long lID, PROJECTS& recProject);
-	/// <summary>Removes a specific project from the PROJECTS table</summary>  
-	bool DeleteProject(const long lID);
-	/// <summary>Gets the already populated m_oProjectsArray for the ProjectsView</summary>  
-
-
-	/// <summary>Loads all Task from the TASKS table</summary>  
-	bool LoadAllTasks();
-	/// <summary>Alters the role of a specific Task in the TASKS Table</summary>  
-	bool UpdateTask(const long lID, TASKS& recTask);
-	/// <summary>Removes a specific Task from the Task table</summary>  
-	bool DeleteTask(const long lID);
-
-	bool GetProjectTasks(const long lProjectID, CTasksTypedPtrArray& oProjectsTasksArray);
-
-	bool AddProjectWithTasks(CProjectDetails& oProjectDetails);
-
-	bool UpdateProjectWithTasks(const long lProjectID, CProjectDetails& oProjectDetails);
-
-	bool DeleteProjectWithTasks(const long lProjectID, CProjectDetails& oProjectDetails);
-private:
+	/// <summary>Loads all users from the PROJECTS table</summary
 	bool LoadAllUsers();
+
+	/// <summary>Метод за взимане на задачите по проект</summary>  
+	bool GetProjectTasks(const long lProjectID, CTasksTypedPtrArray& oProjectsTasksArray);
+	/// <summary>Метод за добавяне проект и неговите</summary>  
+	bool AddProjectWithTasks(CProjectDetails& oProjectDetails);
+	/// <summary>Метод за промяна проект и неговите</summary>  
+	bool UpdateProjectWithTasks(const long lProjectID, CProjectDetails& oProjectDetails);
+	/// <summary>Метод за изтриване проект и неговите</summary>  
+	bool DeleteProjectWithTasks(const long lProjectID, CProjectDetails& oProjectDetails);
+	
 	// Overrides
 	// ----------------
 public:
@@ -64,7 +53,8 @@ public:
 	// Members
 	// ----------------
 private:
+	/// <summary>Масив с всички проекти от базата</summary>  
 	CProjectsTypedPtrArray m_oProjectsArray;
-	CTasksTypedPtrArray m_oTasksArray;
+	/// <summary>Масив с всички потребители от базата</summary
 	CUsersTypedPtrArray m_oUsersArray;
 };
