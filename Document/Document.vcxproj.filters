@@ -27,7 +27,7 @@
     <ClCompile Include="UsersDocument.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ProjectsAndTasksDocument.cpp">
+    <ClCompile Include="ProjectsDocument.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -55,7 +55,7 @@
     <ClInclude Include="UsersDocument.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ProjectsAndTasksDocument.h">
+    <ClInclude Include="ProjectsDocument.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

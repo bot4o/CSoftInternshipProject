@@ -5,6 +5,7 @@
 #include "TasksAccessor.h"
 #include "BaseTable.h"
 #include "ProjectDetails.h"
+#include "SessionManager.h"
 
 
 #define TABLE_NAME_PROJECTS _T("PROJECTS")
@@ -138,11 +139,12 @@ bool CProjectsAppService::AddProjectWithTasks(CProjectDetails& oProjectDetails)
 	PROJECTS& oProject = oProjectDetails.GetProject();
 	CTasksTypedPtrArray& oTasksArray = oProjectDetails.GetTasks();
 
-	BeginTransaction(); 
+	CSessionManager<PROJECTS, CProjectsAccessor> oSessionManager = CSessionManager<PROJECTS, CProjectsAccessor>();
 
+	oSessionManager.BeginTransaction();
 	if (!InsertProject(oProject))
 	{
-		RollbackTransaction();
+		oSessionManager.RollbackTransaction();
 		AfxMessageBox(_T("Error at the m_oTasksTable.InsertProject() in the application layer"));
 		return false;
 	}
@@ -153,24 +155,25 @@ bool CProjectsAppService::AddProjectWithTasks(CProjectDetails& oProjectDetails)
 		pTask->lProjectId = oProject.lId;
 		if (!InsertTask(*pTask))
 		{
-			RollbackTransaction();
+			oSessionManager.RollbackTransaction();
 			AfxMessageBox(_T("Error inserting task"));
 			return false;
 		}
 	}
-	CommitTransaction();
-
+	oSessionManager.CommitTransaction();
 	return true;
 }
 bool CProjectsAppService::UpdateProjectWithTasks(const long lProjectID, CProjectDetails& oProjectDetails)
 {
 	PROJECTS& oProject = oProjectDetails.GetProject();
-	CTasksTypedPtrArray& oTasksArray = oProjectDetails.GetTasks();
+	CTasksTypedPtrArray& oTasksArray = oProjectDetails.GetTasks();	
 
-	BeginTransaction();
+	CSessionManager<PROJECTS, CProjectsAccessor> oSessionManager = CSessionManager<PROJECTS, CProjectsAccessor>();
 
+	oSessionManager.BeginTransaction();
 	if (!UpdateProjectByID(lProjectID, oProject))
 	{
+		oSessionManager.RollbackTransaction();
 		AfxMessageBox(_T("Error at the m_oTasksTable.UpdateProjectByID() on UpdateProjectWithTasks in the application layer"));
 		return false;
 	}
@@ -180,11 +183,9 @@ bool CProjectsAppService::UpdateProjectWithTasks(const long lProjectID, CProject
 		TASKS* pTask = oTasksArray[i];
 		if (pTask->lId == 0)
 		{
-			//ID = 0 -> newly created task;
 			if (!InsertTask(*pTask))
 			{
-				RollbackTransaction();
-
+				oSessionManager.RollbackTransaction();
 				AfxMessageBox(_T("Error at the m_oTasksTable.InsertTask() on UpdateProjectWithTasks in the application layer"));
 				return false;
 			}
@@ -193,28 +194,28 @@ bool CProjectsAppService::UpdateProjectWithTasks(const long lProjectID, CProject
 		long lTaskId = pTask->lId;
 		if (!UpdateTaskByID(lTaskId, *pTask))
 		{
-			RollbackTransaction();
-
+			oSessionManager.RollbackTransaction();
 			AfxMessageBox(_T("Error at the m_oTasksTable.UpdateTaskByID() on UpdateProjectWithTasks in the application layer"));
 			return false;
 		}
 	}
+	oSessionManager.CommitTransaction();
 
-	CommitTransaction();
 	return true;
 }
 bool CProjectsAppService::DeleteProjectWithTasks(const long lProjectID, CProjectDetails& oProjectDetails)
 {
 	PROJECTS& oProject = oProjectDetails.GetProject();
 	CTasksTypedPtrArray& oProjectTasksArray = oProjectDetails.GetTasks();
+	CSessionManager<PROJECTS, CProjectsAccessor> oSessionManager = CSessionManager<PROJECTS, CProjectsAccessor>();
 
-	BeginTransaction();
+	oSessionManager.BeginTransaction();
 
 	for (int i = 0; i < oProjectTasksArray.GetSize(); i++)
 	{
 		if (!DeleteTaskByID(oProjectTasksArray[i]->lId))
 		{
-			RollbackTransaction();
+			oSessionManager.RollbackTransaction();
 			AfxMessageBox(_T("Error at the CTasksAppService().DeleteWhereID() in the document layer"));
 			return false;
 		}
@@ -222,12 +223,33 @@ bool CProjectsAppService::DeleteProjectWithTasks(const long lProjectID, CProject
 
 	if (!DeleteProjectByID(lProjectID))
 	{
-		RollbackTransaction();
+		oSessionManager.RollbackTransaction();
 		AfxMessageBox(_T("Error at the CProjectsAppService().DeleteWhereID() in the document layer"));
 		return false;
 	}
+	oSessionManager.CommitTransaction();
 
-	CommitTransaction();
 	return true;
 }
 
+bool CProjectsAppService::GetProjectTasks(const long lProjectID, CTasksTypedPtrArray& oProjectsTasksArray)
+{
+	CTasksTypedPtrArray oTasksArray;
+
+	if (!SelectAllTasks(oTasksArray))
+	{
+		AfxMessageBox(_T("Error at retriving all tasks"));
+		return false;
+
+	}
+	for (int i = 0; i < oTasksArray.GetSize(); i++)
+	{
+		if (oTasksArray[i]->lProjectId == lProjectID)
+		{
+			TASKS* oTask = new TASKS(*oTasksArray[i]);
+			oProjectsTasksArray.Add(oTask);
+		}
+	}
+
+	return true;
+}

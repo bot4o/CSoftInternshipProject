@@ -39,6 +39,8 @@ public:
 	bool InsertTask(TASKS& recTask);
 	/// <summary>Изтрива потребител от базата според ID</summary>  
 	bool DeleteTaskByID(const long lID);
+	
+	bool GetProjectTasks(const long lProjectID, CTasksTypedPtrArray& oProjectsTasksArray);
 
 	bool AddProjectWithTasks(CProjectDetails& oProjectDetails);
 

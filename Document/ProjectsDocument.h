@@ -12,17 +12,17 @@
 /////////////////////////////////////////////////////////////////////////////
 // CProjectsDocument
 
-class DocumentDLL_EXP CProjectsAndTasksDocument : public CDocument
+class DocumentDLL_EXP CProjectsDocument : public CDocument
 {
 	// Macros
 	// ----------------
-	DECLARE_DYNCREATE(CProjectsAndTasksDocument)
+	DECLARE_DYNCREATE(CProjectsDocument)
 
 	// Constructor / Destructor
 	// ----------------
 public:
-	CProjectsAndTasksDocument();
-	virtual ~CProjectsAndTasksDocument();
+	CProjectsDocument();
+	virtual ~CProjectsDocument();
 
 	// Methods
 	// ----------------
@@ -45,7 +45,9 @@ public:
 	bool UpdateTask(const long lID, TASKS& recTask);
 	/// <summary>Removes a specific Task from the Task table</summary>  
 	bool DeleteTask(const long lID);
-	/// <summary>Gets the already populated m_oTasksArray for the TasksView</summary>
+
+	bool GetProjectTasks(const long lProjectID, CTasksTypedPtrArray& oProjectsTasksArray);
+
 	bool AddProjectWithTasks(CProjectDetails& oProjectDetails);
 
 	bool UpdateProjectWithTasks(const long lProjectID, CProjectDetails& oProjectDetails);

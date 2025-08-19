@@ -3,7 +3,7 @@
 #include "framework.h"
 #include "pch.h"
 #include "afxcview.h"
-#include "../Document/ProjectsAndTasksDocument.h"
+#include "../Document/ProjectsDocument.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CProjectsView
@@ -23,13 +23,14 @@ public:
 
 	// Methods
 	// ----------------
-	CProjectsAndTasksDocument* GetDocument() const;
+	CProjectsDocument* GetDocument() const;
 	void OnListDoubleClick(NMHDR* pNMHDR, LRESULT* pResult);
 	void OnNMRClick(NMHDR* pNMHDR, LRESULT* pResult);
 	void OnContextEdit();
 	void OnContextDelete();
 	void OnContextInsert();
 	void OnContextLoad();
+	void SetItemToListCtrl(int nItem, const PROJECTS& oProject);
 	// Overrides
 	// ----------------
 		/// <summary>Инициализира данните за CListCtrl()</summary>

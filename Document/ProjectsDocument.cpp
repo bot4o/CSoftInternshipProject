@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "ProjectsAndTasksDocument.h"
+#include "ProjectsDocument.h"
 #include "../Database/ProjectsAccessor.h"
 #include "../Database/TasksAccessor.h"
 #include "UsersAppService.h"
@@ -11,20 +11,20 @@
 #define TABLE_NAME_TASKS _T("TASKS")
 
 /////////////////////////////////////////////////////////////////////////////
-// CProjectsAndTasksDocument
+// CProjectsDocument
 // 
 
 // Macros
 // ----------------
-IMPLEMENT_DYNCREATE(CProjectsAndTasksDocument, CDocument)
+IMPLEMENT_DYNCREATE(CProjectsDocument, CDocument)
 
 // Constructor / Destructor
 // ----------------
-CProjectsAndTasksDocument::CProjectsAndTasksDocument()
+CProjectsDocument::CProjectsDocument()
 {
 }
 
-CProjectsAndTasksDocument::~CProjectsAndTasksDocument()
+CProjectsDocument::~CProjectsDocument()
 {
 }
 
@@ -32,7 +32,7 @@ CProjectsAndTasksDocument::~CProjectsAndTasksDocument()
 // ----------------
 //CRUD
 
-bool CProjectsAndTasksDocument::LoadAllProjects()
+bool CProjectsDocument::LoadAllProjects()
 {
 	if (!CProjectsAppService().SelectAllProjects(m_oProjectsArray))
 	{
@@ -42,7 +42,7 @@ bool CProjectsAndTasksDocument::LoadAllProjects()
 	return true;
 }
 
-bool CProjectsAndTasksDocument::UpdateProject(const long lID, PROJECTS& oRecProject)
+bool CProjectsDocument::UpdateProject(const long lID, PROJECTS& oRecProject)
 {
 	if (!CProjectsAppService().UpdateProjectByID(lID, oRecProject))
 	{
@@ -54,7 +54,7 @@ bool CProjectsAndTasksDocument::UpdateProject(const long lID, PROJECTS& oRecProj
 	return true;
 }
 
-bool CProjectsAndTasksDocument::DeleteProject(const long lID)
+bool CProjectsDocument::DeleteProject(const long lID)
 {
 	if (!CProjectsAppService().DeleteProjectByID(lID))
 	{
@@ -74,7 +74,7 @@ bool CProjectsAndTasksDocument::DeleteProject(const long lID)
 	return true;
 }
 
-bool CProjectsAndTasksDocument::LoadAllTasks()
+bool CProjectsDocument::LoadAllTasks()
 {
 	if (!CProjectsAppService().SelectAllTasks(m_oTasksArray))
 	{
@@ -84,7 +84,7 @@ bool CProjectsAndTasksDocument::LoadAllTasks()
 	return true;
 }
 
-bool CProjectsAndTasksDocument::UpdateTask(const long lID, TASKS& oRecTask)
+bool CProjectsDocument::UpdateTask(const long lID, TASKS& oRecTask)
 {
 	if (!CProjectsAppService().UpdateTaskByID(lID, oRecTask))
 	{
@@ -96,7 +96,7 @@ bool CProjectsAndTasksDocument::UpdateTask(const long lID, TASKS& oRecTask)
 	return true;
 }
 
-bool CProjectsAndTasksDocument::DeleteTask(const long lID)
+bool CProjectsDocument::DeleteTask(const long lID)
 {
 	if (!CProjectsAppService().DeleteTaskByID(lID))
 	{
@@ -116,22 +116,22 @@ bool CProjectsAndTasksDocument::DeleteTask(const long lID)
 	return true;
 }
 
-CProjectsTypedPtrArray& CProjectsAndTasksDocument::GetProjects()
+CProjectsTypedPtrArray& CProjectsDocument::GetProjects()
 {
 	return m_oProjectsArray;
 }
 
-CTasksTypedPtrArray& CProjectsAndTasksDocument::GetTasks()
+CTasksTypedPtrArray& CProjectsDocument::GetTasks()
 {
 	return m_oTasksArray;
 }
 
-CUsersTypedPtrArray& CProjectsAndTasksDocument::GetUsers()
+CUsersTypedPtrArray& CProjectsDocument::GetUsers()
 {
 	return m_oUsersArray;
 }
 
-bool CProjectsAndTasksDocument::LoadAllUsers()
+bool CProjectsDocument::LoadAllUsers()
 {
 	if (!CUsersAppService().SelectAll(m_oUsersArray))
 	{
@@ -145,29 +145,17 @@ void UpdateAllViews(CView* pSender, LPARAM lHint = 0L, CObject* pHint = NULL)
 
 }
 
-// Overrides
-// ----------------
-BOOL CProjectsAndTasksDocument::OnNewDocument()
+bool CProjectsDocument::GetProjectTasks(const long lProjectID, CTasksTypedPtrArray& oProjectsTasksArray)
 {
-	if (!CDocument::OnNewDocument())
-		return FALSE;
-
-	if (!LoadAllUsers()) {
-		AfxMessageBox(_T("Cound't initialize all users into this document"));
-		return FALSE;
+	if (!CProjectsAppService().GetProjectTasks(lProjectID, oProjectsTasksArray))
+	{
+		AfxMessageBox(_T("Error at AddProjectWithTasks() in the Document Layer"));
+		return false;
 	}
-	if (!LoadAllTasks()) {
-		AfxMessageBox(_T("Cound't initialize all users into this document"));
-		return FALSE;
-	}
-	if (!LoadAllProjects()) {
-		AfxMessageBox(_T("Cound't initialize all users into this document"));
-		return FALSE;
-	}
-	return TRUE;
+	return true;
 }
 
-bool CProjectsAndTasksDocument::AddProjectWithTasks(CProjectDetails& oProjectDetails)
+bool CProjectsDocument::AddProjectWithTasks(CProjectDetails& oProjectDetails)
 {
 	if (!CProjectsAppService().AddProjectWithTasks(oProjectDetails))
 	{
@@ -177,9 +165,9 @@ bool CProjectsAndTasksDocument::AddProjectWithTasks(CProjectDetails& oProjectDet
 	UpdateAllViews(nullptr, (long)Modes::InsertMode, (CObject*)&oProjectDetails);
 	return true;
 }
-bool CProjectsAndTasksDocument::UpdateProjectWithTasks(const long lProjectID, CProjectDetails& oProjectDetails)
+bool CProjectsDocument::UpdateProjectWithTasks(const long lProjectID, CProjectDetails& oProjectDetails)
 {
-	if(!CProjectsAppService().UpdateProjectWithTasks(lProjectID, oProjectDetails))
+	if (!CProjectsAppService().UpdateProjectWithTasks(lProjectID, oProjectDetails))
 	{
 		AfxMessageBox(_T("Error at AddProjectWithTasks() in the Document Layer"));
 		return false;
@@ -188,7 +176,7 @@ bool CProjectsAndTasksDocument::UpdateProjectWithTasks(const long lProjectID, CP
 
 	return true;
 }
-bool CProjectsAndTasksDocument::DeleteProjectWithTasks(const long lProjectID, CProjectDetails& oProjectDetails)
+bool CProjectsDocument::DeleteProjectWithTasks(const long lProjectID, CProjectDetails& oProjectDetails)
 {
 	if (!CProjectsAppService().DeleteProjectWithTasks(lProjectID, oProjectDetails))
 	{
@@ -198,4 +186,26 @@ bool CProjectsAndTasksDocument::DeleteProjectWithTasks(const long lProjectID, CP
 	UpdateAllViews(nullptr, (long)Modes::DeleteMode, (CObject*)&oProjectDetails);
 
 	return true;
+}
+
+// Overrides
+// ----------------
+BOOL CProjectsDocument::OnNewDocument()
+{
+	if (!CDocument::OnNewDocument())
+		return FALSE;
+
+	if (!LoadAllUsers()) {
+		AfxMessageBox(_T("Cound't initialize all users into this document"));
+		return FALSE;
+	}
+	/*if (!LoadAllTasks()) {
+		AfxMessageBox(_T("Cound't initialize all tasks into this document"));
+		return FALSE;
+	}*/
+	if (!LoadAllProjects()) {
+		AfxMessageBox(_T("Cound't initialize all projects into this document"));
+		return FALSE;
+	}
+	return TRUE;
 }

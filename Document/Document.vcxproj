@@ -220,7 +220,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="ProjectsAndTasksDocument.cpp" />
+    <ClCompile Include="ProjectsDocument.cpp" />
     <ClCompile Include="UsersDocument.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -228,7 +228,7 @@
     <None Include="res\Document.rc2" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ProjectsAndTasksDocument.h" />
+    <ClInclude Include="ProjectsDocument.h" />
     <ClInclude Include="UsersDocument.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />

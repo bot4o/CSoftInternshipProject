@@ -8,7 +8,7 @@
 #include "DBConnection.h"
 #include "UsersDocument.h"
 #include "UsersView.h"
-#include "ProjectsAndTasksDocument.h"
+#include "ProjectsDocument.h"
 #include "ProjectsView.h"
 
 #include "DLLExport.h"
@@ -53,7 +53,7 @@ BOOL ClientApp::InitInstance()
 
 	CMultiDocTemplate* pProjectsTemplate;
 	pProjectsTemplate = new CMultiDocTemplate(IDR_CSoftInternshipProjectTYPE,
-		RUNTIME_CLASS(CProjectsAndTasksDocument),
+		RUNTIME_CLASS(CProjectsDocument),
 		RUNTIME_CLASS(CChildFrame),
 		RUNTIME_CLASS(CProjectsView));
 

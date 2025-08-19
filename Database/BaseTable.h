@@ -4,6 +4,7 @@
 #include "atldbcli.h"
 #include "DBConnection.h"
 #include "DLLExport.h"
+#include "SessionManager.h"
 
 #define IDENTITY_ACCESSOR_INDEX 0
 #define DATA_ACCESSOR_INDEX 1
@@ -30,39 +31,17 @@ public:
         /// <summary>Извежда всички потребители в базата</summary>  
     bool SelectAll(CTypedPtrArray<CPtrArray, TRecord*>& oRecordArray)
     {
-        CDataSource& oDataSource = CDBConnection::GetDataSource();
-        if (oDataSource.m_spInit == nullptr)
-        {
-            CDBConnection::OpenConnection();
-        }
-
-        HRESULT hResult = m_oSession.Open(oDataSource);
-        if (FAILED(hResult))
-        {
-            CString msg;
-            msg.Format(_T("Unable to open session. HRESULT: 0x%08X", hResult));
-            AfxMessageBox(msg);
-            return false;
-        }
-
+        m_oSessionManager.OpenSession();
         CString strQuery;
         strQuery.Format(SQL_SELECT_ALL, m_strTable);
-
-        hResult = m_oCommand.Open(m_oSession, strQuery);
-        if (FAILED(hResult))
-        {
-            CString msg;
-            msg.Format(_T("Unable to execute query. HRESULT: 0x%08X", hResult));
-            AfxMessageBox(msg);
-            m_oSession.Close();
-            return false;
-        }
+        m_oSessionManager.ExecuteQuery(strQuery);
 
         oRecordArray.RemoveAll();
 
-        while ((hResult = m_oCommand.MoveNext()) == S_OK)
+        HRESULT hResult = S_OK;
+        while ((hResult = m_oSessionManager.MoveNext()) == S_OK)
         {
-            TRecord* pRecord = new TRecord(m_oCommand.GetRecord()); // <-- 
+            TRecord* pRecord = new TRecord(m_oSessionManager.GetRecord());
             oRecordArray.Add(pRecord);
         }
 
@@ -73,134 +52,90 @@ public:
             AfxMessageBox(msg);
             return false;
         }
-
-        m_oCommand.Close();
-        m_oSession.Close();
+        m_oSessionManager.CloseSession();
         return true;
     }
     /// <summary>Извежда потребител от базата според ID</summary>  
     bool SelectWhereID(const long lID, TRecord& oRecord)
     {
-        CDataSource& oDataSource = CDBConnection::GetDataSource();
-
-        HRESULT hResult = m_oSession.Open(oDataSource);
-        if (FAILED(hResult))
-        {
-            CString strMessage;
-            strMessage.Format(_T("Unable to open session for the SQL Server database. HRESULT: 0x%08X", hResult));
-            AfxMessageBox(strMessage);
-            return false;
-        }
-
-        hResult = m_oSession.StartTransaction();
-        if (FAILED(hResult))
-        {
-            AfxMessageBox(_T("Unable to start new transaction for the SQL Server database. Error: %d", hResult));
-            m_oSession.Close();
-            return false;
-        }
+        m_oSessionManager.OpenSession();
+        m_oSessionManager.BeginTransaction();
 
         CString strQuery;
         strQuery.Format(SQL_SELECT_BY_ID, m_strTable, lID);
-
         CDBPropSet& oUpdateDBPropSet = CDBConnection::GetDbPropSet();
 
-        hResult = m_oCommand.Open(m_oSession, strQuery, &oUpdateDBPropSet);
-        if (FAILED(hResult))
+        if (m_oSessionManager.ExecuteQuery(strQuery, &oUpdateDBPropSet))
         {
             CString strMessage;
-            strMessage.Format(_T("Unable to execute command for the SQL Server database. HRESULT: 0x%08X", hResult));
+            strMessage.Format(_T("Failed to update %s oRecord. Error: %d", hResult, m_strTable));
             AfxMessageBox(strMessage);
-            m_oSession.Abort();
-            m_oSession.Close();
+            m_oSessionManager.RollbackTransaction();
+            m_oSessionManager.CloseSession();
             return false;
         }
 
-        hResult = m_oCommand.MoveFirst();
+        HRESULT hResult = m_oSessionManager.MoveFirst();
         if (hResult != S_OK)
         {
             CString strMessage;
             strMessage.Format(_T("%s oRecord with ID of %d was not found"), m_strTable, lID);
             AfxMessageBox(strMessage);
-            m_oSession.Abort();
-            m_oCommand.Close();
-            m_oSession.Close();
+            m_oSessionManager.RollbackTransaction();
+            m_oSessionManager.CloseSession();
             return false;
         }
 
-        oRecord = m_oCommand.GetRecord(); // <--
+        oRecord = m_oSessionManager.GetRecord(); // <--
 
-        hResult = m_oSession.Commit();
+        hResult = m_oSessionManager.CommitTransaction();
         if (FAILED(hResult))
         {
             CString strMessage;
             strMessage.Format(_T("Failed to commit transaction. Error: %d", hResult));
             AfxMessageBox(strMessage);
-            m_oSession.Abort();
-            m_oSession.Close();
+            m_oSessionManager.RollbackTransaction();
+            m_oSessionManager.CloseSession();
             return false;
         }
 
-        m_oCommand.Close();
-        m_oSession.Close();
+        m_oSessionManager.CloseSession();
         return true;
     }
     /// <summary>Променя длъжноста на потребител от базата според ID</summary>  
     bool UpdateWhereID(const long lID, TRecord& oRecord)
     {
-        CDataSource& oDataSource = CDBConnection::GetDataSource();
-
-        HRESULT hResult = m_oSession.Open(oDataSource);
-        if (FAILED(hResult))
-        {
-            CString strMessage;
-            strMessage.Format(_T("Unable to open session for the SQL Server database. HRESULT: 0x%08X", hResult));
-            AfxMessageBox(strMessage);
-            return false;
-        }
-
-        hResult = m_oSession.StartTransaction();
-        if (FAILED(hResult))
-        {
-            AfxMessageBox(_T("Unable to start new transaction for the SQL Server database. Error: %d", hResult));
-            m_oSession.Close();
-            return false;
-        }
+        m_oSessionManager.OpenSession();
+        m_oSessionManager.BeginTransaction();
 
         CString sUpdateQuery;
         sUpdateQuery.Format(SQL_SELECT_BY_ID, m_strTable, lID);
-
         CDBPropSet& oUpdateDBPropSet = CDBConnection::GetDbPropSet();
 
-        hResult = m_oCommand.Open(m_oSession, sUpdateQuery, &oUpdateDBPropSet);
-        if (FAILED(hResult))
+        if (!m_oSessionManager.ExecuteQuery(sUpdateQuery, &oUpdateDBPropSet))
         {
             CString strMessage;
             strMessage.Format(_T("Failed to update %s oRecord. Error: %d", hResult, m_strTable));
             AfxMessageBox(strMessage);
-            m_oSession.Abort();
-            m_oSession.Close();
+            m_oSessionManager.RollbackTransaction();
+            m_oSessionManager.CloseSession();
             return false;
         }
-        //Ето тук
-        //This move the "cursor" on the position of the first (and only) row of the query result
-        hResult = m_oCommand.MoveNext();
+        HRESULT hResult = m_oSessionManager.MoveNext();
         if (hResult == DB_S_ENDOFROWSET)
         {
             AfxMessageBox(_T("No %s found with the specified ID to update.", m_strTable));
-            m_oSession.Abort();
-            m_oCommand.Close();
-            m_oSession.Close();
+            m_oSessionManager.RollbackTransaction();
+            m_oSessionManager.CloseSession();
             return true;
         }
 
-        TRecord& oDatabaseRecord = m_oCommand.GetRecord();
+        TRecord& oDatabaseRecord = m_oSessionManager.GetRecord();
         if (oRecord.lUpdateCounter != oDatabaseRecord.lUpdateCounter)
         {
             AfxMessageBox(_T("Update counters do not match in the database"));
-            m_oSession.Abort();
-            m_oCommand.Close();
-            m_oSession.Close();
+            m_oSessionManager.RollbackTransaction();
+            m_oSessionManager.CloseSession();
             return false;
         }
 
@@ -208,165 +143,126 @@ public:
         oDatabaseRecord.lUpdateCounter += 1;
         oRecord.lUpdateCounter += 1;
 
-        hResult = m_oCommand.SetData(DATA_ACCESSOR_INDEX);
+        hResult = m_oSessionManager.SetData(DATA_ACCESSOR_INDEX);
         if (FAILED(hResult))
         {
             AfxMessageBox(_T("Unable to set data in the SQL Server database. Error: %d", hResult));
-            m_oSession.Abort();
-            m_oCommand.Close();
-            m_oSession.Close();
+            m_oSessionManager.RollbackTransaction();
+            m_oSessionManager.CloseSession();
             return false;
         }
 
-        hResult = m_oSession.Commit();
+        hResult = m_oSessionManager.CommitTransaction();
         if (FAILED(hResult))
         {
             CString strMessage;
             strMessage.Format(_T("Failed to commit transaction. Error: %d", hResult));
             AfxMessageBox(strMessage);
-            m_oSession.Abort();
-            m_oSession.Close();
+            m_oSessionManager.RollbackTransaction();
+            m_oSessionManager.CloseSession();
             return false;
         }
-        m_oCommand.Close();
-        m_oSession.Close();
+        m_oSessionManager.CloseSession();
         return true;
     }
     /// <summary>Вмъква нов потребител в базата</summary>  
     bool Insert(TRecord& oRecord)
     {
-        CDataSource& oDataSource = CDBConnection::GetDataSource();
-
-        HRESULT hResult = m_oSession.Open(oDataSource);
-        if (FAILED(hResult))
-        {
-            CString strMessage;
-            strMessage.Format(_T("Unable to open session for the SQL Server database. HRESULT: 0x%08X", hResult));
-            AfxMessageBox(strMessage);
-            return false;
-        }
+        m_oSessionManager.OpenSession();
 
         CString strQuery;
         strQuery.Format(SQL_SELECT_EMPTY, m_strTable);
-
         CDBPropSet& oUpdateDBPropSet = CDBConnection::GetDbPropSet();
 
-        hResult = m_oCommand.Open(m_oSession, strQuery, &oUpdateDBPropSet);
-        if (FAILED(hResult))
+        if (!m_oSessionManager.ExecuteQuery(strQuery, &oUpdateDBPropSet))
         {
             CString strMessage;
-            strMessage.Format(_T("Failed to insert %s oRecord. Error: %d", m_strTable, hResult));
+            strMessage.Format(_T("Failed to update %s oRecord. Error: %d", hResult, m_strTable));
             AfxMessageBox(strMessage);
-            m_oCommand.Close();
-            m_oSession.Close();
+            m_oSessionManager.CloseSession();
             return false;
         }
 
-        TRecord& oDatabaseRecord = m_oCommand.GetRecord();
+        TRecord& oDatabaseRecord = m_oSessionManager.GetRecord();
         oDatabaseRecord = oRecord;
 
-        hResult = m_oCommand.Insert(DATA_ACCESSOR_INDEX);
+        HRESULT hResult = m_oSessionManager.InsertData(DATA_ACCESSOR_INDEX);
         if (FAILED(hResult))
         {
             AfxMessageBox(_T("Unable to set data in the SQL Server database. Error: %d", hResult));
-            m_oCommand.Close();
-            m_oSession.Close();
+            m_oSessionManager.CloseSession();
+
             return false;
         }
 
-        hResult = m_oCommand.MoveFirst();
+        hResult = m_oSessionManager.MoveFirst();
         if (hResult != S_OK)
         {
             AfxMessageBox(_T("Unable to read inserted %s oRecord again from the SQL Server database. Error: %d", m_strTable, hResult));
-            m_oCommand.Close();
-            m_oSession.Close();
+            m_oSessionManager.CloseSession();
             return true;
         }
         oRecord.lId = oDatabaseRecord.lId;
 
-        m_oCommand.Close();
-        m_oSession.Close();
+        m_oSessionManager.CloseSession();
         return true;
     }
     /// <summary>Изтрива потребител от базата според ID</summary>  
     bool DeleteWhereID(const long lID)
     {
-        CDataSource& oDataSource = CDBConnection::GetDataSource();
-
-        HRESULT hResult = m_oSession.Open(oDataSource);
-        if (FAILED(hResult))
-        {
-            CString strMessage;
-            strMessage.Format(_T("Unable to open session for the SQL Server database. HRESULT: 0x%08X", hResult));
-            AfxMessageBox(strMessage);
-            return false;
-        }
-
-        hResult = m_oSession.StartTransaction();
-        if (FAILED(hResult))
-        {
-            AfxMessageBox(_T("Unable to start new transaction for the SQL Server database. Error: %d", hResult));
-            m_oSession.Close();
-            return false;
-        }
+        m_oSessionManager.OpenSession();
+        m_oSessionManager.BeginTransaction();
 
         CString strQuery;
         strQuery.Format(SQL_SELECT_BY_ID, m_strTable, lID);
-
         CDBPropSet& oUpdateDBPropSet = CDBConnection::GetDbPropSet();
 
-        hResult = m_oCommand.Open(m_oSession, strQuery, &oUpdateDBPropSet);
-        if (FAILED(hResult))
+        if (!m_oSessionManager.ExecuteQuery(strQuery, &oUpdateDBPropSet))
         {
             CString strMessage;
             strMessage.Format(_T("Failed to delete %s oRecord. Error: %d", m_strTable, hResult));
             AfxMessageBox(strMessage);
-            m_oSession.Abort();
-            m_oSession.Close();
+            m_oSessionManager.RollbackTransaction();
+            m_oSessionManager.CloseSession();
+
             return false;
         }
 
-        hResult = m_oCommand.MoveFirst();
+        HRESULT hResult = m_oSessionManager.MoveFirst();
         if (hResult != S_OK)
         {
             AfxMessageBox(_T("No %s oRecord found with the specified ID", m_strTable));
-            m_oSession.Abort();
-            m_oCommand.Close();
-            m_oSession.Close();
+            m_oSessionManager.RollbackTransaction();
+            m_oSessionManager.CloseSession();
             return true;
         }
-        hResult = m_oCommand.Delete();
+        hResult = m_oSessionManager.Delete();
         if (FAILED(hResult))
         {
             AfxMessageBox(_T("Failed to delete the %s. oRecord", m_strTable));
-            m_oSession.Abort();
-            m_oCommand.Close();
-            m_oSession.Close();
+            m_oSessionManager.RollbackTransaction();
+            m_oSessionManager.CloseSession();
             return false;
         }
 
-        hResult = m_oSession.Commit();
+        hResult = m_oSessionManager.CommitTransaction();
         if (FAILED(hResult))
         {
             CString strMessage;
             strMessage.Format(_T("Failed to commit transaction. Error: %d", hResult));
             AfxMessageBox(strMessage);
-            m_oSession.Abort();
-            m_oSession.Close();
+            m_oSessionManager.RollbackTransaction();
+            m_oSessionManager.CloseSession();
             return false;
         }
-        m_oCommand.Close();
-        m_oSession.Close();
+        m_oSessionManager.CloseSession();
         return true;
     }
 
     // Members
     // ----------------
 private:
-    /// <summary>Помага да изпълним команди по сесията</summary>  
-    CCommand<CAccessor<TAccessor>> m_oCommand;
+    CSessionManager<TRecord, TAccessor> m_oSessionManager; 
     // <summary>От коя таблица ще се извличат данни в заявките</summary>
     CString m_strTable;
-    /// <summary>Самата сесия</summary
-    CSession m_oSession;
 };
